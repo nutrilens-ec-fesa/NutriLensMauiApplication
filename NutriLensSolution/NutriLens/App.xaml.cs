@@ -1,8 +1,7 @@
-﻿using NutriLens.Models;
+﻿using DictionaryLibrary;
+using NutriLens.Models;
 using NutriLens.Services;
 using NutriLens.ViewInterfaces;
-using PermissionsLibrary;
-using PopupLibrary;
 
 namespace NutriLens
 {
@@ -11,6 +10,7 @@ namespace NutriLens
         public App()
         {
             InitializeComponent();
+            ViewServices.PopUpManager.UpdateLanguage(Languages.Portuguese);
             MainPage = new NavigationPage(ViewServices.ResolvePage<IMainMenuPage>());
         }
 

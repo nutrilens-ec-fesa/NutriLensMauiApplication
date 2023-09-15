@@ -2,6 +2,8 @@
 using CommunityToolkit.Mvvm.Input;
 using NutriLens.Services;
 using NutriLens.ViewInterfaces;
+using PopupLibrary;
+using System.Reflection;
 
 namespace NutriLens.ViewModels
 {
@@ -24,6 +26,18 @@ namespace NutriLens.ViewModels
         private async Task OpenCamera()
         {
             await _navigation.PushAsync(ViewServices.ResolvePage<ICameraPage>());
+        }
+
+        [RelayCommand]
+        private async Task OpenBarCode()
+        {
+            await _navigation.PushAsync(ViewServices.ResolvePage<IBarCodePage>());
+        }
+
+        [RelayCommand]
+        private async Task OpenManualInput()
+        {
+            await ViewServices.PopUpManager.PopInDevelopment(MethodBase.GetCurrentMethod());
         }
     }
 }

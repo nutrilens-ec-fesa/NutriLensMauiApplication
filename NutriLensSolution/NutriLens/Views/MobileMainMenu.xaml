@@ -2,14 +2,14 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NutriLens.Views.MobileMainMenu"
-             Title="MobileMainMenu">
+             Title="NutriLens">
     <ContentPage.Content>
         <StackLayout Spacing="10">
-            <Label Text="Detail page Details"
-            HorizontalTextAlignment="Center"
-            VerticalTextAlignment="Center" />
-            <Button x:Name="btnTest" Text="Open Flyout" Command="{Binding OpenFlyoutCommand}" />
-            <Button x:Name="btnCamera" Text="Open Câmera" Command="{Binding OpenCameraCommand}" />
+            <Button x:Name="btnTest" Text="Informações do aplicativo" Command="{Binding OpenFlyoutCommand}" />
+            <Label Text="Registrar refeição" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+            <Button x:Name="btnCamera" Text="Por foto" Command="{Binding OpenCameraCommand}" />
+            <Button x:Name="btnBarCode" Text="Por código de barras" Command="{Binding OpenBarCodeCommand}" />
+            <Button x:Name="btnManual" Text="Por inserção manual" Command="{Binding OpenManualInputCommand}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

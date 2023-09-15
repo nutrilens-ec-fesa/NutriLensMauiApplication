@@ -4,9 +4,15 @@
              x:Class="NutriLens.Views.MobileFlyoutPage"
              Title="MobileFlyoutPage">
     <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <Label Text="Desenvolvido por:" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,20" />
+        
+        <Label Text="Carlos Adonias" VerticalOptions="Center" HorizontalOptions="Center" />
+        <Label Text="Carlos Gonçalves" VerticalOptions="Center" HorizontalOptions="Center" />
+        <Label Text="Gabriel Teixeira" VerticalOptions="Center" HorizontalOptions="Center" />
+        <Label Text="Johnny Messias" VerticalOptions="Center" HorizontalOptions="Center" />
+
+        <Label Text="Orientado por:" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,20"/>
+        
+        <Label Text="Filippo Valiante" VerticalOptions="Center" HorizontalOptions="Center" />
     </VerticalStackLayout>
 </ContentPage>
