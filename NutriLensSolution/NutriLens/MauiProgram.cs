@@ -9,6 +9,9 @@ using WebLibrary;
 using NutriLens.ViewInterfaces;
 using NutriLens.Views;
 using Camera.MAUI;
+using Plugin.Maui.Audio;
+using Microsoft.Extensions.DependencyInjection;
+using AppDataLibrary;
 
 namespace NutriLens
 {
@@ -28,11 +31,7 @@ namespace NutriLens
 
             builder.UseMauiCommunityToolkit();
             builder.UseViewServices();
-
-            //builder.Services.AddSingleton<IFtpManager>(provider =>
-            //{
-            //    return new FtpManager(string.Empty, string.Empty, string.Empty);
-            //});
+            builder.Services.AddSingleton(AudioManager.Current);
 
             builder.Services.AddSingleton<IPopUpManager, PopUpManager>();
 
@@ -41,12 +40,18 @@ namespace NutriLens
                 return new AppConfigurationManager(UriAndPaths.appConfigurationPath);
             });
 
+            builder.Services.AddSingleton<IAppDataManager>(provider =>
+            {
+                return new AppDataManager(UriAndPaths.appDataPath);
+            });
+
 #if ANDROID || IOS
             builder.Services.AddSingleton<IPermissionManager, PermissionManager>();
             builder.Services.AddSingleton<IMainMenuPage, MobileMainMenu>();
             builder.Services.AddSingleton<IFlyoutPage, MobileFlyoutPage>();
             builder.Services.AddSingleton<ICameraPage, MobileCameraPage>();
             builder.Services.AddSingleton<IBarCodePage, MobileBarCodePage>();
+            builder.Services.AddSingleton<IManualInputPage, MobileManualInputPage>();
 #elif WINDOWS
 
 #endif
