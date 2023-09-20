@@ -1,6 +1,8 @@
 ﻿using AppConfigLibrary;
+using AppDataLibrary;
 using DictionaryLibrary;
 using PermissionsLibrary;
+using Plugin.Maui.Audio;
 using PopupLibrary;
 using WebLibrary;
 
@@ -78,7 +80,11 @@ public static class ViewServices
 
     public static IPermissionManager PermissionManager => GetService<IPermissionManager>();
 
+    public static IAppDataManager AppDataManager => GetService<IAppDataManager>();
+
     public static IAppConfigurationManager AppConfigurationManager => GetService<IAppConfigurationManager>();
+
+    public static IAudioManager AudioManager => GetService<IAudioManager>();
 }
 
 
