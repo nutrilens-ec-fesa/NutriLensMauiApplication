@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="NutriLens.Views.Popups.AddFoodItemPopup"
+             Color="#00000000">
+    <Frame BackgroundColor="#2B2B2B" 
+           Padding="20"
+           HasShadow="True"
+           CornerRadius="10">
+        <Frame.Content>
+            <Grid BackgroundColor="#2B2B2B" RowSpacing="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25*"></RowDefinition>
+                    <RowDefinition Height="25*"></RowDefinition>
+                    <RowDefinition Height="25*"></RowDefinition>
+                    <RowDefinition Height="25*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Text="Item: "></Label>
+                <Entry Grid.Row="0" Grid.Column="1" x:Name="inputItem" BackgroundColor="Black" HorizontalOptions="FillAndExpand"></Entry>
+
+                <Label Grid.Row="1" Grid.Column="0" Text="Porção: "></Label>
+                <Entry Grid.Row="1" Grid.Column="1" x:Name="inputPortion" BackgroundColor="Black" HorizontalOptions="FillAndExpand"></Entry>
+
+                <Label Grid.Row="2" Grid.Column="0" Text="Calorias: "></Label>
+                <Entry Grid.Row="2" Grid.Column="1" x:Name="inputCalories" BackgroundColor="Black" HorizontalOptions="FillAndExpand"></Entry>
+
+
+                <Button Grid.Row="3" Grid.ColumnSpan="2" x:Name="BtnConfirmItem" Text="Confirmar item" Clicked="BtnConfirmItem_Clicked"></Button>
+
+            </Grid>
+        </Frame.Content>
+    </Frame>
+</toolkit:Popup>
