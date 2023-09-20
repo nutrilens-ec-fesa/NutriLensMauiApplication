@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NutriLens.Views.MobileManualInputPage"
+             Title="Inserção manual">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackLayout Grid.Row="0" Orientation="Horizontal">
+            <Label Text="Quantidade de itens na refeição: " Padding="20,20,20,20"></Label>
+            <Label Text="{Binding FoodItemsQuantity}" Padding="0,20,0,20"></Label>
+        </StackLayout>
+        <StackLayout Grid.Row="1" Padding="20,0,20,0">
+            <Button Text="Adicionar novo item" Command="{Binding AddNewItemCommand}"></Button>
+        </StackLayout>
+        <StackLayout Grid.Row="2" Padding="0,20,0,0">
+            <ListView ItemsSource="{Binding FoodItems}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <StackLayout Padding="10">
+                                    <Label TextColor="White" Text="{Binding NamePlusPortion}" />
+                                </StackLayout>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+        <StackLayout Grid.Row="3" Orientation="Horizontal" Margin="20,0,20,20">
+            <Label FontSize="Medium" Text="Total de calorias: "></Label>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand">
+                <Label FontSize="Large" Text="{Binding KiloCalories}"></Label>
+                <Label FontSize="Large" Text=" "></Label>
+                <Label FontSize="Large" Text="{Binding EnergeticUnit}"></Label>
+            </StackLayout>
+        </StackLayout>
+        <StackLayout Grid.Row="4" Margin="20,0,20,20">
+            <Button Text="Registrar refeição" Command="{Binding RegisterMealCommand}"></Button>
+        </StackLayout>
+    </Grid>
+</ContentPage>

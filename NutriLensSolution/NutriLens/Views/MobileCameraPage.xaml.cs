@@ -8,7 +8,7 @@ public partial class MobileCameraPage : ContentPage, ICameraPage
 	public MobileCameraPage()
 	{
 		InitializeComponent();
-		BindingContext = new CameraPageVm(Navigation);
+		BindingContext = new CameraPageVm(Navigation, cameraView);
 	}
 
     private void cameraView_CamerasLoaded(object sender, EventArgs e)
@@ -20,6 +20,7 @@ public partial class MobileCameraPage : ContentPage, ICameraPage
             await cameraView.StopCameraAsync();
             await cameraView.StartCameraAsync();
         });
+
     }
 
 }

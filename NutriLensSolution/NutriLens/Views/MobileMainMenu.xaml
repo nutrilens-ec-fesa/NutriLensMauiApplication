@@ -6,10 +6,17 @@
     <ContentPage.Content>
         <StackLayout Spacing="10">
             <Button x:Name="btnTest" Text="Informações do aplicativo" Command="{Binding OpenFlyoutCommand}" />
+            <Label Text="Consumo calórico de hoje:" FontSize="Large" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+            <Label Text="{Binding TodayTotalEnergeticConsumption}" FontSize="Title" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
             <Label Text="Registrar refeição" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
             <Button x:Name="btnCamera" Text="Por foto" Command="{Binding OpenCameraCommand}" />
             <Button x:Name="btnBarCode" Text="Por código de barras" Command="{Binding OpenBarCodeCommand}" />
             <Button x:Name="btnManual" Text="Por inserção manual" Command="{Binding OpenManualInputCommand}" />
+            <Label Text="Consultar histórico" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+            <Button x:Name="btnPerDayHistoric" Text="Por dia" Command="{Binding PerDayHistoricCommand}"/>
+            <Button x:Name="btnPerWeekHistoric" Text="Por semana" Command="{Binding PerWeekHistoricCommand}"/>
+            <Button x:Name="btnPerMonthHistoric" Text="Por mês" Command="{Binding PerMonthHistoricCommand}"/>
+            <Button x:Name="btnPerPeriod" Text="Por período" Command="{Binding PerPeriodHistoricCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

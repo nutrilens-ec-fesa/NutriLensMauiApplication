@@ -3,6 +3,7 @@ using NutriLens.ViewModels;
 using PopupLibrary;
 using PermissionsLibrary;
 using NutriLens.Services;
+using Plugin.Maui.Audio;
 
 namespace NutriLens.Views;
 
