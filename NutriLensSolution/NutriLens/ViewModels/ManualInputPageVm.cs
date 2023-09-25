@@ -6,11 +6,10 @@ using NutriLens.Models;
 using NutriLens.Services;
 using NutriLens.Views.Popups;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 
 namespace NutriLens.ViewModels
 {
-    public partial class ManualInputPageVm : ObservableObject//, INotifyPropertyChanged
+    public partial class ManualInputPageVm : ObservableObject
     {
         private INavigation _navigation;
 
@@ -40,7 +39,7 @@ namespace NutriLens.ViewModels
         {
             _navigation = navigation;
             FoodItems = new ObservableCollection<FoodItem>();
-
+            
             // Mocked FoodItems
             //FoodItems = new ObservableCollection<FoodItem>
             //{

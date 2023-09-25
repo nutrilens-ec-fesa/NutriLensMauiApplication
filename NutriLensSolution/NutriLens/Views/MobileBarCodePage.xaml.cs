@@ -1,9 +1,5 @@
-using Camera.MAUI;
-using NutriLens.Services;
 using NutriLens.ViewInterfaces;
 using NutriLens.ViewModels;
-using Plugin.Maui.Audio;
-using ZXing;
 
 namespace NutriLens.Views;
 

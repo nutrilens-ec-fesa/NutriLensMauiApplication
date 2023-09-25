@@ -15,9 +15,6 @@ public partial class MobileMainMenu : ContentPage, IMainMenuPage
         BindingContext = new MainMenuPageVM(Navigation);
     }
 
-    /// <summary>
-    /// Chama a StartPage no evento de OnAppearing
-    /// </summary>
     protected override async void OnAppearing()
     {
         base.OnAppearing();
