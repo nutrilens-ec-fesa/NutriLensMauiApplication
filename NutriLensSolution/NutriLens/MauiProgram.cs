@@ -52,6 +52,7 @@ namespace NutriLens
             builder.Services.AddSingleton<ICameraPage, MobileCameraPage>();
             builder.Services.AddSingleton<IBarCodePage, MobileBarCodePage>();
             builder.Services.AddSingleton<IManualInputPage, MobileManualInputPage>();
+            builder.Services.AddSingleton<IMealHistoricPage, MobileMealHistoricPage>();
 #elif WINDOWS
 
 #endif
