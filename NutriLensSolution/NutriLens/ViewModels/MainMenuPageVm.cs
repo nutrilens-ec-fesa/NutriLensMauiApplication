@@ -4,8 +4,6 @@ using NutriLens.Entities;
 using NutriLens.Models;
 using NutriLens.Services;
 using NutriLens.ViewInterfaces;
-using Plugin.Maui.Audio;
-using PopupLibrary;
 using System.Reflection;
 
 namespace NutriLens.ViewModels
@@ -13,13 +11,14 @@ namespace NutriLens.ViewModels
     public partial class MainMenuPageVM : ObservableObject
     {
         private INavigation _navigation;
+
         private MealListClass _mealList;
 
         public string TodayTotalEnergeticConsumption
         {
             get
             {
-                _mealList ??= new MealListClass(AppDataHelperClass.GetTodayMeals());
+                _mealList = new MealListClass(AppDataHelperClass.GetTodayMeals());
                 return _mealList.TotalEnergeticConsumption(AppConfigHelperClass.EnergeticUnit);
             }
         }
@@ -56,7 +55,7 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private async Task PerDayHistoric()
         {
-            await ViewServices.PopUpManager.PopInDevelopment(MethodBase.GetCurrentMethod());
+            await _navigation.PushAsync(ViewServices.ResolvePage<IMealHistoricPage>());
         }
 
         [RelayCommand]
@@ -75,6 +74,12 @@ namespace NutriLens.ViewModels
         private async Task PerPeriodHistoric()
         {
             await ViewServices.PopUpManager.PopInDevelopment(MethodBase.GetCurrentMethod());
+        }
+
+        [RelayCommand]
+        private void Appearing()
+        {
+            OnPropertyChanged(nameof(TodayTotalEnergeticConsumption));
         }
     }
 }
