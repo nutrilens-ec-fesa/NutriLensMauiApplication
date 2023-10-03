@@ -12,6 +12,14 @@ namespace NutriLens.Entities
         kJ
     }
 
+    public enum MealHistoryFilter
+    {
+        PerDay,
+        PerWeek,
+        PerMonth,
+        PerPeriod
+    }
+
     internal class EnumeratorsClass
     {
     }

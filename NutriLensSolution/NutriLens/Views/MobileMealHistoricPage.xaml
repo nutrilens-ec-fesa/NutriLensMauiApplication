@@ -4,6 +4,23 @@
              x:Class="NutriLens.Views.MobileMealHistoricPage"
              Title="MobileMealHistoricView">
     <Grid>
-        <Label Text="Histórico por dia" />
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackLayout Grid.Row="0" Padding="0,20,0,20">
+            <ListView ItemsSource="{Binding MealsList}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <StackLayout Padding="10">
+                                    <Label TextColor="White" Text="{Binding MealList}" />
+                                </StackLayout>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
     </Grid>
 </ContentPage>

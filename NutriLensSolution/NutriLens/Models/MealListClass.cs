@@ -6,6 +6,17 @@ namespace NutriLens.Models
     {
         public List<Meal> MealList { get; set; }
 
+        public string MealListInfo
+        {
+            get
+            {
+                if (MealList.DistinctBy(x => x.DateTime.ToShortDateString()).Count() == 1)
+                    return $"{MealList[0].DateTime.ToShortDateString()} {TotalEnergeticConsumption(AppConfigHelperClass.EnergeticUnit)}";
+                else
+                    return "undefined";
+            }
+        }
+
         public MealListClass(List<Meal> mealList)
         {
             MealList = mealList;
