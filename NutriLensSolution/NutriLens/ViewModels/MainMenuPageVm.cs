@@ -55,7 +55,7 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private async Task PerDayHistoric()
         {
-            await _navigation.PushAsync(ViewServices.ResolvePage<IMealHistoricPage>());
+            await _navigation.PushAsync(ViewServices.ResolvePage<IMealHistoricPage>(MealHistoryFilter.PerDay));
         }
 
         [RelayCommand]

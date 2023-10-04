@@ -2,25 +2,31 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NutriLens.Views.MobileMealHistoricPage"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="MobileMealHistoricView">
+    <ContentPage.Behaviors>
+        <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
+        <mct:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
+    </ContentPage.Behaviors>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <StackLayout Grid.Row="0" Padding="0,20,0,20">
-            <ListView ItemsSource="{Binding MealsList}">
+            <ListView ItemsSource="{Binding MealsListString}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View>
-                                <StackLayout Padding="10">
-                                    <Label TextColor="White" Text="{Binding MealList}" />
-                                </StackLayout>
+                                <!--<StackLayout Padding="10" BackgroundColor="Violet">-->
+                                    <Label BackgroundColor="Green" TextColor="Black" Text="{Binding}" />
+                                <!--</StackLayout>-->
                             </ViewCell.View>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <Button Text="Teste" Command="{Binding TestCommand}"></Button>
         </StackLayout>
     </Grid>
 </ContentPage>

@@ -1,31 +1,44 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.Input;
 using NutriLens.Entities;
 using NutriLens.Models;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace NutriLens.ViewModels
 {
-    public partial class MealHistoricPageVm : ObservableObject
+    internal partial class MealHistoricPageVm : INotifyPropertyChanged
     {
         private INavigation _navigation;
         private MealHistoryFilter _mealHistoryFilter;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         private ObservableCollection<MealListClass> MealsList { get; set; }
-        private List<Meal> MealList { get => MealsList[0].MealList; }
+        private ObservableCollection<string> MealsListString { get; set; }
         public MealHistoricPageVm(INavigation navigation, MealHistoryFilter mealHistoryFilter)
         {
             _navigation = navigation;
             _mealHistoryFilter = mealHistoryFilter;
+            MealsListString = new ObservableCollection<string>();
+            MealsList = new ObservableCollection<MealListClass>();
+        }
 
-            List<MealListClass> mealLists = new List<MealListClass>();
+        [RelayCommand]
+        private void Appearing()
+        {
+            List<Meal> meals;
 
-            List<Meal> meals = new List<Meal>();
-
-            switch (mealHistoryFilter)
+            switch (_mealHistoryFilter)
             {
                 case MealHistoryFilter.PerDay:
                     meals = AppDataHelperClass.GetAllMeals();
 
-                    DateTime lastDateTime = DateTime.Now;
+                    DateTime lastDateTime = DateTime.MinValue;
 
                     foreach (Meal meal in meals.OrderByDescending(x => x.DateTime))
                     {
@@ -46,6 +59,18 @@ namespace NutriLens.ViewModels
                 case MealHistoryFilter.PerPeriod:
                     break;
             }
+
+            foreach (MealListClass meal in MealsList)
+            {
+                MealsListString.Add(meal.MealListInfo);
+                OnPropertyChanged(nameof(MealsListString));
+            }
+        }
+
+        [RelayCommand]
+        private void Test()
+        {
+            OnPropertyChanged(nameof(MealsListString));
         }
     }
 }
