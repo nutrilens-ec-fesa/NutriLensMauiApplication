@@ -17,5 +17,10 @@ namespace NutriLens.Models
         public string KiloCalorieInfo { get => $"{KiloCalories} {Constants.kcalUnit}"; }
         [JsonIgnore]
         public string KiloJoulesInfo { get => $"{KiloCalories * Constants.kcalToKJFactor} {Constants.kJUnit}"; }
+
+        public override string ToString()
+        {
+            return $"{Name} - {Portion} - {KiloCalorieInfo}";
+        }
     }
 }
