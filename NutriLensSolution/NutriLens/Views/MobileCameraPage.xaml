@@ -6,14 +6,17 @@
              Title="MobileCameraPage">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="90*"></RowDefinition>
             <RowDefinition Height="10*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <StackLayout Grid.Row="0">
             <cv:CameraView x:Name="cameraView" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" CamerasLoaded="cameraView_CamerasLoaded"></cv:CameraView>
+            <StackLayout Padding="10" BackgroundColor="DodgerBlue" IsVisible="{Binding TakenPictureVisible}">
+                <Image x:Name="takenPicture" Source="{Binding TakenPictureSource}" Aspect="AspectFill"></Image>
+            </StackLayout>
         </StackLayout>
         <StackLayout Grid.Row="1">
-            <Button Text="Capturar"></Button>
+            <Button Text="Capturar" Command="{Binding TakePictureCommand}"></Button>
         </StackLayout>
     </Grid>
 </ContentPage>

@@ -9,6 +9,9 @@ namespace NutriLens.ViewModels
         private INavigation _navigation;
         private CameraView _camera;
 
+        public ImageSource TakenPictureSource { get; set; }
+        public bool TakenPictureVisible { get; set; }
+
         public CameraPageVm(INavigation navigation, CameraView camera) 
         {
             _navigation = navigation;
@@ -18,7 +21,35 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private void TakePicture()
         {
-            ImageSource photo = _camera.SnapShot;
+            if (TakenPictureVisible)
+            {
+
+                TakenPictureVisible = false;
+                OnPropertyChanged(nameof(TakenPictureVisible));
+
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    _camera.IsVisible = true;
+                    //await Task.Delay(200);
+                    //await _camera.StopCameraAsync();
+                    //await _camera.StartCameraAsync();
+                });
+            }
+            else
+            {
+                TakenPictureSource = _camera.GetSnapShot(Camera.MAUI.ImageFormat.PNG);
+                OnPropertyChanged(nameof(TakenPictureSource));
+
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    //await _camera.StopCameraAsync();
+                    //await Task.Delay(200);
+                    _camera.IsVisible = false;
+                });
+
+                TakenPictureVisible = true;
+                OnPropertyChanged(nameof(TakenPictureVisible));
+            }
         }
     }
 }

@@ -20,7 +20,6 @@ public partial class MobileCameraPage : ContentPage, ICameraPage
             await cameraView.StopCameraAsync();
             await cameraView.StartCameraAsync();
         });
-
     }
 
 }
