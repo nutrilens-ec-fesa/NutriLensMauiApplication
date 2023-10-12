@@ -20,7 +20,7 @@ namespace NutriLens.Models
 
         public override string ToString()
         {
-            return $"{Name} - {Portion} - {KiloCalorieInfo}";
+            return $"{Name}{(string.IsNullOrEmpty(Portion) ? string.Empty : $" - {Portion}")} - {KiloCalorieInfo}";
         }
     }
 }
