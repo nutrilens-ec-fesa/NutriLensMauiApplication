@@ -1,10 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using Amazon.Runtime.SharedInterfaces;
+using MongoDB.Bson;
+using Newtonsoft.Json;
 using NutriLens.Entities;
 
 namespace NutriLens.Models
 {
     public class FoodItem
     {
+        public BsonObjectId Id { get; set; }
         public string Name { get; set; }
         public string Portion { get; set; }
         public double KiloCalories { get; set; }
