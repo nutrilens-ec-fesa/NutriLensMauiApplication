@@ -118,6 +118,47 @@ namespace NutriLens.Entities
             }
         }
 
+        public static string UploadImage(string imagePath)
+        {
+            var dbName = "NutriLensDtb";
+            var collectionName = "TestCollection";
+
+            IMongoClient client;
+
+            IMongoCollection<MongoImage> collection;
+
+            try
+            {
+                client = new MongoClient(_connectionUri);
+            }
+            catch (Exception ex)
+            {
+                return "There was a problem connecting to your " +
+                    "Atlas cluster. Check that the URI includes a valid " +
+                    "username and password, and that your IP address is " +
+                    $"in the Access List. Message: {ex.Message}";
+            }
+
+            collection = client
+                .GetDatabase(dbName)
+                .GetCollection<MongoImage>(collectionName);
+
+            try
+            {
+                collection.InsertOne(new MongoImage
+                {
+                    ImageBytes = File.ReadAllBytes(imagePath)
+                });
+
+                return "Inserção realizada com sucesso!";
+            }
+            catch (Exception e)
+            {
+                return $"Something went wrong trying to insert the new documents." +
+                    $" Message: {e.Message}";
+            }
+        }
+
         public static string GetNutritionalInfo(FoodItem foodItem)
         {
             OpenAiInputModel openAiInputModel = new()
