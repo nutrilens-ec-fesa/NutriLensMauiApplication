@@ -56,10 +56,15 @@
             {
                 string parametersUrl = "/";
 
-                foreach (string param in Parameters)
+                if (Parameters != null)
                 {
-                    parametersUrl += param + "/";
+                    foreach (string param in Parameters)
+                    {
+                        parametersUrl += param + "/";
+                    }
                 }
+                else
+                    return string.Empty;
 
                 return parametersUrl;
             }
