@@ -1,5 +1,6 @@
 ﻿using Camera.MAUI;
 using Camera.MAUI.ZXingHelper;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using ZXing;
