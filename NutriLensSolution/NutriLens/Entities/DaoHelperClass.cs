@@ -10,7 +10,7 @@ namespace NutriLens.Entities
             OpenAiInputModel openAiInputModel = new()
             {
                 SystemPrompt = "Be direct. Answer only the nutritional info in json format including units. Consider the average size/type.",
-                UserPrompt = foodItem.ToString(),
+                UserPrompt = foodItem.GptQueryString,
                 Temperature = 1,
                 TopP = 1,
                 FrequencyPenalty = 0,

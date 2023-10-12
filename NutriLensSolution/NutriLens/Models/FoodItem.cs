@@ -17,6 +17,8 @@ namespace NutriLens.Models
         public string KiloCalorieInfo { get => $"{KiloCalories} {Constants.kcalUnit}"; }
         [JsonIgnore]
         public string KiloJoulesInfo { get => $"{KiloCalories * Constants.kcalToKJFactor} {Constants.kJUnit}"; }
+        [JsonIgnore]
+        public string GptQueryString { get => $"{Name}{(string.IsNullOrEmpty(Portion) ? string.Empty : $" - {Portion}")}"; }
 
         public override string ToString()
         {
