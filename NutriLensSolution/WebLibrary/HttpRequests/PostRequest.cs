@@ -5,7 +5,7 @@ namespace WebLibrary.HttpRequests
     public class PostRequest : HttpRequest
     {
         public object Body { get; set; }
-        public string JsonBody { get => JsonConvert.SerializeObject(Body); }
+        public string JsonBody { get => JsonConvert.SerializeObject(Body, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }); }
 
         public PostRequest(string url, string controller) : base(url, controller)
         {
