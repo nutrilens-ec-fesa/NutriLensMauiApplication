@@ -22,6 +22,8 @@
             <Button x:Name="btnPerWeekHistoric" Text="Por semana" Command="{Binding PerWeekHistoricCommand}"/>
             <Button x:Name="btnPerMonthHistoric" Text="Por mês" Command="{Binding PerMonthHistoricCommand}"/>
             <Button x:Name="btnPerPeriod" Text="Por período" Command="{Binding PerPeriodHistoricCommand}"/>
+            <Label Text="Consultar fotos" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+            <Button x:Name="btnOpenGallery" Text="Galeria" Command="{Binding OpenGalleryCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

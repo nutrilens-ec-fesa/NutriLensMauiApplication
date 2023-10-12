@@ -62,18 +62,22 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private async Task PerWeekHistoric()
         {
+            // Teste de consulta com o ChatGPT
             try
             {
                 string input = await ViewServices.PopUpManager.PopFreeInputAsync("Teste GPT", "Informe o alimento");
 
-                FoodItem foodItem = new()
+                if (!string.IsNullOrEmpty(input))
                 {
-                    Name = input
-                };
+                    FoodItem foodItem = new()
+                    {
+                        Name = input
+                    };
 
-                string nutritionalInfo = DaoHelperClass.GetNutritionalInfo(foodItem);
+                    string nutritionalInfo = DaoHelperClass.GetNutritionalInfo(foodItem);
 
-                await ViewServices.PopUpManager.PopInfoAsync(nutritionalInfo);
+                    await ViewServices.PopUpManager.PopInfoAsync(nutritionalInfo);
+                }
             }
             catch(Exception ex)
             {
@@ -84,13 +88,27 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private async Task PerMonthHistoric()
         {
-            await ViewServices.PopUpManager.PopInDevelopment(MethodBase.GetCurrentMethod());
+            try
+            {
+                // Teste de conexão com o mongo
+                await ViewServices.PopUpManager.PopInfoAsync(DaoHelperClass.MongoDbPingTest());
+            }
+            catch(Exception ex)
+            {
+                await ViewServices.PopUpManager.PopErrorAsync(ex.Message);
+            }
         }
 
         [RelayCommand]
         private async Task PerPeriodHistoric()
         {
-            await ViewServices.PopUpManager.PopInDevelopment(MethodBase.GetCurrentMethod());
+            await ViewServices.PopUpManager.PopInDevelopment();
+        }
+
+        [RelayCommand]
+        private async Task OpenGallery()
+        {
+            await _navigation.PushAsync(ViewServices.ResolvePage<IPicturesGridPage>());
         }
 
         [RelayCommand]
