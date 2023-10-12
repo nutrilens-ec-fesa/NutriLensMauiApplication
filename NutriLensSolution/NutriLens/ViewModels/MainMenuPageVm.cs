@@ -4,6 +4,7 @@ using NutriLens.Entities;
 using NutriLens.Models;
 using NutriLens.Services;
 using NutriLens.ViewInterfaces;
+using NutriLens.Views;
 using System.Reflection;
 
 namespace NutriLens.ViewModels
@@ -37,7 +38,7 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private async Task OpenCamera()
         {
-            await _navigation.PushAsync(ViewServices.ResolvePage<ICameraPage>());
+            await _navigation.PushAsync(new MobileCameraPageV2());
         }
 
         [RelayCommand]
@@ -61,7 +62,23 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private async Task PerWeekHistoric()
         {
-            await ViewServices.PopUpManager.PopInDevelopment(MethodBase.GetCurrentMethod());
+            try
+            {
+                string input = await ViewServices.PopUpManager.PopFreeInputAsync("Teste GPT", "Informe o alimento");
+
+                FoodItem foodItem = new()
+                {
+                    Name = input
+                };
+
+                string nutritionalInfo = DaoHelperClass.GetNutritionalInfo(foodItem);
+
+                await ViewServices.PopUpManager.PopInfoAsync(nutritionalInfo);
+            }
+            catch(Exception ex)
+            {
+                await ViewServices.PopUpManager.PopErrorAsync(ex.Message);
+            }
         }
 
         [RelayCommand]
