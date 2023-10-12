@@ -1,6 +1,7 @@
 ﻿using Camera.MAUI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using NutriLens.Services;
 
 namespace NutriLens.ViewModels
 {
@@ -38,6 +39,7 @@ namespace NutriLens.ViewModels
             else
             {
                 TakenPictureSource = _camera.GetSnapShot(Camera.MAUI.ImageFormat.PNG);
+                _camera.SaveSnapShot(Camera.MAUI.ImageFormat.PNG, Path.Combine(FileSystem.AppDataDirectory, "testimg.png"));
                 OnPropertyChanged(nameof(TakenPictureSource));
 
                 MainThread.BeginInvokeOnMainThread(async () =>
@@ -50,6 +52,27 @@ namespace NutriLens.ViewModels
                 TakenPictureVisible = true;
                 OnPropertyChanged(nameof(TakenPictureVisible));
             }
+        }
+
+        [RelayCommand]
+        private void TakeAnother()
+        {
+            TakePicture();
+        }
+
+        [RelayCommand]
+        private async void ConfirmPicture()
+        {
+            await ViewServices.PopUpManager.PopInfoAsync("Foto registrada com sucesso!");
+
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await _camera.StopCameraAsync();
+                //await Task.Delay(200);
+                _camera.IsVisible = true;
+            });
+
+            await _navigation.PopAsync();
         }
     }
 }

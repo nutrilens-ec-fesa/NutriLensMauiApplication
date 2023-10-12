@@ -3,20 +3,35 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NutriLens.Views.MobileCameraPage"
              xmlns:cv="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
+             xmlns:xct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="MobileCameraPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <xct:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="90*"></RowDefinition>
             <RowDefinition Height="10*"></RowDefinition>
         </Grid.RowDefinitions>
         <StackLayout Grid.Row="0">
-            <cv:CameraView x:Name="cameraView" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" CamerasLoaded="cameraView_CamerasLoaded"></cv:CameraView>
+            <cv:CameraView x:Name="cameraView" 
+                           HorizontalOptions="FillAndExpand" 
+                           VerticalOptions="FillAndExpand" 
+                           CamerasLoaded="cameraView_CamerasLoaded"
+                           AutoSnapShotAsImageSource="True" 
+                           AutoSnapShotFormat="PNG"
+                           FlashMode="Enabled"
+                           ></cv:CameraView>
             <StackLayout Padding="10" BackgroundColor="DodgerBlue" IsVisible="{Binding TakenPictureVisible}">
-                <Image x:Name="takenPicture" Source="{Binding TakenPictureSource}" Aspect="AspectFill"></Image>
+                <Image x:Name="takenPicture" Source="{Binding TakenPictureSource}" HeightRequest="200" WidthRequest="200" Aspect="AspectFill" />
             </StackLayout>
         </StackLayout>
-        <StackLayout Grid.Row="1">
-            <Button Text="Capturar" Command="{Binding TakePictureCommand}"></Button>
+        <StackLayout Grid.Row="1" Orientation="Horizontal" Spacing="20" HorizontalOptions="FillAndExpand">
+            <Button IsVisible="{Binding TakenPictureVisible, Converter={StaticResource InvertedBoolConverter}}" Text="Capturar" Command="{Binding TakePictureCommand}" HorizontalOptions="FillAndExpand"></Button>
+            <Button IsVisible="{Binding TakenPictureVisible}" Text="Tirar outra" Command="{Binding TakeAnotherCommand}" HorizontalOptions="FillAndExpand"></Button>
+            <Button IsVisible="{Binding TakenPictureVisible}" Text="Confirmar" Command="{Binding ConfirmPictureCommand}" HorizontalOptions="FillAndExpand"></Button>
         </StackLayout>
     </Grid>
 </ContentPage>

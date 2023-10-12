@@ -17,6 +17,7 @@ public partial class MobileCameraPage : ContentPage, ICameraPage
 
         MainThread.BeginInvokeOnMainThread(async () =>
         {
+            cameraView.ZoomFactor = 0;
             await cameraView.StopCameraAsync();
             await cameraView.StartCameraAsync();
         });
