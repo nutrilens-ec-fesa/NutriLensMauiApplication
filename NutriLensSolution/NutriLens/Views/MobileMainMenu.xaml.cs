@@ -40,6 +40,10 @@ public partial class MobileMainMenu : ContentPage, IMainMenuPage
         string requiredPermissionTitle = "Permissão necessária";
 
         neededPermissions.Add(new(PermissionType.Câmera, requiredPermissionTitle, "Para utilizar a visão computacional do NutriLens, precisamos de acesso a câmera durante a execução do aplicativo."));
+        neededPermissions.Add(new(PermissionType.StorageWrite, requiredPermissionTitle, "Para salvar as fotos da sua alimentação, precisamos da permissão de escrita no seu dispositivo"));
+        neededPermissions.Add(new(PermissionType.StorageRead, requiredPermissionTitle, "Para resgatar seus dados da aplicação, precisamos de acesso a leitura dos dados do dispositivo"));
+        neededPermissions.Add(new(PermissionType.Photos, requiredPermissionTitle, "Para salvar e resgatar as fotos da sua alimentação, precisamos de acesso as fotos do dispositivo")); 
+        neededPermissions.Add(new(PermissionType.Microfone, requiredPermissionTitle, "Para o teste de gravar vídeos, precisamos de acesso ao microfone"));
 
         ViewServices.PermissionManager.SetNeededPermissions(neededPermissions);
         ViewServices.PermissionManager.EventInfoMessage += PermissionManager_EventInfoMessage;
