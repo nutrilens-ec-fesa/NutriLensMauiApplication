@@ -102,7 +102,7 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private async Task PerPeriodHistoric()
         {
-            await ViewServices.PopUpManager.PopInDevelopment();
+            await ViewServices.PopUpManager.PopInDevelopment(MethodBase.GetCurrentMethod());
         }
 
         [RelayCommand]
