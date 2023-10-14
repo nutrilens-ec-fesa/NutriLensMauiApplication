@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NutriLens.Views.MobileMealHistoricPage"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             Title="MobileMealHistoricView">
+             Title="{Binding HistoricPageName}">
     <ContentPage.Behaviors>
         <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
         <mct:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
@@ -19,14 +19,13 @@
                         <ViewCell>
                             <ViewCell.View>
                                 <!--<StackLayout Padding="10" BackgroundColor="Violet">-->
-                                    <Label BackgroundColor="Green" TextColor="Black" Text="{Binding}" />
+                                    <Label Padding="20,5,0,0" FontSize="Large" TextColor="White" Text="{Binding}" />
                                 <!--</StackLayout>-->
                             </ViewCell.View>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Button Text="Teste" Command="{Binding TestCommand}"></Button>
         </StackLayout>
     </Grid>
 </ContentPage>
