@@ -6,12 +6,22 @@ namespace NutriLens.Models
     {
         public List<Meal> MealList { get; set; }
 
-        public string MealListInfo
+        public string MealListDailyInfo
         {
             get
             {
                 if (MealList.DistinctBy(x => x.DateTime.ToShortDateString()).Count() == 1)
-                    return $"{MealList[0].DateTime.ToShortDateString()} {TotalEnergeticConsumption(AppConfigHelperClass.EnergeticUnit)}";
+                    return $"{MealList[0].DateTime.ToShortDateString()} - {TotalEnergeticConsumption(AppConfigHelperClass.EnergeticUnit)}";
+                else
+                    return "undefined";
+            }
+        }
+        public string MealListMonthlyInfo
+        {
+            get
+            {
+                if (MealList.DistinctBy(x => x.DateTime.Month).Count() == 1)
+                    return $"{MealList[0].DateTime.Month}/{MealList[0].DateTime.Year} - {TotalEnergeticConsumption(AppConfigHelperClass.EnergeticUnit)}";
                 else
                     return "undefined";
             }
@@ -24,9 +34,18 @@ namespace NutriLens.Models
 
         public string TotalEnergeticConsumption(EnergeticUnit energeticUnit)
         {
-            double totalCalories = MealList
-                .SelectMany(meal => meal.FoodItems)
-                .Sum(foodItem => foodItem.KiloCalories);
+            double totalCalories;
+
+            try
+            {
+                totalCalories = MealList
+                    .SelectMany(meal => meal.FoodItems)
+                    .Sum(foodItem => foodItem.KiloCalories);
+            }
+            catch
+            {
+                totalCalories = 0;
+            }
 
             return energeticUnit switch
             {
