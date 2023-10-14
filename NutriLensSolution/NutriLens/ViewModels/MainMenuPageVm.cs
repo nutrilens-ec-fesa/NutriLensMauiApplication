@@ -1,5 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Extensions;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.ApplicationModel;
 using NutriLens.Entities;
 using NutriLens.Models;
 using NutriLens.Services;
@@ -27,6 +29,7 @@ namespace NutriLens.ViewModels
         public MainMenuPageVM(INavigation navigation)
         {
             _navigation = navigation;
+            Application.Current.UserAppTheme = AppTheme.Dark;
         }
 
         [RelayCommand]
@@ -62,41 +65,35 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private async Task PerWeekHistoric()
         {
+            await ViewServices.PopUpManager.PopInDevelopment(MethodBase.GetCurrentMethod());
+            //await _navigation.PushAsync(ViewServices.ResolvePage<IMealHistoricPage>(MealHistoryFilter.PerWeek));
             // Teste de consulta com o ChatGPT
-            try
-            {
-                string input = await ViewServices.PopUpManager.PopFreeInputAsync("Teste GPT", "Informe o alimento");
+            //try
+            //{
+            //    string input = await ViewServices.PopUpManager.PopFreeInputAsync("Teste GPT", "Informe o alimento");
 
-                if (!string.IsNullOrEmpty(input))
-                {
-                    FoodItem foodItem = new()
-                    {
-                        Name = input
-                    };
+            //    if (!string.IsNullOrEmpty(input))
+            //    {
+            //        FoodItem foodItem = new()
+            //        {
+            //            Name = input
+            //        };
 
-                    string nutritionalInfo = DaoHelperClass.GetNutritionalInfo(foodItem);
+            //        string nutritionalInfo = DaoHelperClass.GetNutritionalInfo(foodItem);
 
-                    await ViewServices.PopUpManager.PopInfoAsync(nutritionalInfo);
-                }
-            }
-            catch(Exception ex)
-            {
-                await ViewServices.PopUpManager.PopErrorAsync(ex.Message);
-            }
+            //        await ViewServices.PopUpManager.PopInfoAsync(nutritionalInfo);
+            //    }
+            //}
+            //catch(Exception ex)
+            //{
+            //    await ViewServices.PopUpManager.PopErrorAsync(ex.Message);
+            //}
         }
 
         [RelayCommand]
         private async Task PerMonthHistoric()
         {
-            try
-            {
-                // Teste de conexão com o mongo
-                await ViewServices.PopUpManager.PopInfoAsync(DaoHelperClass.MongoDbPingTest());
-            }
-            catch(Exception ex)
-            {
-                await ViewServices.PopUpManager.PopErrorAsync(ex.Message);
-            }
+            await _navigation.PushAsync(ViewServices.ResolvePage<IMealHistoricPage>(MealHistoryFilter.PerMonth));
         }
 
         [RelayCommand]
