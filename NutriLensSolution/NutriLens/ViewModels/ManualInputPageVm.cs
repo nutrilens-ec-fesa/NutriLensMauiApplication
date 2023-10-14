@@ -1,11 +1,14 @@
 ﻿using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MongoDB.Bson.IO;
 using NutriLens.Entities;
 using NutriLens.Models;
 using NutriLens.Services;
 using NutriLens.Views.Popups;
 using System.Collections.ObjectModel;
+using Newtonsoft.Json;
+using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace NutriLens.ViewModels
 {
@@ -23,9 +26,9 @@ namespace NutriLens.ViewModels
                 OnPropertyChanged(nameof(FoodItems));
             }
         }
-        
-        public int FoodItemsQuantity  => FoodItems.Count; 
-        public double KiloCalories => FoodItems.Sum(x => x.KiloCalories); 
+
+        public int FoodItemsQuantity => FoodItems.Count;
+        public double KiloCalories => FoodItems.Sum(x => x.KiloCalories);
         public string EnergeticUnit => AppConfigHelperClass.EnergeticUnit.ToString();
 
         //public event PropertyChangedEventHandler PropertyChanged;
@@ -39,7 +42,7 @@ namespace NutriLens.ViewModels
         {
             _navigation = navigation;
             FoodItems = new ObservableCollection<FoodItem>();
-            
+
             // Mocked FoodItems
             //FoodItems = new ObservableCollection<FoodItem>
             //{
@@ -57,12 +60,22 @@ namespace NutriLens.ViewModels
 
             if (addFoodItemPopup.Confirmed)
             {
-                FoodItems.Add(new()
-                { 
+                FoodItem foodItem = new()
+                {
                     Name = addFoodItemPopup.InputItem,
                     Portion = addFoodItemPopup.InputPortion,
                     KiloCalories = addFoodItemPopup.InputCalories
-                });
+                };
+
+                // Se não informou as calorias
+                if (addFoodItemPopup.InputCalories == -1)
+                {
+                    string gptJson = DaoHelperClass.GetNutritionalInfo(foodItem);
+                    GptNutritionalInfo gptNutritionalInfo = JsonConvert.DeserializeObject<GptNutritionalInfo>(gptJson);
+                    foodItem.KiloCalories = gptNutritionalInfo.CaloriesValue;
+                }
+
+                FoodItems.Add(foodItem);
 
                 OnPropertyChanged(nameof(FoodItemsQuantity));
                 OnPropertyChanged(nameof(KiloCalories));
@@ -72,7 +85,7 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         public async Task RegisterMeal()
         {
-            if(FoodItemsQuantity == 0)
+            if (FoodItemsQuantity == 0)
             {
                 await ViewServices.PopUpManager.PopErrorAsync("Não foi inserido nenhum item na refeição. Para registrar a refeição, por favor insira um ou mais itens.");
                 return;
