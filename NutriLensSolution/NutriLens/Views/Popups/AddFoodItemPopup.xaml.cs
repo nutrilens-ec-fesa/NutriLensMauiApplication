@@ -11,7 +11,7 @@ public partial class AddFoodItemPopup : Popup
 
     public string InputItem { get => inputItem.Text; }
     public string InputPortion { get => inputPortion.Text; }
-    public double InputCalories { get => double.Parse(inputCalories.Text); }
+    public double InputCalories { get => string.IsNullOrEmpty(inputCalories.Text) ? -1 : double.Parse(inputCalories.Text); }
 
     public AddFoodItemPopup()
     {
