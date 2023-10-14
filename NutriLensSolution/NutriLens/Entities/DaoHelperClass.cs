@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using FluentFTP.Helpers;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using NutriLens.Models;
 using static NutriLens.Entities.OpenAiEntity;
@@ -147,6 +148,7 @@ namespace NutriLens.Entities
             {
                 collection.InsertOne(new MongoImage
                 {
+                    FileName = Path.GetFileName(imagePath),
                     ImageBytes = File.ReadAllBytes(imagePath)
                 });
 
@@ -159,11 +161,60 @@ namespace NutriLens.Entities
             }
         }
 
+        public static string DownloadImages(string downloadDirectory)
+        {
+            var dbName = "NutriLensDtb";
+            var collectionName = "TestCollection";
+
+            IMongoClient client;
+
+            IMongoCollection<MongoImage> collection;
+
+            try
+            {
+                client = new MongoClient(_connectionUri);
+            }
+            catch (Exception ex)
+            {
+                return "There was a problem connecting to your " +
+                    "Atlas cluster. Check that the URI includes a valid " +
+                    "username and password, and that your IP address is " +
+                    $"in the Access List. Message: {ex.Message}";
+            }
+
+            collection = client
+                .GetDatabase(dbName)
+                .GetCollection<MongoImage>(collectionName);
+
+            try
+            {
+                var allDocs = collection.Find(Builders<MongoImage>.Filter.Empty)
+                .ToList();
+
+                string returnString = string.Empty;
+
+                foreach (MongoImage mongoImage in allDocs)
+                {
+                    if (!string.IsNullOrEmpty(mongoImage.FileName) && !File.Exists(Path.Combine(downloadDirectory, mongoImage.FileName)))
+                    {
+                        File.WriteAllBytes(Path.Combine(downloadDirectory, mongoImage.FileName), mongoImage.ImageBytes);
+                    }
+                }
+
+                return returnString;
+            }
+            catch (Exception e)
+            {
+                return $"Something went wrong trying to insert the new documents." +
+                    $" Message: {e.Message}";
+            }
+        }
+
         public static string GetNutritionalInfo(FoodItem foodItem)
         {
             OpenAiInputModel openAiInputModel = new()
             {
-                SystemPrompt = "Be direct. Answer only the nutritional info in json format including units. Consider the average size/type.",
+                SystemPrompt = "Be direct. Answer only the nutritional info in json format. Always with units. Consider the average size/type.",
                 UserPrompt = foodItem.GptQueryString,
                 Temperature = 1,
                 TopP = 1,
