@@ -145,11 +145,11 @@ namespace NutriLens.ViewModels
                 AutoStartPreview = false;
                 OnPropertyChanged(nameof(AutoStartPreview));
             });
-            TakeSnapshotCmd = new Command(() =>
-            {
-                TakeSnapshot = false;
-                TakeSnapshot = true;
-            });
+            //TakeSnapshotCmd = new Command(() =>
+            //{
+            //    TakeSnapshot = false;
+            //    TakeSnapshot = true;
+            //});
 #if IOS
         RecordingFile = Path.Combine(FileSystem.Current.CacheDirectory, "Video.mov");
 #else

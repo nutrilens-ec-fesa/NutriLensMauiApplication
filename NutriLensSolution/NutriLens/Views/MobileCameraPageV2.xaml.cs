@@ -1,41 +1,84 @@
-using CommunityToolkit.Mvvm.Input;
+using AndroidX.AppCompat.App;
 using NutriLens.Entities;
 using NutriLens.Services;
-using static Microsoft.Maui.ApplicationModel.Permissions;
+using ExceptionLibrary; 
 
 namespace NutriLens.Views;
 
 public partial class MobileCameraPageV2 : ContentPage
 {
-	public MobileCameraPageV2()
-	{
-		InitializeComponent();
-	}
+    public MobileCameraPageV2()
+    {
+        InitializeComponent();
+    }
 
     private async void BtnSavePicture_Clicked(object sender, EventArgs e)
     {
-        if (cameraView.SnapShot != null)
+        try
         {
-            DateTime dateTimeNow = DateTime.Now;
+            if (EntitiesHelperClass.HasTempPicture)
+            {
+                byte[] img = File.ReadAllBytes(Path.Combine(FileSystem.AppDataDirectory, EntitiesHelperClass.GetTempPicture()));
 
-            // Template de arquivo: nlpYYYYMMDDHHmmss.png
-            string fileName = $"nlp{dateTimeNow.Year:D4}{dateTimeNow.Month:D2}{dateTimeNow.Day:D2}{dateTimeNow.Hour:D2}{dateTimeNow.Minute:D2}{dateTimeNow.Day:D2}.png";
+                string filePath = NewPictureFilePath();
 
-            // Obter o ImagePath
-            string filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
+                File.WriteAllBytes(filePath, img);
 
-            await cameraView.SaveSnapShot(Camera.MAUI.ImageFormat.PNG, Path.Combine(FileSystem.AppDataDirectory, fileName));
 
-            await ViewServices.PopUpManager.PopInfoAsync($"Imagem '{fileName}' salva com sucesso!");
+                EntitiesHelperClass.ShowLoading("Sincronizando imagem na nuvem...");
 
-            // Chama a função de upload com o caminho da imagem
-            string resultadoUpload = DaoHelperClass.UploadImage(filePath);
+                string resultadoUpload = string.Empty;
 
-            await ViewServices.PopUpManager.PopInfoAsync($"Imagem '{resultadoUpload}' salva no MongoDB!");
+                // Chama a função de upload com o caminho da imagem
+                await Task.Run(() => resultadoUpload = DaoHelperClass.UploadImage(filePath));
 
-            await Navigation.PopAsync();
+                await ViewServices.PopUpManager.PopInfoAsync($"Imagem '{Path.GetFileName(filePath)}' salva com sucesso!");
+
+                EntitiesHelperClass.CloseLoading();
+
+                EntitiesHelperClass.DeleteTempPictures();
+
+                await Navigation.PopAsync();
+            }
+            else
+                await ViewServices.PopUpManager.PopErrorAsync("Tire uma foto antes de poder salvar!");
         }
-        else
-            await ViewServices.PopUpManager.PopErrorAsync("Tire uma foto antes de poder salvar!");
+        catch(Exception ex)
+        {
+            await ViewServices.PopUpManager.PopErrorAsync("Houve algum erro para salvar a foto.\n\n" + ExceptionManager.ExceptionMessage(ex));
+        }
+    }
+
+    private async void BtnTakeSnapshot_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+            ImgTakenSnapShot.Source = null;
+
+            EntitiesHelperClass.DeleteTempPictures();
+
+            string tempPictureFilePath = NewTempPictureFilePath();
+
+            await cameraView.SaveSnapShot(Camera.MAUI.ImageFormat.PNG, tempPictureFilePath);
+
+            ImgTakenSnapShot.Source = tempPictureFilePath;
+        }
+        catch(Exception ex)
+        {
+            await ViewServices.PopUpManager.PopErrorAsync("Houve algum erro para tirar a foto.\n\n" + ExceptionManager.ExceptionMessage(ex));
+        }
+    }
+
+    private string NewPictureFilePath()
+    {
+        DateTime dateTimeNow = DateTime.Now;
+        string fileName = $"nlp{dateTimeNow.Year:D4}{dateTimeNow.Month:D2}{dateTimeNow.Day:D2}{dateTimeNow.Hour:D2}{dateTimeNow.Minute:D2}{dateTimeNow.Day:D2}.png";
+        return Path.Combine(FileSystem.AppDataDirectory, fileName);
+    }
+
+    private string NewTempPictureFilePath()
+    {
+        string fileName = $"nlpTemp{DateTime.Now.Ticks}.png";
+        return Path.Combine(FileSystem.AppDataDirectory, fileName);
     }
 }

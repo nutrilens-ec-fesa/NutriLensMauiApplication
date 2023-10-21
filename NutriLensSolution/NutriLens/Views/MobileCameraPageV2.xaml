@@ -27,7 +27,8 @@
                         <CheckBox BindingContext="{x:Reference cameraView}" VerticalOptions="Center" Color="Black" IsChecked="{Binding TorchEnabled}"/>
                     </HorizontalStackLayout>
                     <Stepper HorizontalOptions="Center" BindingContext="{x:Reference cameraView}" Minimum="{Binding MinZoomFactor}" Maximum="7" Increment="0.5" Value="{Binding ZoomFactor,Mode=TwoWay}"/>
-                    <Button Margin="0,20,0,0" VerticalOptions="End" HorizontalOptions="Center" Text="Capturar" Command="{Binding TakeSnapshotCmd}"/>
+                    <Button x:Name="BtnTakeSnapshot" Margin="0,20,0,0" VerticalOptions="End" HorizontalOptions="Center" Text="Capturar" Clicked="BtnTakeSnapshot_Clicked"></Button>
+                            <!--Command="{Binding TakeSnapshotCmd}"/>-->
                 </VerticalStackLayout>
 
                 <HorizontalStackLayout IsVisible="False" HorizontalOptions="Center" Margin="5">
@@ -58,7 +59,7 @@
                     <Button Text="Stop Record" Command="{Binding StopRecording}" />
                 </HorizontalStackLayout>
                 <Label IsVisible="False" Text="{Binding BarcodeText}" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center" />
-                <Image BindingContext="{x:Reference cameraView}" Source="{Binding SnapShot}" Aspect="AspectFill" WidthRequest="250" HeightRequest="200" HorizontalOptions="Center" />
+                <Image x:Name="ImgTakenSnapShot" BindingContext="{x:Reference cameraView}" Aspect="AspectFill" WidthRequest="250" HeightRequest="200" HorizontalOptions="Center" />
                 <!--<toolkit:MediaElement Source="{Binding VideoSource}" ShouldAutoPlay="False" ShouldShowPlaybackControls="True" HeightRequest="300" WidthRequest="200" />-->
             </VerticalStackLayout>
 
