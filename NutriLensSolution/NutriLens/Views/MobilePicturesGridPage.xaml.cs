@@ -1,3 +1,4 @@
+using ExceptionLibrary;
 using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Handlers;
 using NutriLens.Entities;
@@ -17,11 +18,11 @@ public partial class MobilePicturesGridPage : ContentPage, IPicturesGridPage
     {
         string[] files = Directory.GetFiles(FileSystem.AppDataDirectory);
 
-        string[] localPictures = files.Where(x => x.EndsWith(".png")).ToArray();
+        string[] localPictures = files.Where(x => x.EndsWith(".png") && !x.Contains("Temp")).ToArray();
 
         int childrenIndex = 0;
 
-        gridPictures.Children.Insert(childrenIndex++, new Label { Text = "Imagens no dispositivo", HorizontalOptions = LayoutOptions.Center });
+        gridPictures.Children.Insert(childrenIndex++, new Label { Text = "Imagens no dispositivo", Margin = new Thickness(0, 0, 0, 20), HorizontalOptions = LayoutOptions.Center });
 
         if (localPictures.Length == 0)
             gridPictures.Children.Insert(childrenIndex++, new Label { Text = "Ainda não foram tiradas fotos nesse dispositivo", HorizontalOptions = LayoutOptions.Center });
@@ -29,7 +30,7 @@ public partial class MobilePicturesGridPage : ContentPage, IPicturesGridPage
         {
             foreach (string picture in localPictures)
             {
-                Image img = new Image { Source = picture, Aspect = Aspect.AspectFit, HeightRequest = 300, WidthRequest = 200 };
+                Image img = new Image { Source = picture, Aspect = Aspect.AspectFill, Margin = new Thickness(0, 0, 0, 20), HeightRequest = 250, WidthRequest = 200 };
                 var tapGestureRecognizer = new TapGestureRecognizer();
                 tapGestureRecognizer.Tapped += async (s, e) =>
                 {
@@ -46,27 +47,43 @@ public partial class MobilePicturesGridPage : ContentPage, IPicturesGridPage
         }
     }
 
-    private void BtnSyncDatabase_Clicked(object sender, EventArgs e)
+    private async void BtnSyncDatabase_Clicked(object sender, EventArgs e)
     {
-        BtnSyncDatabase.IsVisible = false;
-
-        if (!Directory.Exists(UriAndPaths.databasePicturesPath))
-            Directory.CreateDirectory(UriAndPaths.databasePicturesPath);
-
-        DaoHelperClass.DownloadImages(UriAndPaths.databasePicturesPath);
-
-        string[] cloudPictures = Directory.GetFiles(UriAndPaths.databasePicturesPath);
-
-        gridPictures.Children.Add(new Label { Text = "Imagens em nuvem", HorizontalOptions = LayoutOptions.Center });
-
-        if (cloudPictures.Length == 0)
-            gridPictures.Children.Add(new Label { Text = "Não foram encontradas imagens em núvem", HorizontalOptions = LayoutOptions.Center });
-        else
+        try
         {
-            foreach (string picture in cloudPictures)
+            EntitiesHelperClass.ShowLoading("Sincronizando imagens...");
+
+            BtnSyncDatabase.IsVisible = false;
+
+            if (!Directory.Exists(UriAndPaths.databasePicturesPath))
+                Directory.CreateDirectory(UriAndPaths.databasePicturesPath);
+
+            await Task.Run(() =>
             {
-                gridPictures.Children.Add(new Image { Source = picture, Aspect = Aspect.AspectFit, HeightRequest = 300, WidthRequest = 200 });
+                DaoHelperClass.DownloadImages(UriAndPaths.databasePicturesPath);
+            });
+
+            string[] cloudPictures = Directory.GetFiles(UriAndPaths.databasePicturesPath);
+
+            gridPictures.Children.Add(new Label { Text = "Imagens em nuvem", Margin = new Thickness(0, 0, 0, 20), HorizontalOptions = LayoutOptions.Center });
+
+            if (cloudPictures.Length == 0)
+                gridPictures.Children.Add(new Label { Text = "Não foram encontradas imagens em núvem", HorizontalOptions = LayoutOptions.Center });
+            else
+            {
+                foreach (string picture in cloudPictures)
+                {
+                    gridPictures.Children.Add(new Image { Source = picture, Aspect = Aspect.AspectFill, Margin = new Thickness(0, 0, 0, 20), HeightRequest = 250, WidthRequest = 200 });
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            await ViewServices.PopUpManager.PopErrorAsync("Houve algum problema na obtenção das imagens em nuvem.\n\n" + ExceptionManager.ExceptionMessage(ex));
+        }
+        finally
+        {
+            EntitiesHelperClass.CloseLoading();
         }
     }
 }

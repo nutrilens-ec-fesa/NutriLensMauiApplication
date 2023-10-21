@@ -9,7 +9,7 @@
     </ContentPage.BindingContext>
     <ScrollView>
         <VerticalStackLayout x:Name="gridPictures">
-            <Button x:Name="BtnSyncDatabase" Text="Buscar fotos em nuvem" Clicked="BtnSyncDatabase_Clicked"></Button>
+            <Button x:Name="BtnSyncDatabase" Margin="0,20,0,0" Text="Buscar fotos em nuvem" Clicked="BtnSyncDatabase_Clicked"></Button>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
