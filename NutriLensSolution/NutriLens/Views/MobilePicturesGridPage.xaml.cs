@@ -68,7 +68,7 @@ public partial class MobilePicturesGridPage : ContentPage, IPicturesGridPage
             gridPictures.Children.Add(new Label { Text = "Imagens em nuvem", Margin = new Thickness(0, 0, 0, 20), HorizontalOptions = LayoutOptions.Center });
 
             if (cloudPictures.Length == 0)
-                gridPictures.Children.Add(new Label { Text = "Não foram encontradas imagens em núvem", HorizontalOptions = LayoutOptions.Center });
+                gridPictures.Children.Add(new Label { Text = "Não foram encontradas imagens em nuvem", HorizontalOptions = LayoutOptions.Center });
             else
             {
                 foreach (string picture in cloudPictures)
