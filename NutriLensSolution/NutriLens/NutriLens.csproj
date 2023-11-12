@@ -40,6 +40,8 @@
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
 		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
+    <MauiImage Include="Resources\TFLiteModels\nutrilens.tflite" />
+    <BuildAction>MauiImage</BuildAction>
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -67,6 +69,7 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="TensorFlowSharp" Version="1.15.1" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,14 +1,17 @@
 ﻿using Camera.MAUI;
 using Camera.MAUI.ZXingHelper;
 using CommunityToolkit.Mvvm.Input;
+using NutriLens.Entities;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using TensorFlow;
 using ZXing;
 
 namespace NutriLens.ViewModels
 {
     internal class CameraPageVmV2 : INotifyPropertyChanged
     {
+        private TensorFlowHelper tfhelper = null;
         private CameraInfo camera = null;
         public CameraInfo Camera
         {
@@ -23,6 +26,28 @@ namespace NutriLens.ViewModels
                 OnPropertyChanged(nameof(AutoStartPreview));
             }
         }
+
+        private void InitializeTensorFlow()
+        {
+            // Substitua o caminho com o caminho real do seu modelo .tflite
+            tfhelper.LoadModel("Resources\\TFLiteModels\\nutrilens.tflite");
+        }
+
+        public void ProcessFrame(byte[] frameData)
+        {
+            // Converte os dados do frame em um tensor
+            var inputTensor = new TFTensor(frameData);
+
+            // Executa a detecção de objetos usando o TensorFlow
+            var outputTensor = tfhelper.RunObjectDetection("Resources\\TFLiteModels\\nutrilens.tflite");
+
+            // Processa os resultados (substitua isso pelo seu código real de processamento de resultados)
+            // Exemplo: var result = ProcessOutputTensor(outputTensor);
+
+            // Notifica sobre os resultados ou tome as ações apropriadas
+            // Exemplo: OnPropertyChanged(nameof(Result));
+        }
+
         private ObservableCollection<CameraInfo> cameras = new();
         public ObservableCollection<CameraInfo> Cameras
         {
@@ -145,6 +170,7 @@ namespace NutriLens.ViewModels
                 AutoStartPreview = false;
                 OnPropertyChanged(nameof(AutoStartPreview));
             });
+            tfhelper = new TensorFlowHelper();
             //TakeSnapshotCmd = new Command(() =>
             //{
             //    TakeSnapshot = false;
