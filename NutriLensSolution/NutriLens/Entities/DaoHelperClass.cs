@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 using NutriLens.Models;
+using NutriLens.Services;
 using static NutriLens.Entities.OpenAiEntity;
 
 namespace NutriLens.Entities
@@ -13,12 +14,9 @@ namespace NutriLens.Entities
         public static string MongoDbPingTest()
         {
 
-            var settings = MongoClientSettings.FromConnectionString(_connectionUri);
+            MongoClientSettings settings = MongoClientSettings.FromConnectionString(_connectionUri);
 
-            // Create a new client and connect to the server
-            var client = new MongoClient(settings);
-
-            // Send a ping to confirm a successful connection
+            MongoClient client = new MongoClient(settings);
             try
             {
                 var result = client.GetDatabase("admin").RunCommand<BsonDocument>(new BsonDocument("ping", 1));
@@ -44,7 +42,7 @@ namespace NutriLens.Entities
             {
                 client = new MongoClient(_connectionUri);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return "There was a problem connecting to your " +
                     "Atlas cluster. Check that the URI includes a valid " +
@@ -58,10 +56,10 @@ namespace NutriLens.Entities
 
             try
             {
-                collection.InsertOne(new FoodItem 
-                { 
-                    Name="Pão de queijo - CEFSA rock version", 
-                    Portion="uma unidade"
+                collection.InsertOne(new FoodItem
+                {
+                    Name = "Pão de queijo - CEFSA rock version",
+                    Portion = "uma unidade"
                 });
 
                 return "Inserção realizada com sucesso!";
@@ -207,6 +205,177 @@ namespace NutriLens.Entities
             {
                 return $"Something went wrong trying to insert the new documents." +
                     $" Message: {e.Message}";
+            }
+        }
+
+        public static bool InsertBarCodeItem(BarcodeItem barcodeItem)
+        {
+            var dbName = "NutriLensDtb";
+            var collectionName = "BarCodeProductsCollection";
+
+            IMongoClient client;
+
+            IMongoCollection<BarcodeItem> collection;
+
+            try
+            {
+                client = new MongoClient(_connectionUri);
+            }
+            catch (Exception ex)
+            {
+                ViewServices.PopUpManager.PopErrorAsync("There was a problem connecting to your " +
+                    "Atlas cluster. Check that the URI includes a valid " +
+                    "username and password, and that your IP address is " +
+                    $"in the Access List. Message: {ex.Message}");
+
+                return false;
+            }
+
+            collection = client
+                .GetDatabase(dbName)
+                .GetCollection<BarcodeItem>(collectionName);
+
+            try
+            {
+                collection.InsertOne(barcodeItem);
+                return true;
+            }
+            catch (Exception e)
+            {
+                ViewServices.PopUpManager.PopErrorAsync($"Something went wrong trying to insert the new documents." +
+                    $" Message: {e.Message}");
+                return false;
+            }
+        }
+
+        public static bool UpdateBarCodeItem(BarcodeItem barcodeItem)
+        {
+            var dbName = "NutriLensDtb";
+            var collectionName = "BarCodeProductsCollection";
+
+            IMongoClient client;
+
+            IMongoCollection<BarcodeItem> collection;
+
+            try
+            {
+                client = new MongoClient(_connectionUri);
+            }
+            catch (Exception ex)
+            {
+                ViewServices.PopUpManager.PopErrorAsync("There was a problem connecting to your " +
+                    "Atlas cluster. Check that the URI includes a valid " +
+                    "username and password, and that your IP address is " +
+                    $"in the Access List. Message: {ex.Message}");
+
+                return false;
+            }
+
+            collection = client
+                .GetDatabase(dbName)
+                .GetCollection<BarcodeItem>(collectionName);
+
+            try
+            {
+                collection.ReplaceOne(doc => doc.Barcode == barcodeItem.Barcode, barcodeItem);
+                return true;
+            }
+            catch (Exception e)
+            {
+                ViewServices.PopUpManager.PopErrorAsync($"Something went wrong trying to update the new documents." +
+                    $" Message: {e.Message}");
+                return false;
+            }
+        }
+
+        public static BarcodeItem GetBarCodeItem(string barcode)
+        {
+            var dbName = "NutriLensDtb";
+            var collectionName = "BarCodeProductsCollection";
+
+            IMongoClient client;
+
+            IMongoCollection<BarcodeItem> collection;
+
+            try
+            {
+                client = new MongoClient(_connectionUri);
+            }
+            catch (Exception ex)
+            {
+                ViewServices.PopUpManager.PopErrorAsync("There was a problem connecting to your " +
+                    "Atlas cluster. Check that the URI includes a valid " +
+                    "username and password, and that your IP address is " +
+                    $"in the Access List. Message: {ex.Message}");
+
+                return null;
+            }
+
+            collection = client
+                .GetDatabase(dbName)
+                .GetCollection<BarcodeItem>(collectionName);
+
+            try
+            {
+                List<BarcodeItem> allDocs = collection.Find(Builders<BarcodeItem>.Filter.Eq(x => x.Barcode, barcode))
+                .ToList();
+
+                if (allDocs.Count > 0)
+                    return allDocs[0];
+                else
+                    return null;
+            }
+            catch (Exception e)
+            {
+                ViewServices.PopUpManager.PopErrorAsync($"Something went wrong trying to insert the new documents." +
+                    $" Message: {e.Message}");
+
+                return null;
+            }
+        }
+
+        public static List<BarcodeItem> GetAllBarCodeItems()
+        {
+            var dbName = "NutriLensDtb";
+            var collectionName = "BarCodeProductsCollection";
+
+            IMongoClient client;
+
+            IMongoCollection<BarcodeItem> collection;
+
+            try
+            {
+                client = new MongoClient(_connectionUri);
+            }
+            catch (Exception ex)
+            {
+                ViewServices.PopUpManager.PopErrorAsync("There was a problem connecting to your " +
+                    "Atlas cluster. Check that the URI includes a valid " +
+                    "username and password, and that your IP address is " +
+                    $"in the Access List. Message: {ex.Message}");
+
+                return null;
+            }
+
+            collection = client
+                .GetDatabase(dbName)
+                .GetCollection<BarcodeItem>(collectionName);
+
+            try
+            {
+                List<BarcodeItem> allDocs = collection.Find(Builders<BarcodeItem>.Filter.Empty).ToList();
+
+                if (allDocs.Count > 0)
+                    return allDocs;
+                else
+                    return null;
+            }
+            catch (Exception e)
+            {
+                ViewServices.PopUpManager.PopErrorAsync($"Something went wrong trying to insert the new documents." +
+                    $" Message: {e.Message}");
+
+                return null;
             }
         }
 
