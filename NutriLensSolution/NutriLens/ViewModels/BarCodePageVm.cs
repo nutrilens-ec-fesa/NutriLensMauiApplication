@@ -1,6 +1,9 @@
 ﻿using Camera.MAUI;
 using Camera.MAUI.ZXingHelper;
+using NutriLens.Entities;
+using NutriLens.Models;
 using NutriLens.Services;
+using NutriLens.ViewInterfaces;
 using Plugin.Maui.Audio;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -14,8 +17,10 @@ namespace NutriLens.ViewModels
 
         private Result[] _barCodeResults;
 
+        private DateTime? _lastBarCodeDetected;
+
         public string BarCodeText { get; set; }
-        public ObservableCollection<string> BarCodesRead { get; set; }
+        public ObservableCollection<BarcodeItem> BarCodesRead { get; set; }
         public bool AutoStartPreview { get; set; } = false;
         private CameraInfo _camera = null;
         public CameraInfo Camera
@@ -47,22 +52,22 @@ namespace NutriLens.ViewModels
             get => _barCodeResults;
             set
             {
-                _barCodeResults = value;
-                if (_barCodeResults != null && _barCodeResults.Length > 0)
+                if (_lastBarCodeDetected == null || (DateTime.Now - _lastBarCodeDetected) > TimeSpan.FromSeconds(3))
                 {
-                    BarCodeText = _barCodeResults[0].Text;
+                    _lastBarCodeDetected = DateTime.Now;
 
-                    if (BarCodesRead.FirstOrDefault(x => x == BarCodeText) == null)
+                    _barCodeResults = value;
+                    if (_barCodeResults != null && _barCodeResults.Length > 0)
                     {
-                        BarCodesRead.Add(BarCodeText);
-                        OnPropertyChanged(nameof(BarCodesRead));
+                        BarCodeText = _barCodeResults[0].Text;
                         Beep();
+                        CheckProduct(BarCodeText);
                     }
-                }
-                else
-                    BarCodeText = "No barcode detected";
+                    else
+                        BarCodeText = "No barcode detected";
 
-                OnPropertyChanged(nameof(BarCodeText));
+                    OnPropertyChanged(nameof(BarCodeText));
+                }
             }
         }
 
@@ -94,10 +99,51 @@ namespace NutriLens.ViewModels
             player.Play();
         }
 
+        private async Task CheckProduct(string barcode)
+        {
+            await MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                List<BarcodeItem> barcodeItems = BarCodesRead.ToList();
+
+                BarcodeItem foundBarCodeItem = BarCodesRead.FirstOrDefault(x => x.Barcode == barcode);
+
+                if (foundBarCodeItem != null)
+                {
+                    if (await ViewServices.PopUpManager.PopYesOrNoAsync("Produto já inserido", "Produto já foi previamente inserido, deseja inserir mais uma vez?"))
+                    {
+                        BarCodesRead.Add(foundBarCodeItem);
+                        OnPropertyChanged(nameof(BarCodesRead));
+                    }
+
+                    return;
+                }
+
+                EntitiesHelperClass.ShowLoading($"Buscando código '{BarCodeText}' na base de dados");
+
+                BarcodeItem barcodeItem = null;
+
+                await Task.Run(() => barcodeItem = DaoHelperClass.GetBarCodeItem(BarCodeText));
+
+                await EntitiesHelperClass.CloseLoading();
+
+                if (barcodeItem == null)
+                {
+                    if (await ViewServices.PopUpManager.PopYesOrNoAsync("Produto não encontrado", $"O produto com o código de barras '{barcode}' não foi encontrado. Deseja registrá-lo?"))
+                    {
+                        await _navigation.PushAsync(ViewServices.ResolvePage<IAddBarcodeProductPage>(barcode));
+                    }
+                }
+                else
+                {
+                    BarCodesRead.Add(barcodeItem);
+                    OnPropertyChanged(nameof(BarCodesRead));
+                }
+            });
+        }
         public BarCodePageVm(INavigation navigation)
         {
             _navigation = navigation;
-            BarCodesRead = new ObservableCollection<string>();
+            BarCodesRead = new ObservableCollection<BarcodeItem>();
 
             BarCodeOptions = new BarcodeDecodeOptions
             {

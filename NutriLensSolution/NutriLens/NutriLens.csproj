@@ -86,6 +86,9 @@
 	  <Compile Update="Views\MobileMealHistoricPage.xaml.cs">
 	    <DependentUpon>MobileMealHistoricPage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\MobileAddBarcodeProduct.xaml.cs">
+	    <DependentUpon>MobileAddBarcodeProduct.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\MobilePicturesGridPage.xaml.cs">
 	    <DependentUpon>MobilePicturesGridPage.xaml</DependentUpon>
 	  </Compile>
@@ -101,6 +104,9 @@
 	  <MauiXaml Update="Views\MobileCameraPageV2.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\MobileEditBarCodeProducts.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\MobileFlyoutPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -111,6 +117,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\MobileMealHistoricPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\MobileAddBarcodeProduct.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\MobilePicturesGridPage.xaml">

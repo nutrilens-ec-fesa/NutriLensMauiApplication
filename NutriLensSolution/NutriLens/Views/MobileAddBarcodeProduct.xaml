@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NutriLens.Views.MobileAddBarcodeProduct"
+             Title="{Binding PageTitle}">
+    <ScrollView>
+        <VerticalStackLayout Padding="10,20,10,20" Spacing="5">
+            <Label Margin="5,0,0,0" Text="Código de barras"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite o código de barras..." Text="{Binding BarcodeItem.Barcode}"/>
+            <Label Margin="5,0,0,0" Text="Produto"/>
+            <Entry Keyboard="Default" Placeholder="Digite a nome/descrição do produto..." Text="{Binding BarcodeItem.ProductName}"/>
+            <Label Margin="5,0,0,0" Text="Tipo da porção"/>
+            <Entry Keyboard="Text" Placeholder="Digite o tipo de porção (fatia, biscoito)..." Text="{Binding BarcodeItem.PortionDefinition}"/>
+            <Label Margin="5,0,0,0" Text="Unidades da porção"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite quantas unidades do produto na porção..." Text="{Binding BarcodeItem.UnitsPerPortion}"/>
+            <Label Margin="5,0,0,0" Text="Porção base (g ou ml)"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite o volume da porção..." Text="{Binding BarcodeItem.BasePortion}"/>
+            <Label Margin="5,0,0,0" Text="Valor energético (kcal)"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite o valor calórico da porção..." Text="{Binding BarcodeItem.EnergeticValue}"/>
+            <Label Margin="5,0,0,0" Text="Carboidratos totais (g)"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite os carboidratos totais..." Text="{Binding BarcodeItem.TotalCarbohydrates}"/>
+            <Label Margin="5,0,0,0" Text="Açúcares totais (g)"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite os açúcares totais..." Text="{Binding BarcodeItem.TotalSugar}"/>
+            <Label Margin="5,0,0,0" Text="Açucares adicionados (g)"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite os açúcares adicionados..." Text="{Binding BarcodeItem.AddedSugar}"/>
+            <Label Margin="5,0,0,0" Text="Proteínas (g)"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite as proteínas..." Text="{Binding BarcodeItem.Proteins}"/>
+            <Label Margin="5,0,0,0" Text="Gorduras totais (g)"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite as gorduras totais..." Text="{Binding BarcodeItem.TotalFat}"/>
+            <Label Margin="5,0,0,0" Text="Gorduras saturadas (g)"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite as gorduras saturadas..." Text="{Binding BarcodeItem.SaturatedFat}"/>
+            <Label Margin="5,0,0,0" Text="Gorduras trans (g)"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite as gorduras trans..." Text="{Binding BarcodeItem.TransFat}"/>
+            <Label Margin="5,0,0,0" Text="Fibra alimentar (g)"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite a fibra alimentar..." Text="{Binding BarcodeItem.DietaryFiber}"/>
+            <Label Margin="5,0,0,0" Text="Sódio (mg)"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite o sódio..." Text="{Binding BarcodeItem.Sodium}"/>
+            <Button Margin="0,20,0,0" Text="Confirmar informações" Command="{Binding ConfirmProductCommand}"></Button>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

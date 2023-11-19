@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NutriLens.Views.MobileEditBarCodeProducts"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:c="clr-namespace:NutriLens.Entities.Converters"
+             Title="Editar produtos">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <c:ItemTappedEventArgsConverter x:Key="itemTappedEventArgsConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Behaviors>
+        <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
+        <mct:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
+    </ContentPage.Behaviors>
+    <ScrollView>
+        <ListView ItemsSource="{Binding BarCodeProducts}" Margin="0,20,0,20" VerticalOptions="Center" RowHeight="100">
+            <ListView.Behaviors>
+                <toolkit:EventToCommandBehavior EventName="ItemTapped" Command="{Binding ProductTappedCommand}" EventArgsConverter="{StaticResource itemTappedEventArgsConverter}"></toolkit:EventToCommandBehavior>
+            </ListView.Behaviors>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell Height="100">
+                        <ViewCell.View>
+                            <StackLayout Spacing="20" VerticalOptions="CenterAndExpand">
+                                <Label Padding="20,0,20,0" TextColor="White" Text="{Binding ProductName}" LineBreakMode="WordWrap" FontSize="Medium" VerticalTextAlignment="Center">
+                                </Label>
+                            </StackLayout>
+                        </ViewCell.View>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </ScrollView>
+</ContentPage>

@@ -109,6 +109,12 @@ namespace NutriLens.ViewModels
         }
 
         [RelayCommand]
+        private async Task EditBarCodeProducts()
+        {
+            await _navigation.PushAsync(ViewServices.ResolvePage<IEditBarCodeProductsPage>());
+        }
+
+        [RelayCommand]
         private void Appearing()
         {
             OnPropertyChanged(nameof(TodayTotalEnergeticConsumption));
