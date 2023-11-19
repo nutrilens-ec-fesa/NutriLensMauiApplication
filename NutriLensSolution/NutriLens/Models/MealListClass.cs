@@ -2,11 +2,20 @@
 
 namespace NutriLens.Models
 {
+    /// <summary>
+    /// Representa um modelo contendo uma lista de refeições
+    /// </summary>
     public class MealListClass
     {
+        /// <summary>
+        /// Lista de refeições
+        /// </summary>
         public List<Meal> MealList { get; set; }
-
-        public string MealListDailyInfo
+        
+        /// <summary>
+        /// Caso todas as refeições sejam da mesma data, retorna uma string com o consumo energético
+        /// </summary>
+        public string DailyInfo
         {
             get
             {
@@ -16,7 +25,11 @@ namespace NutriLens.Models
                     return "undefined";
             }
         }
-        public string MealListMonthlyInfo
+
+        /// <summary>
+        /// Caso todas as refeições sejam do mesmo mês, retorna uma string com o consumo energético
+        /// </summary>
+        public string MonthlyInfo
         {
             get
             {
@@ -27,11 +40,20 @@ namespace NutriLens.Models
             }
         }
 
+        /// <summary>
+        /// Construtor da classe
+        /// </summary>
+        /// <param name="mealList">Lista de refeições</param>
         public MealListClass(List<Meal> mealList)
         {
             MealList = mealList;
         }
 
+        /// <summary>
+        /// Retorna uma string do consumo energético total das refeições da lista
+        /// </summary>
+        /// <param name="energeticUnit">Unidade de consumo energético a ser retornado</param>
+        /// <returns></returns>
         public string TotalEnergeticConsumption(EnergeticUnit energeticUnit)
         {
             double totalCalories;
