@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using NutriLens.Entities;
 using NutriLens.Models;
+using NutriLens.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
@@ -36,6 +37,14 @@ namespace NutriLens.ViewModels
         {
             List<Meal> meals;
             meals = AppDataHelperClass.GetAllMeals();
+
+            if(meals.Count == 0)
+            {
+                ViewServices.PopUpManager.PopPersonalizedAsync("Sem refeições", "Não foram encontradas refeições registradas no dispositivo", "OK");
+                _navigation.PopAsync();
+                return;
+            }
+
             DateTime lastDateTime = DateTime.MinValue;
 
             switch (_mealHistoryFilter)
@@ -113,10 +122,10 @@ namespace NutriLens.ViewModels
                 switch (_mealHistoryFilter)
                 {
                     case MealHistoryFilter.PerDay:
-                        MealsListString.Add(meal.MealListDailyInfo);
+                        MealsListString.Add(meal.DailyInfo);
                         break;
                     case MealHistoryFilter.PerMonth:
-                        MealsListString.Add(meal.MealListMonthlyInfo);
+                        MealsListString.Add(meal.MonthlyInfo);
                         break;
                 }
 
