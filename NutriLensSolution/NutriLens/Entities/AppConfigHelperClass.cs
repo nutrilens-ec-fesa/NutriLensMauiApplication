@@ -32,5 +32,11 @@ namespace NutriLens.Entities
                 return (EnergeticUnit)_energeticUnit;
             }
         }
+
+        public static void SetEnergeticUnit(EnergeticUnit energeticUnit)
+        {
+            ViewServices.AppDataManager.SetItem(ConfigItems.EnergeticUnit, energeticUnit);
+            _energeticUnit = energeticUnit;
+        }
     }
 }
