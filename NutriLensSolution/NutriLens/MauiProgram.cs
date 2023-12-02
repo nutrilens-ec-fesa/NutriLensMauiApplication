@@ -56,6 +56,7 @@ namespace NutriLens
             builder.Services.AddSingleton<IPicturesGridPage, MobilePicturesGridPage>();
             builder.Services.AddSingleton<IAddBarcodeProductPage, MobileAddBarcodeProduct>();
             builder.Services.AddSingleton<IEditBarCodeProductsPage, MobileEditBarCodeProducts>();
+            builder.Services.AddSingleton<IUserConfigPage, MobileUserConfigPage>();
 #elif WINDOWS
 
 #endif

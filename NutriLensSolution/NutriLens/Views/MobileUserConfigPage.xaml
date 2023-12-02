@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NutriLens.Views.MobileUserConfigPage"
+             xmlns:xct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Title="Configurações">
+    <ScrollView>
+        <VerticalStackLayout Padding="10,20,10,20" Spacing="5">
+            <Label Margin="5,0,0,0" Text="Nome"/>
+            <Entry Keyboard="Text" Placeholder="Digite seu nome..." Text="{Binding UserInfo.Name}" />
+            <Label Margin="5,0,0,0" Text="Sexo"/>
+            <Picker ItemsSource="{Binding GenderOptions}" SelectedIndex="{Binding GenderIndex}"/>
+            <Label Margin="5,0,0,0" Text="Data de nascimento"/>
+            <DatePicker Date="{Binding UserInfo.BornDate}" />
+            <Label Margin="5,0,0,0" Text="Massa (kg)"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite seu peso..." Text="{Binding WeightEntry}" />
+            <Label Margin="5,0,0,0" Text="Altura (m)"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite sua altura..." Text="{Binding HeightEntry}" />
+            <Label Margin="5,0,0,0" Text="Nível de atividade física"/>
+            <Picker ItemsSource="{Binding HabitualPhysicalActivityOptions}" SelectedIndex="{Binding HabitualPhysicalActivityIndex}"/>
+            <Label Margin="5,0,0,0" Text="Unidade de energia"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <RadioButton Grid.Row="0" Grid.Column="0" Content="kcal (quilocalorias)" IsChecked="{Binding KcalEnabled}"></RadioButton>
+                <RadioButton Grid.Row="0" Grid.Column="1" Content="kJ (quilojoules)" IsChecked="{Binding KJEnabled}"></RadioButton>
+            </Grid>
+            <Label Margin="5,0,0,0" Text="Meta diária de consumo"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite sua meta diária de consumo..." Text="{Binding UserInfo.KiloCaloriesDiaryObjective}" />
+            <Label Margin="5,0,0,0" Text="Doenças crônicas não transmissíveis (DCNT)"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding UserInfo.Hipertension}"></CheckBox>
+                    <Label Text="Hipertensão" VerticalOptions="Center" />
+                </StackLayout>
+                <StackLayout Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding UserInfo.Diabetes}"></CheckBox>
+                    <Label Text="Diabetes" VerticalOptions="Center" />
+                </StackLayout>
+            </Grid>
+            <Label Margin="5,0,0,0" Text="Restrições alimentares"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding UserInfo.LactoseIntolerant}"></CheckBox>
+                    <Label Text="Intolerante a lactose" VerticalOptions="Center" />
+                </StackLayout>
+                <StackLayout Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding UserInfo.GlutenIntolerant}"></CheckBox>
+                    <Label Text="Intolerante a glúten" VerticalOptions="Center" />
+                </StackLayout>
+            </Grid>
+            <Button Text="Salvar informações" Command="{Binding SaveConfigsCommand}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
