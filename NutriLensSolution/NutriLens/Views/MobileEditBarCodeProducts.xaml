@@ -25,7 +25,7 @@
                     <ViewCell Height="100">
                         <ViewCell.View>
                             <StackLayout Spacing="20" VerticalOptions="CenterAndExpand">
-                                <Label Padding="20,0,20,0" TextColor="White" Text="{Binding ProductName}" LineBreakMode="WordWrap" FontSize="Medium" VerticalTextAlignment="Center">
+                                <Label Padding="20,0,20,0" TextColor="Black" Text="{Binding ProductName}" LineBreakMode="WordWrap" FontSize="Medium" VerticalTextAlignment="Center">
                                 </Label>
                             </StackLayout>
                         </ViewCell.View>

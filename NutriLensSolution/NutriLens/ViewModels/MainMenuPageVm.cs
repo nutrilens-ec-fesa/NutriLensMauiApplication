@@ -22,14 +22,27 @@ namespace NutriLens.ViewModels
             get
             {
                 _mealList = new MealListClass(AppDataHelperClass.GetTodayMeals());
-                return _mealList.TotalEnergeticConsumption(AppConfigHelperClass.EnergeticUnit);
+                return _mealList.TotalEnergeticConsumption();
+            }
+        }
+
+        public string TodayProgressInfo
+        {
+            get
+            {
+                _mealList = new MealListClass(AppDataHelperClass.GetTodayMeals());
+
+                double todayCalories = double.Parse(_mealList.TotalEnergeticConsumption(true));
+                double diaryObjective = AppDataHelperClass.GetEnergeticDiaryObjective();
+
+                return $"{todayCalories} / {diaryObjective} {AppConfigHelperClass.EnergeticUnit}{Environment.NewLine}({todayCalories / diaryObjective * 100:0.00}% atingido)";
             }
         }
 
         public MainMenuPageVM(INavigation navigation)
         {
             _navigation = navigation;
-            Application.Current.UserAppTheme = AppTheme.Dark;
+            Application.Current.UserAppTheme = AppTheme.Light;
         }
 
         [RelayCommand]
@@ -115,9 +128,15 @@ namespace NutriLens.ViewModels
         }
 
         [RelayCommand]
+        private async Task OpenConfig()
+        {
+            await _navigation.PushAsync(ViewServices.ResolvePage<IUserConfigPage>());
+        }
+
+        [RelayCommand]
         private void Appearing()
         {
-            OnPropertyChanged(nameof(TodayTotalEnergeticConsumption));
+            OnPropertyChanged(nameof(TodayProgressInfo));
         }
     }
 }

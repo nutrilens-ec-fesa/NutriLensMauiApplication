@@ -25,7 +25,7 @@
                         <ViewCell>
                             <ViewCell.View>
                                 <StackLayout Padding="10">
-                                    <Label TextColor="White" Text="{Binding NamePlusPortionPlusKcalInfo}" />
+                                    <Label TextColor="Black" Text="{Binding NamePlusPortionPlusKcalInfo}" />
                                 </StackLayout>
                             </ViewCell.View>
                         </ViewCell>

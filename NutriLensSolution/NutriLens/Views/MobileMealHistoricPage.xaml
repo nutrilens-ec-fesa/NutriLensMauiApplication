@@ -19,7 +19,7 @@
                         <ViewCell>
                             <ViewCell.View>
                                 <!--<StackLayout Padding="10" BackgroundColor="Violet">-->
-                                    <Label Padding="20,5,0,0" FontSize="Large" TextColor="White" Text="{Binding}" />
+                                    <Label Padding="20,5,0,0" FontSize="Large" TextColor="Black" Text="{Binding}" />
                                 <!--</StackLayout>-->
                             </ViewCell.View>
                         </ViewCell>

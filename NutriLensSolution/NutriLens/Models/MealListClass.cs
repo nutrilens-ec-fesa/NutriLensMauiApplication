@@ -20,7 +20,7 @@ namespace NutriLens.Models
             get
             {
                 if (MealList.DistinctBy(x => x.DateTime.ToShortDateString()).Count() == 1)
-                    return $"{MealList[0].DateTime.ToShortDateString()} - {TotalEnergeticConsumption(AppConfigHelperClass.EnergeticUnit)}";
+                    return $"{MealList[0].DateTime.ToShortDateString()} - {TotalEnergeticConsumption()}";
                 else
                     return "undefined";
             }
@@ -34,7 +34,7 @@ namespace NutriLens.Models
             get
             {
                 if (MealList.DistinctBy(x => x.DateTime.Month).Count() == 1)
-                    return $"{MealList[0].DateTime.Month}/{MealList[0].DateTime.Year} - {TotalEnergeticConsumption(AppConfigHelperClass.EnergeticUnit)}";
+                    return $"{MealList[0].DateTime.Month}/{MealList[0].DateTime.Year} - {TotalEnergeticConsumption()}";
                 else
                     return "undefined";
             }
@@ -54,7 +54,7 @@ namespace NutriLens.Models
         /// </summary>
         /// <param name="energeticUnit">Unidade de consumo energético a ser retornado</param>
         /// <returns></returns>
-        public string TotalEnergeticConsumption(EnergeticUnit energeticUnit)
+        public string TotalEnergeticConsumption(bool valueOnly = false)
         {
             double totalCalories;
 
@@ -69,10 +69,10 @@ namespace NutriLens.Models
                 totalCalories = 0;
             }
 
-            return energeticUnit switch
+            return AppConfigHelperClass.EnergeticUnit switch
             {
-                EnergeticUnit.kcal => $"{totalCalories} {Constants.kcalUnit}",
-                EnergeticUnit.kJ => $"{totalCalories * Constants.kcalToKJFactor} {Constants.kJUnit}",
+                EnergeticUnit.kcal => $"{totalCalories}{(valueOnly ? string.Empty : " " + Constants.kcalUnit)}",
+                EnergeticUnit.kJ => $"{totalCalories * Constants.kcalToKJFactor:0.}{(valueOnly ? string.Empty : " " + Constants.kJUnit)}",
                 _ => default
             };
         }

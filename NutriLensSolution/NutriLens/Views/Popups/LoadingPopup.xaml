@@ -16,7 +16,7 @@
                 </Grid.RowDefinitions>
 
                 <ActivityIndicator Grid.Row="0" x:Name="actIndicator" Color="Aqua" IsRunning="True"></ActivityIndicator>
-                <Label Grid.Row="1" x:Name="lblMessage" HorizontalTextAlignment="Center"></Label>
+                <Label Grid.Row="1" x:Name="lblMessage" HorizontalTextAlignment="Center" TextColor="White"></Label>
             </Grid>
         </Frame.Content>
     </Frame>

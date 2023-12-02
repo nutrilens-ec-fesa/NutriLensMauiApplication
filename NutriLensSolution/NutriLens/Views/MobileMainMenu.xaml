@@ -9,11 +9,12 @@
         <mct:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
-        <ScrollView>
+        <ScrollView Margin="10">
             <StackLayout Spacing="10">
                 <Button x:Name="btnTest" Text="Informações do aplicativo" Command="{Binding OpenFlyoutCommand}" />
+                <Button x:Name="btnConfig" Text="Configurações" Command="{Binding OpenConfigCommand}" />
                 <Label Text="Consumo calórico de hoje:" FontSize="Large" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
-                <Label Text="{Binding TodayTotalEnergeticConsumption}" FontSize="Title" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+                <Label Text="{Binding TodayProgressInfo}" FontSize="Title" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" HorizontalTextAlignment="Center" />
                 <Label Text="Registrar refeição" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
                 <Button x:Name="btnCamera" Text="Por foto" Command="{Binding OpenCameraCommand}" />
                 <Button x:Name="btnBarCode" Text="Por código de barras" Command="{Binding OpenBarCodeCommand}" />

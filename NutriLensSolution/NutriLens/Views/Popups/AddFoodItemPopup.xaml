@@ -21,14 +21,14 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
-                <Label Grid.Row="0" Grid.Column="0" Text="Item: "></Label>
-                <Entry Grid.Row="0" Grid.Column="1" x:Name="inputItem" BackgroundColor="Black" HorizontalOptions="FillAndExpand"></Entry>
+                <Label Grid.Row="0" Grid.Column="0" Text="Item: " TextColor="White"></Label>
+                <Entry Grid.Row="0" Grid.Column="1" x:Name="inputItem" BackgroundColor="Black" TextColor="White" HorizontalOptions="FillAndExpand"></Entry>
 
-                <Label Grid.Row="1" Grid.Column="0" Text="Porção: "></Label>
-                <Entry Grid.Row="1" Grid.Column="1" x:Name="inputPortion" BackgroundColor="Black" HorizontalOptions="FillAndExpand"></Entry>
+                <Label Grid.Row="1" Grid.Column="0" Text="Porção: " TextColor="White"></Label>
+                <Entry Grid.Row="1" Grid.Column="1" x:Name="inputPortion" BackgroundColor="Black" TextColor="White" HorizontalOptions="FillAndExpand"></Entry>
 
-                <Label Grid.Row="2" Grid.Column="0" Text="Calorias: "></Label>
-                <Entry Grid.Row="2" Grid.Column="1" x:Name="inputCalories" BackgroundColor="Black" HorizontalOptions="FillAndExpand"></Entry>
+                <Label Grid.Row="2" Grid.Column="0" Text="Calorias: " TextColor="White"></Label>
+                <Entry Grid.Row="2" Grid.Column="1" x:Name="inputCalories" BackgroundColor="Black" TextColor="White" HorizontalOptions="FillAndExpand"></Entry>
 
 
                 <Button Grid.Row="3" Grid.ColumnSpan="2" x:Name="BtnConfirmItem" Text="Confirmar item" Clicked="BtnConfirmItem_Clicked"></Button>
