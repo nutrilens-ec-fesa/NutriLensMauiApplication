@@ -1,5 +1,18 @@
 ﻿namespace NutriLens.Models
 {
+    public enum HabitualPhysicalActivity
+    {
+        LightActivity,
+        ModeratelyActive,
+        VigorouslyActive
+    }
+
+    public enum Gender
+    {
+        Masculine,
+        Feminine
+    }
+
     /// <summary>
     /// Classe de dados do usuário, configurações de limites e registro de restrições alimentares
     /// </summary>
@@ -9,6 +22,11 @@
         /// Nome do usuário
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Sexo do usuário
+        /// </summary>
+        public Gender Gender { get; set; }
 
         /// <summary>
         /// Data de nascimento do usuário
@@ -49,5 +67,10 @@
         /// Usuário intolerante a glúten
         /// </summary>
         public bool GlutenIntolerant { get; set; }
+
+        /// <summary>
+        /// Define o grau de intensidade em atividades físicas
+        /// </summary>
+        public HabitualPhysicalActivity HabitualPhysicalActivity { get; set; }
     }
 }
