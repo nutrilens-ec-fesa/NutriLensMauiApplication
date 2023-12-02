@@ -80,13 +80,16 @@ public class AppDataManager : IAppDataManager
             {
                 try
                 {
-                    if(item is JArray jArray)
+                    if (item is JArray jArray)
                     {
                         string json = JsonConvert.SerializeObject(jArray);
                         return JsonConvert.DeserializeObject<T>(json);
                     }
                     else
-                        return (T?)Convert.ChangeType(item, typeof(T)); 
+                    {
+                        string json = JsonConvert.SerializeObject(item);
+                        return JsonConvert.DeserializeObject<T>(json);
+                    }
                 }
                 catch(Exception ex)
                 {
