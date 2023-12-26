@@ -87,3 +87,14 @@ public class FileWriteUpdateException : Exception
     public FileWriteUpdateException(string message) : base(message) { }
     public FileWriteUpdateException(string message, Exception inner) : base(message, inner) { }
 }
+
+/// <summary>
+/// Exceção para indicar que já existe um cadastro com o email informado
+/// </summary>
+[Serializable]
+public class EmailAlreadyRegisteredException : Exception
+{
+    public EmailAlreadyRegisteredException() : base() { }
+    public EmailAlreadyRegisteredException(string message) : base(message) { }
+    public EmailAlreadyRegisteredException(string message, Exception inner) : base(message, inner) { }
+}
