@@ -27,17 +27,26 @@ namespace NutriLens.Entities
                 File.Delete(localPicture);
             }
         }
-
         public static async Task ShowLoading(string message)
         {
             _loadingPopup = new LoadingPopup(message);
             await Application.Current.MainPage.ShowPopupAsync(_loadingPopup);
         }
-
         public static async Task CloseLoading()
         {
             if (_loadingPopup != null)
                 await _loadingPopup.CloseAsync();
+        }
+        public static bool ParseDoubleValue(string value, out double result)
+        {
+            return double.TryParse(value.Replace(Constants.decimalToBeReplaced, Constants.cultureDecimalSeparator), out result);
+        }
+        public static double ParseDoubleValue(string value)
+        {
+            if (double.TryParse(value.Replace(Constants.decimalToBeReplaced, Constants.cultureDecimalSeparator), out double result))
+                return result;
+            else
+                return double.NaN;
         }
     }
 }
