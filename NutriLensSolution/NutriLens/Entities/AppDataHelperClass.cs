@@ -80,7 +80,7 @@ namespace NutriLens.Entities
         /// <summary>
         /// Verifica se existe informações de usuário salvas no aplicativo
         /// </summary>
-        public static bool HasUserInfo { get => UserInfo != null; }
+        public static bool HasUserInfo { get => UserInfo != null && !string.IsNullOrEmpty(UserInfo.Name); }
 
         /// <summary>
         /// Adiciona uma nova refeição
