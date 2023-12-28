@@ -101,10 +101,7 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private async Task SaveConfigs()
         {
-            char cultureDecimalSeparator = Convert.ToChar(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator);
-            char decimalToBeReplaced = cultureDecimalSeparator == ',' ? '.' : ',';
-
-            if (double.TryParse(WeightEntry.Replace(decimalToBeReplaced, cultureDecimalSeparator), out double weightValue))
+            if (EntitiesHelperClass.ParseDoubleValue(WeightEntry, out double weightValue))
                 UserInfo.Weight = weightValue;
             else
             {
@@ -112,7 +109,7 @@ namespace NutriLens.ViewModels
                 return;
             }
 
-            if (double.TryParse(HeightEntry.Replace(decimalToBeReplaced, cultureDecimalSeparator), out double heightValue))
+            if (EntitiesHelperClass.ParseDoubleValue(HeightEntry, out double heightValue))
                 UserInfo.Height = heightValue;
             else
             {
