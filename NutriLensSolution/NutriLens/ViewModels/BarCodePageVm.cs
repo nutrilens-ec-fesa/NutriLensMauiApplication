@@ -5,6 +5,7 @@ using NutriLens.Models;
 using NutriLens.Services;
 using NutriLens.ViewInterfaces;
 using Plugin.Maui.Audio;
+using PopupLibrary;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using ZXing;
@@ -135,8 +136,18 @@ namespace NutriLens.ViewModels
                 }
                 else
                 {
-                    BarCodesRead.Add(barcodeItem);
-                    OnPropertyChanged(nameof(BarCodesRead));
+                    string consumptionQuantity = await ViewServices.PopUpManager.PopFreeInputAsync(barcodeItem.ProductName, $"Quantos(as) '{barcodeItem.PortionDefinition}' você irá consumir?");
+
+                    if (double.TryParse(consumptionQuantity, out var quantity))
+                    { 
+                        await ViewServices.PopUpManager.PopInfoAsync("Total de calorias: " + (quantity * barcodeItem.EnergeticValue) / barcodeItem.UnitsPerPortion);
+                        BarCodesRead.Add(barcodeItem);
+                        OnPropertyChanged(nameof(BarCodesRead));
+                    }
+                    else
+                    {
+                        await ViewServices.PopUpManager.PopErrorAsync("Não foi possível identificar a quantidade estipulada. Tente novamente.");
+                    }
                 }
             });
         }
