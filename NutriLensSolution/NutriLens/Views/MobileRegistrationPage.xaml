@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NutriLens.Views.MobileRegistrationPage"
+             Title="MobileRegistrationPage"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="#FB7243">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.2*"></RowDefinition>
+            <RowDefinition Height="0.4*"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Margin="0,0,0,0" Text="Registrar novo usuário!" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalOptions="End"/>
+        <Image Grid.Row="1" Source="nutrilenslogo.jpg" VerticalOptions="Start" />
+        <Frame Grid.Row="2" BackgroundColor="White" CornerRadius="20" Margin="20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.1*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="0.1*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="0.1*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="0.1*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="0.1*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="10*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Text="Nome" TextColor="Black" />
+                <Entry Grid.Row="1" Keyboard="Text" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding NameEntry}" Placeholder="Digite seu nome..." />
+                <Label Grid.Row="2" Text="Email" TextColor="Black"/>
+                <Entry Grid.Row="3" Keyboard="Email" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding EmailEntry}" Placeholder="Digite seu e-mail..."/>
+                <Label Grid.Row="4" Text="Email" TextColor="Black"/>
+                <Entry Grid.Row="5" Keyboard="Email" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding EmailConfirmEntry}" Placeholder="Confirme seu e-mail..." />
+                <Label Grid.Row="6" Text="Senha" TextColor="Black" />
+                <Entry Grid.Row="7" Keyboard="Text" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding PasswordEntry}" IsPassword="True" Placeholder="Digite sua senha..." />
+                <Label Grid.Row="8" Text="Confirme a senha" TextColor="Black"/>
+                <Entry Grid.Row="9" Keyboard="Text" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding PasswordConfirmEntry}" IsPassword="True" Placeholder="Confirme sua senha..." />
+                <StackLayout Grid.Row="10" Spacing="10" Margin="0,40,0,0" Orientation="Vertical">
+                    <Button Text="Registrar-se" BorderColor="Black" BorderWidth="1" Command="{Binding RegisterCommand}" />
+                </StackLayout>
+            </Grid>
+        </Frame>
+    </Grid>
+</ContentPage>
