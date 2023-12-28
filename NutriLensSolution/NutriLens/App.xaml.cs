@@ -11,7 +11,7 @@ namespace NutriLens
         {
             InitializeComponent();
             ViewServices.PopUpManager.UpdateLanguage(Languages.Portuguese);
-            MainPage = new NavigationPage(ViewServices.ResolvePage<IMainMenuPage>());
+            MainPage = new NavigationPage(ViewServices.ResolvePage<ILoginPage>());
         }
 
         private static MauiAppInfo GetAppInfo()
