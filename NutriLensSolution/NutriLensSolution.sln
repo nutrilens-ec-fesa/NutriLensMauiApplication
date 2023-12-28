@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebLibrary", "WebLibrary\We
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppConfigLibrary", "AppConfigLibrary\AppConfigLibrary.csproj", "{12112C9B-BB94-41FE-AB6C-BB6336BADED1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppDataLibrary", "AppDataLibrary\AppDataLibrary.csproj", "{C830F029-E42B-41FB-8B69-6DDC8541488A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppDataLibrary", "AppDataLibrary\AppDataLibrary.csproj", "{C830F029-E42B-41FB-8B69-6DDC8541488A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptographyLibrary", "CryptographyLibrary\CryptographyLibrary.csproj", "{1C20CD32-FBBF-4F9F-B805-7523A2947CE2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{C830F029-E42B-41FB-8B69-6DDC8541488A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C830F029-E42B-41FB-8B69-6DDC8541488A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C830F029-E42B-41FB-8B69-6DDC8541488A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C20CD32-FBBF-4F9F-B805-7523A2947CE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C20CD32-FBBF-4F9F-B805-7523A2947CE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C20CD32-FBBF-4F9F-B805-7523A2947CE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C20CD32-FBBF-4F9F-B805-7523A2947CE2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

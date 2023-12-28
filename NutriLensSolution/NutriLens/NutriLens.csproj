@@ -50,6 +50,7 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\AppIcon\icon_nutrilens_1.svg" />
+	  <None Remove="Resources\Images\nutrilenslogo.jpg" />
 	  <None Remove="Resources\Raw\beep.mp3" />
 	</ItemGroup>
 
@@ -73,6 +74,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\AppConfigLibrary\AppConfigLibrary.csproj" />
 	  <ProjectReference Include="..\AppDataLibrary\AppDataLibrary.csproj" />
+	  <ProjectReference Include="..\CryptographyLibrary\CryptographyLibrary.csproj" />
 	  <ProjectReference Include="..\DictionaryLibrary\DictionaryLibrary.csproj" />
 	  <ProjectReference Include="..\ExceptionLibrary\ExceptionLibrary.csproj" />
 	  <ProjectReference Include="..\PermissionsLibrary\PermissionsLibrary.csproj" />
@@ -108,6 +110,9 @@
 	  <MauiXaml Update="Views\MobileFlyoutPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\MobileLoginPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\MobileMainMenu.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -121,6 +126,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\MobilePicturesGridPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\MobileRegistrationPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\MobileUserConfigPage.xaml">
