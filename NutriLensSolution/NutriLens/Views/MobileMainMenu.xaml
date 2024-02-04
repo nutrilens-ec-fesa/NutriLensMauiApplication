@@ -4,6 +4,7 @@
              x:Class="NutriLens.Views.MobileMainMenu"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="NutriLens">
+    <NavigationPage.HasBackButton>False</NavigationPage.HasBackButton>
     <ContentPage.Behaviors>
         <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
         <mct:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
@@ -28,6 +29,9 @@
                 <Button x:Name="btnOpenGallery" Text="Galeria" Command="{Binding OpenGalleryCommand}"/>
                 <Label Text="Configurações" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
                 <Button x:Name="btnEditBarCodeProducts" Text="Editar produtos (cód. barras)" Command="{Binding EditBarCodeProductsCommand}"/>
+                <Label Text="Opções" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+                <Button x:Name="btnLogOut" BackgroundColor="IndianRed" Text="Sair" Command="{Binding LogOutCommand}"/>
+                <Button x:Name="btnQuit" BackgroundColor="IndianRed" Text="Fechar aplicativo" Command="{Binding CloseApplicationCommand}"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

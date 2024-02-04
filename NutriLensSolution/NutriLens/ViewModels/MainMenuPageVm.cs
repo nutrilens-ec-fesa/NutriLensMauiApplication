@@ -138,5 +138,29 @@ namespace NutriLens.ViewModels
         {
             OnPropertyChanged(nameof(TodayProgressInfo));
         }
+
+        [RelayCommand]
+        private void Disappearing()
+        {
+            
+        }
+
+        [RelayCommand]
+        private async void LogOut()
+        {
+            if(await ViewServices.PopUpManager.PopYesOrNoAsync("Sair", "Deseja sair deste dispositivo?"))
+            {
+                AppDataHelperClass.CleanUserInfo();
+                _navigation.InsertPageBefore(ViewServices.ResolvePage<ILoginPage>(), _navigation.NavigationStack.Last());
+                await _navigation.PopAsync();
+            }
+        }
+
+        [RelayCommand]
+        private async void CloseApplication()
+        {
+            if (await ViewServices.PopUpManager.PopYesOrNoAsync("Fechar aplicativo", "Deseja fechar o aplicativo?"))
+                Application.Current.Quit();
+        }
     }
 }
