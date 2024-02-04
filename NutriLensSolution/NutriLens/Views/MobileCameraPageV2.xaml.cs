@@ -1,4 +1,3 @@
-using AndroidX.AppCompat.App;
 using NutriLens.Entities;
 using NutriLens.Services;
 using ExceptionLibrary; 
@@ -24,7 +23,6 @@ public partial class MobileCameraPageV2 : ContentPage
 
                 File.WriteAllBytes(filePath, img);
 
-
                 EntitiesHelperClass.ShowLoading("Sincronizando imagem na nuvem...");
 
                 string resultadoUpload = string.Empty;
@@ -33,6 +31,17 @@ public partial class MobileCameraPageV2 : ContentPage
                 await Task.Run(() => resultadoUpload = DaoHelperClass.UploadImage(filePath));
 
                 await ViewServices.PopUpManager.PopInfoAsync($"Imagem '{Path.GetFileName(filePath)}' salva com sucesso!");
+
+                EntitiesHelperClass.CloseLoading();
+
+                EntitiesHelperClass.ShowLoading("Realizando análise dos alimentos...");
+
+                string resultadoAnalise = string.Empty;
+
+                // Chama a função de upload com o caminho da imagem
+                await Task.Run(() => resultadoAnalise = DaoHelperClass.GetFoodVisionAnalisysByLocalPath(filePath));
+
+                await ViewServices.PopUpManager.PopPersonalizedAsync("Alimentos identificados", resultadoAnalise, "OK");
 
                 EntitiesHelperClass.CloseLoading();
 
