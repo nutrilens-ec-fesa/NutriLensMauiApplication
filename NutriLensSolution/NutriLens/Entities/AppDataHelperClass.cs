@@ -22,11 +22,17 @@ namespace NutriLens.Entities
             /// <summary>
             /// Informações do usuário
             /// </summary>
-            UserInfo
+            UserInfo,
+
+            /// <summary>
+            /// Itens alimentícios da tabela TBCA
+            /// </summary>
+            TbcaFoodItems
         }
 
         private static List<Meal> _mealList;
         private static UserInfo _userInfo;
+        private static List<TbcaItem> _tbcaFoodItemsItems; 
 
         /// <summary>
         /// Lista de refeições
@@ -78,9 +84,32 @@ namespace NutriLens.Entities
         }
 
         /// <summary>
+        /// Lista de itens da tabela TBCA
+        /// </summary>
+        public static List<TbcaItem> TbcaFoodItems
+        {
+            get
+            {
+                if (_tbcaFoodItemsItems == null)
+                {
+                    try
+                    {
+                        _tbcaFoodItemsItems = ViewServices.AppDataManager.GetItem<List<TbcaItem>>(DataItems.TbcaFoodItems);
+                    }
+                    catch (NotFoundException)
+                    {
+                        _tbcaFoodItemsItems = new List<TbcaItem>();
+                    }
+                }
+
+                return _tbcaFoodItemsItems;
+            }
+        }
+
+        /// <summary>
         /// Verifica se existe informações de usuário salvas no aplicativo
         /// </summary>
-        public static bool HasUserInfo { get => UserInfo != null && !string.IsNullOrEmpty(UserInfo.Name); }
+        public static bool HasUserInfo { get => UserInfo != null && !string.IsNullOrEmpty(UserInfo.Id); }
 
         /// <summary>
         /// Adiciona uma nova refeição
@@ -147,12 +176,28 @@ namespace NutriLens.Entities
             _userInfo = userInfo;
         }
 
+        /// <summary>
+        /// Limpa o objeto UserInfo do dispositivo
+        /// </summary>
+        /// <param name="userInfo"></param>
+        public static void CleanUserInfo()
+        {
+            ViewServices.AppDataManager.SetItem(DataItems.UserInfo, null);
+            _userInfo = null;
+        }
+
         public static double GetEnergeticDiaryObjective()
         {
             if (AppConfigHelperClass.EnergeticUnit == EnergeticUnit.kJ)
                 return UserInfo.KiloCaloriesDiaryObjective * Constants.kcalToKJFactor;
             else
                 return UserInfo.KiloCaloriesDiaryObjective;
+        }
+
+        public static void SetTbcaItems(List<TbcaItem> tbcaItems)
+        {
+            ViewServices.AppDataManager.SetItem(DataItems.TbcaFoodItems, tbcaItems);
+            _tbcaFoodItemsItems = tbcaItems;
         }
 
     }
