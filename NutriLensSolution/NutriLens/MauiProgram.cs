@@ -1,17 +1,15 @@
 ﻿using AppConfigLibrary;
+using AppDataLibrary;
+using Camera.MAUI;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using NutriLens.Entities;
 using NutriLens.Services;
-using PopupLibrary;
-using PermissionsLibrary;
-using WebLibrary;
 using NutriLens.ViewInterfaces;
 using NutriLens.Views;
-using Camera.MAUI;
+using PermissionsLibrary;
 using Plugin.Maui.Audio;
-using Microsoft.Extensions.DependencyInjection;
-using AppDataLibrary;
+using PopupLibrary;
 
 namespace NutriLens
 {
@@ -20,8 +18,11 @@ namespace NutriLens
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
+
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
+                .UseMauiCommunityToolkitMediaElement()
                 .UseMauiCameraView()
                 .ConfigureFonts(fonts =>
                 {
@@ -29,7 +30,6 @@ namespace NutriLens
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            builder.UseMauiCommunityToolkit();
             builder.UseViewServices();
             builder.Services.AddSingleton(AudioManager.Current);
 
