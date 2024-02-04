@@ -1,4 +1,6 @@
-﻿namespace NutriLens.Models
+﻿using MongoDB.Bson.Serialization.Attributes;
+
+namespace NutriLens.Models
 {
     public enum HabitualPhysicalActivity
     {
@@ -9,6 +11,7 @@
 
     public enum Gender
     {
+        Uninformed,
         Masculine,
         Feminine
     }
@@ -19,9 +22,14 @@
     public class UserInfo
     {
         /// <summary>
-        /// Nome do usuário
+        /// Id na base de dados
         /// </summary>
-        public string Name { get; set; }
+        [BsonId]
+        public string Id { get; set; }
+        ///// <summary>
+        ///// Nome do usuário
+        ///// </summary>
+        //public string Name { get; set; }
 
         /// <summary>
         /// Sexo do usuário
