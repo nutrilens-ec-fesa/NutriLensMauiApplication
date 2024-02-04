@@ -32,7 +32,7 @@
                 <Entry Grid.Row="1" Keyboard="Text" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding NameEntry}" Placeholder="Digite seu nome..." />
                 <Label Grid.Row="2" Text="Email" TextColor="Black"/>
                 <Entry Grid.Row="3" Keyboard="Email" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding EmailEntry}" Placeholder="Digite seu e-mail..."/>
-                <Label Grid.Row="4" Text="Email" TextColor="Black"/>
+                <Label Grid.Row="4" Text="Confirme o email" TextColor="Black"/>
                 <Entry Grid.Row="5" Keyboard="Email" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding EmailConfirmEntry}" Placeholder="Confirme seu e-mail..." />
                 <Label Grid.Row="6" Text="Senha" TextColor="Black" />
                 <Entry Grid.Row="7" Keyboard="Text" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding PasswordEntry}" IsPassword="True" Placeholder="Digite sua senha..." />
