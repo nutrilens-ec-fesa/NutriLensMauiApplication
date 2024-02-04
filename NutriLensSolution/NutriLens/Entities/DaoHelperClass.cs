@@ -1,4 +1,5 @@
-﻿using ExceptionLibrary;
+﻿using Android.Hardware.Camera2;
+using ExceptionLibrary;
 using FluentFTP.Helpers;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -397,7 +398,42 @@ namespace NutriLens.Entities
             return openAiResponse.GetResponseMessage();
         }
 
-        public static bool InsertNewLoginModel(Login login)
+        public static string GetFoodVisionAnalisysByUrl(string url)
+        {
+            OpenAiVisionInputModel inputModel = new OpenAiVisionInputModel
+            {
+                UserPrompt = "Analise essa foto.",
+                SystemPrompt = "Você identifica itens alimentícios de uma refeição, trazendo seu nome e a quantidade em gramas ou ml, em itens. Eu sei que as quantidades são aproximadas, portanto, não é necessário escrever aproximadamente ou coisa do tipo. Você é objetivo e não retorna mais nada além do solicitado.",
+                MaxTokens = 300,
+                Base64 = false,
+                Url = url
+            };
+
+            OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4VisionPreview, inputModel);
+
+            return response.GetResponseMessage();
+        }
+
+        public static string GetFoodVisionAnalisysByLocalPath(string localPath)
+        {
+            byte[] imageBytes = File.ReadAllBytes(localPath);
+            string base64Image = Convert.ToBase64String(imageBytes);
+
+            OpenAiVisionInputModel inputModel = new OpenAiVisionInputModel
+            {
+                UserPrompt = "Analise essa foto.",
+                SystemPrompt = "Você identifica itens alimentícios de uma refeição, trazendo seu nome e a quantidade em gramas ou ml, em itens. Eu sei que as quantidades são aproximadas, portanto, não é necessário escrever aproximadamente ou coisa do tipo. Você é objetivo e não retorna mais nada além do solicitado.",
+                MaxTokens = 300,
+                Base64 = false,
+                Url = $"data:image/jpeg;base64,{base64Image}"
+            };
+
+            OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4VisionPreview, inputModel);
+
+            return response.GetResponseMessage();
+        }
+
+        public static UserInfo InsertNewLoginModel(Login login)
         {
             var dbName = "NutriLensDtb";
             var collectionName = "LoginCollection";
@@ -417,7 +453,7 @@ namespace NutriLens.Entities
                     "username and password, and that your IP address is " +
                     $"in the Access List. Message: {ex.Message}");
 
-                return false;
+                return null;
             }
 
             collection = client
@@ -437,7 +473,7 @@ namespace NutriLens.Entities
                 ViewServices.PopUpManager.PopErrorAsync($"Something went wrong trying to insert the new documents." +
                     $" Message: {e.Message}");
 
-                return false;
+                return null;
             }
 
             if (allDocs.Count > 0)
@@ -446,17 +482,128 @@ namespace NutriLens.Entities
             try
             {
                 collection.InsertOne(login);
-                return true;
+                return InsertNewUserInfoByLogin(login);
             }
             catch (Exception e)
             {
                 ViewServices.PopUpManager.PopErrorAsync($"Something went wrong trying to insert the new documents." +
                     $" Message: {e.Message}");
-                return false;
+                return null;
             }
         }
 
-        public static bool CheckUserLogin(Login login)
+        public static UserInfo InsertNewUserInfoByLogin(Login login)
+        {
+            var dbName = "NutriLensDtb";
+            var collectionName = "UserInfoCollection";
+
+            IMongoClient client;
+
+            IMongoCollection<UserInfo> collection;
+
+            try
+            {
+                client = new MongoClient(_connectionUri);
+            }
+            catch (Exception ex)
+            {
+                ViewServices.PopUpManager.PopErrorAsync("There was a problem connecting to your " +
+                    "Atlas cluster. Check that the URI includes a valid " +
+                    "username and password, and that your IP address is " +
+                    $"in the Access List. Message: {ex.Message}");
+
+                return null;
+            }
+
+            collection = client
+                .GetDatabase(dbName)
+                .GetCollection<UserInfo>(collectionName);
+
+            List<UserInfo> allDocs;
+            string userInfoIdentifier = login.UserInfoIdentifier;
+
+            try
+            {
+                var filterBuilder = Builders<UserInfo>.Filter;
+
+                allDocs = collection.Find(filterBuilder.Eq(x => x.Id, userInfoIdentifier)).ToList();
+            }
+            catch (Exception e)
+            {
+                ViewServices.PopUpManager.PopErrorAsync($"Something went wrong trying to insert the new documents." +
+                    $" Message: {e.Message}");
+
+                return null;
+            }
+
+            if (allDocs.Count > 0)
+                throw new EmailAlreadyRegisteredException("Informações de usuário já registradas! Verifique e tente novamente.");
+
+            try
+            {
+                UserInfo newUserInfo = new() { Id = userInfoIdentifier };
+                collection.InsertOne(newUserInfo);
+                return newUserInfo;
+            }
+            catch (Exception e)
+            {
+                ViewServices.PopUpManager.PopErrorAsync($"Something went wrong trying to insert the new documents." +
+                    $" Message: {e.Message}");
+                return null;
+            }
+        }
+
+        public static UserInfo GetUserInfoByLogin(Login login)
+        {
+            var dbName = "NutriLensDtb";
+            var collectionName = "UserInfoCollection";
+
+            IMongoClient client;
+
+            IMongoCollection<UserInfo> collection;
+
+            try
+            {
+                client = new MongoClient(_connectionUri);
+            }
+            catch (Exception ex)
+            {
+                ViewServices.PopUpManager.PopErrorAsync("There was a problem connecting to your " +
+                    "Atlas cluster. Check that the URI includes a valid " +
+                    "username and password, and that your IP address is " +
+                    $"in the Access List. Message: {ex.Message}");
+
+                return null;
+            }
+
+            collection = client
+                .GetDatabase(dbName)
+                .GetCollection<UserInfo>(collectionName);
+
+            List<UserInfo> allDocs;
+            string userInfoIdentifier = login.UserInfoIdentifier;
+
+            try
+            {
+                var filterBuilder = Builders<UserInfo>.Filter;
+
+                allDocs = collection.Find(filterBuilder.Eq(x => x.Id, userInfoIdentifier)).ToList();
+            }
+            catch (Exception e)
+            {
+                ViewServices.PopUpManager.PopErrorAsync($"Something went wrong trying to insert the new documents." +
+                    $" Message: {e.Message}");
+
+                return null;
+            }
+
+            if (allDocs.Count > 0)
+                return allDocs[0];
+            else
+                throw new Exception("Informações de usuário não encontradas");
+        }
+
+        public static UserInfo CheckUserLogin(Login login)
         {
             var dbName = "NutriLensDtb";
             var collectionName = "LoginCollection";
@@ -476,7 +623,7 @@ namespace NutriLens.Entities
                     "username and password, and that your IP address is " +
                     $"in the Access List. Message: {ex.Message}");
 
-                return false;
+                return null;
             }
 
             collection = client
@@ -490,7 +637,7 @@ namespace NutriLens.Entities
                 List<Login> allDocs = collection.Find(filterBuilder.Eq(x => x.Email, login.Email) & filterBuilder.Eq(x => x.Password, login.Password))
                 .ToList();
 
-                return allDocs.Count > 0;
+                return GetUserInfoByLogin(allDocs[0]);
 
             }
             catch (Exception e)
@@ -498,7 +645,92 @@ namespace NutriLens.Entities
                 ViewServices.PopUpManager.PopErrorAsync($"Something went wrong trying to insert the new documents." +
                     $" Message: {e.Message}");
 
+                return null;
+            }
+        }
+
+        public static bool UpdateUserInfo(UserInfo userInfo)
+        {
+            var dbName = "NutriLensDtb";
+            var collectionName = "UserInfoCollection";
+
+            IMongoClient client;
+
+            IMongoCollection<UserInfo> collection;
+
+            try
+            {
+                client = new MongoClient(_connectionUri);
+            }
+            catch (Exception ex)
+            {
+                ViewServices.PopUpManager.PopErrorAsync("There was a problem connecting to your " +
+                    "Atlas cluster. Check that the URI includes a valid " +
+                    "username and password, and that your IP address is " +
+                    $"in the Access List. Message: {ex.Message}");
+
                 return false;
+            }
+
+            collection = client
+                .GetDatabase(dbName)
+                .GetCollection<UserInfo>(collectionName);
+
+            try
+            {
+                collection.ReplaceOne(doc => doc.Id == userInfo.Id, userInfo);
+                return true;
+            }
+            catch (Exception e)
+            {
+                ViewServices.PopUpManager.PopErrorAsync($"Something went wrong trying to update the new documents." +
+                    $" Message: {e.Message}");
+                return false;
+            }
+        }
+
+        public static List<TbcaItem> GetTbcaItemsList()
+        {
+            var dbName = "NutriLensDtb";
+            var collectionName = "TbcaFoodItemsCollection";
+
+            IMongoClient client;
+
+            IMongoCollection<TbcaItem> collection;
+
+            try
+            {
+                client = new MongoClient(_connectionUri);
+            }
+            catch (Exception ex)
+            {
+                ViewServices.PopUpManager.PopErrorAsync("There was a problem connecting to your " +
+                    "Atlas cluster. Check that the URI includes a valid " +
+                    "username and password, and that your IP address is " +
+                    $"in the Access List. Message: {ex.Message}");
+
+                return null;
+            }
+
+            collection = client
+                .GetDatabase(dbName)
+                .GetCollection<TbcaItem>(collectionName);
+
+            try
+            {
+                List<TbcaItem> allDocs = collection.Find(Builders<TbcaItem>.Filter.Empty).ToList();
+
+                if (allDocs.Count > 0)
+                    return allDocs;
+                else
+                    return null;
+            }
+            catch (Exception e)
+            {
+                ViewServices.PopUpManager.PopErrorAsync($"Something went wrong trying to insert the new documents." +
+                    $" Message: {e.Message}");
+
+                return null;
             }
         }
     }
