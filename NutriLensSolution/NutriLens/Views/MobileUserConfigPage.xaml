@@ -6,8 +6,8 @@
              Title="Configurações">
     <ScrollView>
         <VerticalStackLayout Padding="10,20,10,20" Spacing="5">
-            <Label Margin="5,0,0,0" Text="Nome"/>
-            <Entry Keyboard="Text" Placeholder="Digite seu nome..." Text="{Binding UserInfo.Name}" />
+            <!--<Label Margin="5,0,0,0" Text="Nome"/>
+            <Entry Keyboard="Text" Placeholder="Digite seu nome..." Text="{Binding UserInfo.Name}" />-->
             <Label Margin="5,0,0,0" Text="Sexo"/>
             <Picker ItemsSource="{Binding GenderOptions}" SelectedIndex="{Binding GenderIndex}"/>
             <Label Margin="5,0,0,0" Text="Data de nascimento"/>
