@@ -71,6 +71,7 @@ namespace NutriLens.ViewModels
 
             GenderOptions = new ObservableCollection<string>()
             {
+                "Não informado",
                 "Masculino",
                 "Feminino"
             };
@@ -120,16 +121,29 @@ namespace NutriLens.ViewModels
             UserInfo.Gender = (Gender)GenderIndex;
             UserInfo.HabitualPhysicalActivity = (HabitualPhysicalActivity)HabitualPhysicalActivityIndex;
 
-            AppDataHelperClass.SetUserInfo(UserInfo);
+            bool userUpdatedSuccesfully = false;
 
-            if (KcalEnabled)
-                AppConfigHelperClass.SetEnergeticUnit(EnergeticUnit.kcal);
+            EntitiesHelperClass.ShowLoading("Atualizando usuário");
+
+            await Task.Run(() => userUpdatedSuccesfully = DaoHelperClass.UpdateUserInfo(UserInfo));
+
+            EntitiesHelperClass.CloseLoading();
+
+            if (userUpdatedSuccesfully)
+            {
+                AppDataHelperClass.SetUserInfo(UserInfo);
+
+                if (KcalEnabled)
+                    AppConfigHelperClass.SetEnergeticUnit(EnergeticUnit.kcal);
+                else
+                    AppConfigHelperClass.SetEnergeticUnit(EnergeticUnit.kJ);
+
+                await ViewServices.PopUpManager.PopInfoAsync("Configurações salvas com sucesso!");
+
+                await _navigation.PopAsync();
+            }
             else
-                AppConfigHelperClass.SetEnergeticUnit(EnergeticUnit.kJ);
-
-            await ViewServices.PopUpManager.PopInfoAsync("Configurações salvas com sucesso!");
-
-            await _navigation.PopAsync();
+                await ViewServices.PopUpManager.PopErrorAsync("Houve algum problema para atualizar as informações de usuário. Aguarde uns instantes e tente novamente.");
         }
     }
 }
