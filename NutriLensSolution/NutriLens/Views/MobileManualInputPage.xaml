@@ -16,7 +16,7 @@
             <Label Text="{Binding FoodItemsQuantity}" Padding="0,20,0,20"></Label>
         </StackLayout>
         <StackLayout Grid.Row="1" Padding="20,0,20,0">
-            <Button Text="Adicionar novo item" Command="{Binding AddNewItemCommand}"></Button>
+            <Button Text="Adicionar novo item" Command="{Binding AddNewItemFromTbcaCommand}"></Button>
         </StackLayout>
         <StackLayout Grid.Row="2" Padding="0,20,0,0">
             <ListView ItemsSource="{Binding FoodItems}">
