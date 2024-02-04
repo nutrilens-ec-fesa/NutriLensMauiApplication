@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CryptographyLibrary;
+using ExceptionLibrary;
 using NutriLens.Entities;
 using NutriLens.Models;
 using NutriLens.Services;
@@ -63,11 +64,32 @@ namespace NutriLens.ViewModels
 
             Login newLogin = new()
             {
+                Name = NameEntry,
                 Email = EmailEntry,
                 Password = CryptographyManager.GetHashPassword(PasswordEntry)
             };
 
-            DaoHelperClass.InsertNewLoginModel(newLogin);
+            EntitiesHelperClass.ShowLoading("Criando novo usuário.");
+
+            UserInfo userInserted = null;
+
+            try
+            {
+                await Task.Run(() => userInserted = DaoHelperClass.InsertNewLoginModel(newLogin));
+            }
+            catch(Exception ex)
+            {
+                await ViewServices.PopUpManager.PopErrorAsync(ExceptionManager.ExceptionMessage(ex));
+            }
+
+            await EntitiesHelperClass.CloseLoading();
+
+            if (userInserted != null)
+                await ViewServices.PopUpManager.PopPersonalizedAsync("Usuário criado", "O usuário foi criado com sucesso!", "OK");
+            else
+                await ViewServices.PopUpManager.PopErrorAsync("Houve algum problema para inserir o novo usuário tente novamente mais tarde");
+            
+            await _navigation.PopAsync();
         }
     }
 }
