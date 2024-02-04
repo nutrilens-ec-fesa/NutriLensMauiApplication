@@ -1,5 +1,4 @@
-﻿using Android.Net.Wifi.Aware;
-using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Views;
 using NutriLens.Views.Popups;
 
 namespace NutriLens.Entities
