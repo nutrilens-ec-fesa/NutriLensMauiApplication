@@ -31,25 +31,10 @@ namespace NutriLens.ViewModels
         public double KiloCalories => FoodItems.Sum(x => x.KiloCalories);
         public string EnergeticUnit => AppConfigHelperClass.EnergeticUnit.ToString();
 
-        //public event PropertyChangedEventHandler PropertyChanged;
-
-        //protected virtual void OnPropertyChanged(string propertyName)
-        //{
-        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        //}
-
         public ManualInputPageVm(INavigation navigation)
         {
             _navigation = navigation;
             FoodItems = new ObservableCollection<FoodItem>();
-
-            // Mocked FoodItems
-            //FoodItems = new ObservableCollection<FoodItem>
-            //{
-            //    new FoodItem { Name = "Arroz", Portion = "100g", KiloCalories = 200 },
-            //    new FoodItem { Name = "Feijão", Portion = "100g", KiloCalories = 200 },
-            //    new FoodItem { Name = "Peito de frango", Portion = "100g", KiloCalories = 450 }
-            //};
         }
 
         [RelayCommand]
@@ -74,6 +59,43 @@ namespace NutriLens.ViewModels
                     GptNutritionalInfo gptNutritionalInfo = JsonConvert.DeserializeObject<GptNutritionalInfo>(gptJson);
                     foodItem.KiloCalories = gptNutritionalInfo.CaloriesValue;
                 }
+
+                FoodItems.Add(foodItem);
+
+                OnPropertyChanged(nameof(FoodItemsQuantity));
+                OnPropertyChanged(nameof(KiloCalories));
+            }
+        }
+
+        [RelayCommand]
+        public async Task AddNewItemFromTbca()
+        {
+            AddTbcaFoodItemPopup addFoodItemPopup = new AddTbcaFoodItemPopup();
+            await Application.Current.MainPage.ShowPopupAsync(addFoodItemPopup);
+
+            if (addFoodItemPopup.Confirmed)
+            {
+                FoodItem foodItem;
+
+                if (addFoodItemPopup.SelectedItem != null)
+                {
+                    foodItem = new()
+                    {
+                        Name = addFoodItemPopup.SelectedItem.Alimento,
+                        Portion = addFoodItemPopup.InputPortion,
+                        KiloCalories = addFoodItemPopup.InputCalories
+                    };
+                }
+                else
+                    return;
+
+                // Se não informou as calorias
+                //if (addFoodItemPopup.InputCalories == -1)
+                //{
+                //    string gptJson = DaoHelperClass.GetNutritionalInfo(foodItem);
+                //    GptNutritionalInfo gptNutritionalInfo = JsonConvert.DeserializeObject<GptNutritionalInfo>(gptJson);
+                //    foodItem.KiloCalories = gptNutritionalInfo.CaloriesValue;
+                //}
 
                 FoodItems.Add(foodItem);
 
