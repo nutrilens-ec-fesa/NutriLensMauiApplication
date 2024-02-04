@@ -289,6 +289,36 @@ namespace CryptographyLibrary
             return Results;
         }
 
+        /// <summary>
+        /// Retorna o content criptografado como string a partir de uma chave de criptografia
+        /// </summary>
+        /// <param name="decryptedContent">Conteúdo a ser criptografado</param>
+        /// <param name="enumCryptKey">Chave de criptografia</param>
+        /// <returns></returns>
+        public static string EncryptData(string decryptedContent, string key)
+        {
+            byte[] Results;
+            UTF8Encoding UTF8 = new System.Text.UTF8Encoding();
+            MD5CryptoServiceProvider HashProvider = new MD5CryptoServiceProvider();
+            byte[] TDESKey = HashProvider.ComputeHash(UTF8.GetBytes(key));
+            TripleDESCryptoServiceProvider TDESAlgorithm = new TripleDESCryptoServiceProvider();
+            TDESAlgorithm.Key = TDESKey;
+            TDESAlgorithm.Mode = CipherMode.ECB;
+            TDESAlgorithm.Padding = PaddingMode.PKCS7;
+            byte[] DataToEncrypt = UTF8.GetBytes(decryptedContent);
+            try
+            {
+                ICryptoTransform Encryptor = TDESAlgorithm.CreateEncryptor();
+                Results = Encryptor.TransformFinalBlock(DataToEncrypt, 0, DataToEncrypt.Length);
+            }
+            finally
+            {
+                TDESAlgorithm.Clear();
+                HashProvider.Clear();
+            }
+            return Convert.ToBase64String(Results);
+        }
+
         public static string DecryptData(string Message, string key)
         {
             byte[] Results;
