@@ -12,19 +12,19 @@
     </ContentPage.Behaviors>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.2*"></RowDefinition>
-            <RowDefinition Height="0.8*"></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Margin="0,0,0,0" Text="Bem-vindo ao NutriLens!" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalOptions="End"/>
         <Image Grid.Row="1" Source="nutrilenslogo.jpg" VerticalOptions="Start" />
         <Frame Grid.Row="2" BackgroundColor="White" CornerRadius="20" Margin="20">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0.1*"></RowDefinition>
-                    <RowDefinition Height="1*"></RowDefinition>
-                    <RowDefinition Height="0.1*"></RowDefinition>
-                    <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="0.2*"></RowDefinition>
+                    <RowDefinition Height="2*"></RowDefinition>
+                    <RowDefinition Height="0.2*"></RowDefinition>
+                    <RowDefinition Height="2*"></RowDefinition>
                     <RowDefinition Height="10*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Text="Email" TextColor="Black"/>
