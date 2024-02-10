@@ -3,7 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NutriLens.Views.MobileUserConfigPage"
              xmlns:xct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:c="clr-namespace:NutriLens.Entities.Converters"
              Title="Configurações">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <c:SelectedIndexChangedEventArgsConverter x:Key="selectedIndexChangedEventArgsConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ScrollView>
         <VerticalStackLayout Padding="10,20,10,20" Spacing="5">
             <!--<Label Margin="5,0,0,0" Text="Nome"/>
@@ -17,7 +23,11 @@
             <Label Margin="5,0,0,0" Text="Altura (m)"/>
             <Entry Keyboard="Numeric" Placeholder="Digite sua altura..." Text="{Binding HeightEntry}" />
             <Label Margin="5,0,0,0" Text="Nível de atividade física"/>
-            <Picker ItemsSource="{Binding HabitualPhysicalActivityOptions}" SelectedIndex="{Binding HabitualPhysicalActivityIndex}"/>
+            <Picker ItemsSource="{Binding HabitualPhysicalActivityOptions}" SelectedIndex="{Binding HabitualPhysicalActivityIndex}">
+                <Picker.Behaviors>
+                    <xct:EventToCommandBehavior EventName="SelectedIndexChanged" Command="{Binding CaloricSuggestChangedCommand}" EventArgsConverter="{StaticResource selectedIndexChangedEventArgsConverter}"></xct:EventToCommandBehavior>
+                </Picker.Behaviors>
+            </Picker> 
             <Label Margin="5,0,0,0" Text="Unidade de energia"/>
             <Grid>
                 <Grid.RowDefinitions>
@@ -30,7 +40,20 @@
                 <RadioButton Grid.Row="0" Grid.Column="0" Content="kcal (quilocalorias)" IsChecked="{Binding KcalEnabled}"></RadioButton>
                 <RadioButton Grid.Row="0" Grid.Column="1" Content="kJ (quilojoules)" IsChecked="{Binding KJEnabled}"></RadioButton>
             </Grid>
-            <Label Margin="5,0,0,0" Text="Meta diária de consumo"/>
+            <Label Margin="5,0,0,0" Text="Objetivo desejado:"/>
+            <Picker ItemsSource="{Binding DailyKiloCaloriesObjectiveOptions}" SelectedIndex="{Binding DailyKiloCaloriesObjectiveIndex}">
+                <Picker.Behaviors>
+                    <xct:EventToCommandBehavior EventName="SelectedIndexChanged" Command="{Binding CaloricSuggestChangedCommand}" EventArgsConverter="{StaticResource selectedIndexChangedEventArgsConverter}"></xct:EventToCommandBehavior>
+                </Picker.Behaviors>
+            </Picker>
+                
+            <Label Margin="5,0,0,0" Text="Gasto energético basal: "/>
+            <Label Margin="5,0,0,0" Text="{Binding BasalDailyCalories}"/>
+            <Label Margin="5,0,0,0" Text="Gasto energético diário: "/>
+            <Label Margin="5,0,0,0" Text="{Binding DailyKiloCaloriesBurn}"/>
+            <Label Margin="5,0,0,0" Text="Consumo diário de calorias sugerido: "/>
+            <Label Margin="5,0,0,0" Text="{Binding DailyKiloCaloriesGoal}"/>
+            <Label Margin="5,0,0,0" Text="Meta diária de consumo de calorias"/>
             <Entry Keyboard="Numeric" Placeholder="Digite sua meta diária de consumo..." Text="{Binding UserInfo.KiloCaloriesDiaryObjective}" />
             <Label Margin="5,0,0,0" Text="Doenças crônicas não transmissíveis (DCNT)"/>
             <Grid>

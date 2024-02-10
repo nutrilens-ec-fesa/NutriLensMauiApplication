@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.Graphics.Text;
 using MongoDB.Bson.Serialization.Serializers;
 using NutriLens.Entities;
 using NutriLens.Models;
@@ -43,9 +44,22 @@ namespace NutriLens.ViewModels
         public int GenderIndex { get; set; }
 
         /// <summary>
+        /// Data de nascimento na tela
+        /// </summary>
+        public DateTime Born { get; set; }
+
+        /// <summary>
         /// Indica o índice de hábito de atividade física selecionado pelo usuário
         /// </summary>
         public int HabitualPhysicalActivityIndex { get; set; }
+
+        public int DailyKiloCaloriesObjectiveIndex { get; set; }
+
+        public string BasalDailyCalories { get; set; }
+
+        public string DailyKiloCaloriesBurn { get; set; }
+
+        public string DailyKiloCaloriesGoal { get; set; }
 
         /// <summary>
         /// Picker de gêneros
@@ -56,6 +70,11 @@ namespace NutriLens.ViewModels
         /// Picker de hábitos de atividade física
         /// </summary>
         public ObservableCollection<string> HabitualPhysicalActivityOptions { get; set; }
+
+        /// <summary>
+        /// Picker do objetivo do usuário (manter peso, emagrecer ou engordar)
+        /// </summary>
+        public ObservableCollection<string> DailyKiloCaloriesObjectiveOptions { get; set; }
 
         public UserConfigPageVm(INavigation navigation)
         {
@@ -68,6 +87,7 @@ namespace NutriLens.ViewModels
             HeightEntry = UserInfo.Height.ToString("0.00");
 
             HabitualPhysicalActivityOptions = new ObservableCollection<string>();
+            DailyKiloCaloriesObjectiveOptions = new ObservableCollection<string>();
 
             GenderOptions = new ObservableCollection<string>()
             {
@@ -97,6 +117,30 @@ namespace NutriLens.ViewModels
             }
 
             HabitualPhysicalActivityIndex = (int)UserInfo.HabitualPhysicalActivity;
+
+            foreach (DailyKiloCaloriesObjective dailyKiloCaloriesObjective in (DailyKiloCaloriesObjective[])Enum.GetValues(typeof(DailyKiloCaloriesObjective)))
+            {
+                string toAdd = string.Empty;
+
+                switch (dailyKiloCaloriesObjective)
+                {
+                    case DailyKiloCaloriesObjective.Reduce:
+                        toAdd = "Reduzir o peso";
+                        break;
+                    case DailyKiloCaloriesObjective.Maintain:
+                        toAdd = "Manter o peso";
+                        break;
+                    case DailyKiloCaloriesObjective.Fatten:
+                        toAdd = "Aumentar o peso";
+                        break;
+                }
+
+                DailyKiloCaloriesObjectiveOptions.Add(toAdd);
+            }
+
+            DailyKiloCaloriesObjectiveIndex = (int)UserInfo.DailyKiloCaloriesObjective;
+
+
         }
 
         [RelayCommand]
@@ -120,6 +164,20 @@ namespace NutriLens.ViewModels
 
             UserInfo.Gender = (Gender)GenderIndex;
             UserInfo.HabitualPhysicalActivity = (HabitualPhysicalActivity)HabitualPhysicalActivityIndex;
+            UserInfo.DailyKiloCaloriesObjective = (DailyKiloCaloriesObjective)DailyKiloCaloriesObjectiveIndex;
+
+            DateTime born = UserInfo.BornDate;
+            int age = AppDataHelperClass.GetAge(born);
+            string gender = UserInfo.Gender.ToString();
+            double basal = AppDataHelperClass.GetBasalDailyCalories(age, gender);
+            BasalDailyCalories = basal.ToString("0.00");
+
+            string activity = UserInfo.HabitualPhysicalActivity.ToString();
+            double dailyKiloCaloriesBurn = AppDataHelperClass.GetDailyKiloCaloriesBurn(basal, activity);
+            DailyKiloCaloriesBurn = dailyKiloCaloriesBurn.ToString("0.00");
+
+            string objective = UserInfo.DailyKiloCaloriesObjective.ToString();
+            DailyKiloCaloriesGoal = AppDataHelperClass.GetDailyKiloCaloriesGoal(dailyKiloCaloriesBurn, objective).ToString("0.00");
 
             bool userUpdatedSuccesfully = false;
 
@@ -145,5 +203,31 @@ namespace NutriLens.ViewModels
             else
                 await ViewServices.PopUpManager.PopErrorAsync("Houve algum problema para atualizar as informações de usuário. Aguarde uns instantes e tente novamente.");
         }
+
+
+        [RelayCommand]
+        private async Task CaloricSuggestChanged()
+        {
+            DateTime born = UserInfo.BornDate;
+            int age = AppDataHelperClass.GetAge(born);
+            UserInfo.Gender = (Gender)GenderIndex;
+            string gender = UserInfo.Gender.ToString();
+            double basal = AppDataHelperClass.GetBasalDailyCalories(age, gender);
+            BasalDailyCalories = basal.ToString("0.00");
+            OnPropertyChanged(nameof(BasalDailyCalories));
+
+            UserInfo.HabitualPhysicalActivity = (HabitualPhysicalActivity)HabitualPhysicalActivityIndex;
+            string activity = UserInfo.HabitualPhysicalActivity.ToString();
+            double dailyKiloCaloriesBurn = AppDataHelperClass.GetDailyKiloCaloriesBurn(basal, activity);
+            DailyKiloCaloriesBurn = dailyKiloCaloriesBurn.ToString("0.00");
+            OnPropertyChanged(nameof(DailyKiloCaloriesBurn));
+
+            UserInfo.DailyKiloCaloriesObjective = (DailyKiloCaloriesObjective)DailyKiloCaloriesObjectiveIndex;
+            string objective = UserInfo.DailyKiloCaloriesObjective.ToString();
+            DailyKiloCaloriesGoal = AppDataHelperClass.GetDailyKiloCaloriesGoal(dailyKiloCaloriesBurn, objective ).ToString("0.00");
+            OnPropertyChanged(nameof(DailyKiloCaloriesGoal));
+        }
+
     }
+
 }

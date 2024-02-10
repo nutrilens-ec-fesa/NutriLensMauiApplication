@@ -9,6 +9,13 @@ namespace NutriLens.Models
         VigorouslyActive
     }
 
+    public enum DailyKiloCaloriesObjective
+    {
+        Reduce,
+        Maintain,
+        Fatten
+    }
+
     public enum Gender
     {
         Uninformed,
@@ -57,6 +64,23 @@ namespace NutriLens.Models
         public int KiloCaloriesDiaryObjective { get; set; }
 
         /// <summary>
+        /// Gasto energético basal diário conforme gênero e idade
+        /// https://www.tuasaude.com/como-calcular-o-gasto-calorico/
+        /// </summary>
+        public double BasalDailyCalories { get; set; }
+
+        /// <summary>
+        /// Meta de ingestão de calorias diarias baseado gasto basal e no nível de atividade física.
+        /// </summary>
+        public double DailyKiloCaloriesBurn { get; set; }
+
+        /// <summary>
+        /// Metã de ingestão de calorias diárias baseado no objetivo de ganho ou perca de peso
+        /// </summary>
+        public double DailyKiloCaloriesGoal { get; set; }
+
+
+        /// <summary>
         /// Usuário hipertenso
         /// </summary>
         public bool Hipertension { get; set; }
@@ -80,5 +104,11 @@ namespace NutriLens.Models
         /// Define o grau de intensidade em atividades físicas
         /// </summary>
         public HabitualPhysicalActivity HabitualPhysicalActivity { get; set; }
+
+        /// <summary>
+        /// Objetivo do usuario de perder, manter ou ganhar peso
+        /// </summary>
+        public DailyKiloCaloriesObjective DailyKiloCaloriesObjective { get; set; }
+
     }
 }

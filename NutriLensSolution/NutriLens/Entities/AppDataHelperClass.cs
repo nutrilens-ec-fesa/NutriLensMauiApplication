@@ -200,5 +200,123 @@ namespace NutriLens.Entities
             _tbcaFoodItemsItems = tbcaItems;
         }
 
+        public static int GetAge(DateTime bornDate)
+        {
+            TimeSpan dif = DateTime.Now - bornDate;
+            int age = (int)(dif.TotalDays / 365.25);
+            return age;
+        }
+
+        public static double GetBasalDailyCalories (int age, string genero)
+        {
+            double basalCalories = -1;
+
+            if (genero.Equals("Masculine"))
+            {
+                if (age < 3)
+                {
+                    basalCalories = (59.512 * UserInfo.Weight) - 30.4;
+                }
+                else if (age >= 3 && age < 10)
+                {
+                    basalCalories = (22.706 * UserInfo.Weight) + 504.3;
+                }
+                else if (age >= 10 && age < 18)
+                {
+                    basalCalories = (17.686 * UserInfo.Weight) + 658.2;
+                }
+                else if (age >= 18 && age < 30)
+                {
+                    basalCalories = (15.057 * UserInfo.Weight) + 692.2;
+                }
+                else if (age >= 30 && age < 60)
+                {
+                    basalCalories = (11.472 * UserInfo.Weight) + 873.1;
+                }
+                else if (age >= 60)
+                {
+                    basalCalories = (11.711 * UserInfo.Weight) + 587.7;
+                }
+            }
+            else if (genero.Equals("Feminine"))
+            {
+                if (age < 3)
+                {
+                    basalCalories = (58.317 * UserInfo.Weight) - 31.1;
+                }
+                else if (age >= 3 && age < 10)
+                {
+                    basalCalories = (20.315 * UserInfo.Weight) + 485.9;
+                }
+                else if (age >= 10 && age < 18)
+                {
+                    basalCalories = (13.384 * UserInfo.Weight) + 692.6;
+                }
+                else if (age >= 18 && age < 30)
+                {
+                    basalCalories = (14.818 * UserInfo.Weight) + 486.6;
+                }
+                else if (age >= 30 && age < 60)
+                {
+                    basalCalories = (8.126 * UserInfo.Weight) + 845.6;
+                }
+                else if (age >= 60)
+                {
+                    basalCalories = (9.082 * UserInfo.Weight) + 658.5;
+                }
+            }
+            else
+            {
+                basalCalories = 0.00;
+            }
+
+            return basalCalories;
+        }
+
+        public static double GetDailyKiloCaloriesBurn (double basalDailyCalories, string activity)
+        {
+            double dailyKiloCaloriesBurn = 0;
+
+            switch (activity)
+            {
+                case ("LightActivity"):
+                    dailyKiloCaloriesBurn = basalDailyCalories * 1.55;
+                    break;
+                case ("ModeratelyActive"):
+                    dailyKiloCaloriesBurn = basalDailyCalories * 1.84;
+                    break;
+                case ("VigorouslyActive"):
+                    dailyKiloCaloriesBurn = basalDailyCalories * 2.2;
+                    break;
+
+            }
+
+            return dailyKiloCaloriesBurn;
+
+        }
+
+
+        public static double GetDailyKiloCaloriesGoal(double dailyKiloCaloriesBurn, string objective)
+        {
+            double dailyKiloCaloriesGoal = 0;
+
+            switch (objective)
+            {
+                case ("Reduce"):
+                    dailyKiloCaloriesGoal = dailyKiloCaloriesBurn - 500;
+                    break;
+                case ("Maintain"):
+                    dailyKiloCaloriesGoal = dailyKiloCaloriesBurn;
+                    break;
+                case ("Fatten"):
+                    dailyKiloCaloriesGoal = dailyKiloCaloriesBurn + 500;
+                    break;
+
+            }
+
+            return dailyKiloCaloriesGoal;
+
+        }
+
     }
 }
