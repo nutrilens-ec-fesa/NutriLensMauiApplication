@@ -5,6 +5,7 @@ using ExceptionLibrary;
 using NutriLens.Entities;
 using NutriLens.Models;
 using NutriLens.Services;
+using NutriLensClassLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;

@@ -1,11 +1,7 @@
-using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
-using CommunityToolkit.Mvvm.ComponentModel;
-using MongoDB.Bson.IO;
 using NutriLens.Entities;
-using NutriLens.Models;
+using NutriLensClassLibrary.Models;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 
 namespace NutriLens.Views.Popups;
 

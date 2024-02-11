@@ -1,12 +1,9 @@
-﻿using Android.Hardware.Camera2;
-using ExceptionLibrary;
-using FluentFTP.Helpers;
+﻿using ExceptionLibrary;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using NutriLens.Models;
 using NutriLens.Services;
-using ZXing.QrCode.Internal;
-using static NutriLens.Entities.OpenAiEntity;
+using NutriLensClassLibrary.Models;
 
 namespace NutriLens.Entities
 {
@@ -22,7 +19,7 @@ namespace NutriLens.Entities
             MongoClient client = new MongoClient(settings);
             try
             {
-                var result = client.GetDatabase("admin").RunCommand<BsonDocument>(new BsonDocument("ping", 1));
+                BsonDocument result = client.GetDatabase("admin").RunCommand<BsonDocument>(new BsonDocument("ping", 1));
                 return "Pinged your deployment. You successfully connected to MongoDB!";
             }
             catch (Exception ex)
@@ -291,14 +288,14 @@ namespace NutriLens.Entities
             }
         }
 
-        public static BarcodeItem GetBarCodeItem(string barcode)
+        public static BarcodeItemEntry GetBarCodeItem(string barcode)
         {
             var dbName = "NutriLensDtb";
             var collectionName = "BarCodeProductsCollection";
 
             IMongoClient client;
 
-            IMongoCollection<BarcodeItem> collection;
+            IMongoCollection<BarcodeItemEntry> collection;
 
             try
             {
@@ -316,11 +313,11 @@ namespace NutriLens.Entities
 
             collection = client
                 .GetDatabase(dbName)
-                .GetCollection<BarcodeItem>(collectionName);
+                .GetCollection<BarcodeItemEntry>(collectionName);
 
             try
             {
-                List<BarcodeItem> allDocs = collection.Find(Builders<BarcodeItem>.Filter.Eq(x => x.Barcode, barcode))
+                List<BarcodeItemEntry> allDocs = collection.Find(Builders<BarcodeItemEntry>.Filter.Eq(x => x.Barcode, barcode))
                 .ToList();
 
                 if (allDocs.Count > 0)
@@ -384,53 +381,56 @@ namespace NutriLens.Entities
 
         public static string GetNutritionalInfo(FoodItem foodItem)
         {
-            OpenAiInputModel openAiInputModel = new()
-            {
-                SystemPrompt = "Be direct. Answer only the nutritional info in json format. Always with units. Consider the average size/type.",
-                UserPrompt = foodItem.GptQueryString,
-                Temperature = 1,
-                TopP = 1,
-                FrequencyPenalty = 0,
-                PresencePenalty = 0
-            };
+            //OpenAiInputModel openAiInputModel = new()
+            //{
+            //    SystemPrompt = "Be direct. Answer only the nutritional info in json format. Always with units. Consider the average size/type.",
+            //    UserPrompt = foodItem.GptQueryString,
+            //    Temperature = 1,
+            //    TopP = 1,
+            //    FrequencyPenalty = 0,
+            //    PresencePenalty = 0
+            //};
 
-            OpenAiResponse openAiResponse = OpenAiQuery(OpenAiModel.Gpt3dot5Turbo, openAiInputModel);
-            return openAiResponse.GetResponseMessage();
+            //OpenAiResponse openAiResponse = OpenAiQuery(OpenAiModel.Gpt3dot5Turbo, openAiInputModel);
+            //return openAiResponse.GetResponseMessage();
+            return string.Empty;
         }
 
         public static string GetFoodVisionAnalisysByUrl(string url)
         {
-            OpenAiVisionInputModel inputModel = new OpenAiVisionInputModel
-            {
-                UserPrompt = "Analise essa foto.",
-                SystemPrompt = "Você identifica itens alimentícios de uma refeição, trazendo seu nome e a quantidade em gramas ou ml, em itens. Eu sei que as quantidades são aproximadas, portanto, não é necessário escrever aproximadamente ou coisa do tipo. Você é objetivo e não retorna mais nada além do solicitado.",
-                MaxTokens = 300,
-                Base64 = false,
-                Url = url
-            };
+            //OpenAiVisionInputModel inputModel = new OpenAiVisionInputModel
+            //{
+            //    UserPrompt = "Analise essa foto.",
+            //    SystemPrompt = "Você identifica itens alimentícios de uma refeição, trazendo seu nome e a quantidade em gramas ou ml, em itens. Eu sei que as quantidades são aproximadas, portanto, não é necessário escrever aproximadamente ou coisa do tipo. Você é objetivo e não retorna mais nada além do solicitado.",
+            //    MaxTokens = 300,
+            //    Base64 = false,
+            //    Url = url
+            //};
 
-            OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4VisionPreview, inputModel);
+            //OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4VisionPreview, inputModel);
 
-            return response.GetResponseMessage();
+            //return response.GetResponseMessage();
+            return string.Empty;
         }
 
         public static string GetFoodVisionAnalisysByLocalPath(string localPath)
         {
-            byte[] imageBytes = File.ReadAllBytes(localPath);
-            string base64Image = Convert.ToBase64String(imageBytes);
+            //byte[] imageBytes = File.ReadAllBytes(localPath);
+            //string base64Image = Convert.ToBase64String(imageBytes);
 
-            OpenAiVisionInputModel inputModel = new OpenAiVisionInputModel
-            {
-                UserPrompt = "Analise essa foto.",
-                SystemPrompt = "Você identifica itens alimentícios de uma refeição, trazendo seu nome e a quantidade em gramas ou ml, em itens. Eu sei que as quantidades são aproximadas, portanto, não é necessário escrever aproximadamente ou coisa do tipo. Você é objetivo e não retorna mais nada além do solicitado.",
-                MaxTokens = 300,
-                Base64 = false,
-                Url = $"data:image/jpeg;base64,{base64Image}"
-            };
+            //OpenAiVisionInputModel inputModel = new OpenAiVisionInputModel
+            //{
+            //    UserPrompt = "Analise essa foto.",
+            //    SystemPrompt = "Você identifica itens alimentícios de uma refeição, trazendo seu nome e a quantidade em gramas ou ml, em itens. Eu sei que as quantidades são aproximadas, portanto, não é necessário escrever aproximadamente ou coisa do tipo. Você é objetivo e não retorna mais nada além do solicitado.",
+            //    MaxTokens = 300,
+            //    Base64 = false,
+            //    Url = $"data:image/jpeg;base64,{base64Image}"
+            //};
 
-            OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4VisionPreview, inputModel);
+            //OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4VisionPreview, inputModel);
 
-            return response.GetResponseMessage();
+            //return response.GetResponseMessage();
+            return string.Empty;
         }
 
         public static UserInfo InsertNewLoginModel(Login login)

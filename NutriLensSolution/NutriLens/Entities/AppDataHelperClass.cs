@@ -1,6 +1,8 @@
 ﻿using ExceptionLibrary;
 using NutriLens.Models;
 using NutriLens.Services;
+using NutriLensClassLibrary.Entities;
+using NutriLensClassLibrary.Models;
 
 namespace NutriLens.Entities
 {

@@ -18,12 +18,12 @@ namespace NutriLens.ViewModels
     {
         private INavigation _navigation;
 
-        public ObservableCollection<BarcodeItem> BarCodeProducts { get; set; }
+        public ObservableCollection<BarcodeItemEntry> BarCodeProducts { get; set; }
 
         public EditBarCodeProductsVm(INavigation navigation)
         {
             _navigation = navigation;
-            BarCodeProducts = new ObservableCollection<BarcodeItem>();
+            BarCodeProducts = new ObservableCollection<BarcodeItemEntry>();
         }
 
         [RelayCommand]
@@ -31,7 +31,7 @@ namespace NutriLens.ViewModels
         {
             EntitiesHelperClass.ShowLoading("Carregando produtos...");
 
-            List<BarcodeItem> databaseProducts = null;
+            List<BarcodeItemEntry> databaseProducts = null;
 
             await Task.Run(() => databaseProducts = DaoHelperClass.GetAllBarCodeItems());
 
@@ -39,14 +39,14 @@ namespace NutriLens.ViewModels
 
             BarCodeProducts.Clear();
 
-            foreach (BarcodeItem item in databaseProducts.OrderBy(x => x.ProductName))
+            foreach (BarcodeItemEntry item in databaseProducts.OrderBy(x => x.ProductName))
             {
                 BarCodeProducts.Add(item);
             }
         }
 
         [RelayCommand]
-        private async void ProductTapped(BarcodeItem barcodeItem)
+        private async void ProductTapped(BarcodeItemEntry barcodeItem)
         {
             if (await ViewServices.PopUpManager.PopYesOrNoAsync("Editar produto", $"Deseja editar o produto '{barcodeItem.ProductName}'?"))
                 await _navigation.PushAsync(ViewServices.ResolvePage<IAddBarcodeProductPage>(barcodeItem));

@@ -1,13 +1,12 @@
 ﻿using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MongoDB.Bson.IO;
 using NutriLens.Entities;
 using NutriLens.Models;
 using NutriLens.Services;
 using NutriLens.Views.Popups;
+using NutriLensClassLibrary.Models;
 using System.Collections.ObjectModel;
-using Newtonsoft.Json;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace NutriLens.ViewModels

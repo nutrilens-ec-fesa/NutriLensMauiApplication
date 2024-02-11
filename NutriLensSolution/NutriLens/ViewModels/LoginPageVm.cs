@@ -6,6 +6,7 @@ using NutriLens.Services;
 using NutriLens.ViewInterfaces;
 using CryptographyLibrary;
 using PermissionsLibrary;
+using NutriLensClassLibrary.Models;
 
 namespace NutriLens.ViewModels
 {

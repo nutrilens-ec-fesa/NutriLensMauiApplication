@@ -1,4 +1,6 @@
-﻿namespace NutriLens.Models
+﻿using NutriLensClassLibrary.Models;
+
+namespace NutriLens.Models
 {
     /// <summary>
     /// Representa um modelo de refeição
@@ -22,7 +24,10 @@
 
         public override string ToString()
         {
-            return $"{DateTime} - {Name} - {FoodItems.Count} itens";
+            if(FoodItems.Count > 1)
+                return $"{DateTime} - {Name} - {FoodItems.Count} itens";
+            else
+                return $"{DateTime} - {Name} - {FoodItems.Count} item";
         }
     }
 }

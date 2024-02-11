@@ -4,6 +4,7 @@ using MongoDB.Bson.Serialization.Serializers;
 using NutriLens.Entities;
 using NutriLens.Models;
 using NutriLens.Services;
+using NutriLensClassLibrary.Models;
 using System.Collections.ObjectModel;
 
 namespace NutriLens.ViewModels
