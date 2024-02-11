@@ -3,6 +3,7 @@ using NutriLensClassLibrary.Models;
 using ExceptionLibrary;
 using NutriLensWebApp.Interfaces;
 using NutriLensWebApp.Services;
+using WebLibrary;
 
 namespace NutriLensWebApp.Controllers
 {
@@ -23,6 +24,25 @@ namespace NutriLensWebApp.Controllers
                     return Ok(TokenService.GenerateToken(login));
             }
             catch(Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
+        [HttpPost, Route("v1/LoginByUserInfoId")]
+        public IActionResult LoginByUserInfoId([FromBody] string userInfoId,
+            [FromServices] IUserInfo userInfoRepo)
+        {
+            try
+            {
+                UserInfo userInfo = userInfoRepo.GetUserInfoById(userInfoId);
+
+                if (userInfo == null)
+                    return NotFound("Usuário não encontrado");
+                else
+                    return Ok(TokenService.GenerateToken(userInfo));
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ExceptionManager.ExceptionMessage(ex));
             }
