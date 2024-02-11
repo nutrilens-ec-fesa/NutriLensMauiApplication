@@ -1,4 +1,6 @@
 ﻿using ExceptionLibrary;
+using Newtonsoft.Json;
+using MongoDB.Bson.IO;
 using NutriLens.Models;
 using NutriLens.Services;
 
@@ -207,7 +209,7 @@ namespace NutriLens.Entities
             return age;
         }
 
-        public static double GetBasalDailyCalories (int age, string genero)
+        public static double GetBasalDailyCalories (int age, string genero, double weight)
         {
             double basalCalories = -1;
 
@@ -316,6 +318,28 @@ namespace NutriLens.Entities
 
             return dailyKiloCaloriesGoal;
 
+        }
+
+        public static List<RecognizedImageInfoModel> GetRecognizedImageInfoModel(string resultadoAnalise) 
+        { 
+            int ini = resultadoAnalise.IndexOf('[');
+            int fim = resultadoAnalise.IndexOf(']');
+            int len = (fim - ini)+1;
+            string texto = resultadoAnalise.Substring(ini, len);
+            List<RecognizedImageInfoModel> alimentosReconhecidos = Newtonsoft.Json.JsonConvert.DeserializeObject<List<RecognizedImageInfoModel>>(texto);
+            return alimentosReconhecidos;
+        }
+
+        public static string GetRecognizedImageInfoText (List<RecognizedImageInfoModel> alimentosReconhecidos)
+        {
+            string alimentos = string.Empty;
+
+            foreach(RecognizedImageInfoModel item in alimentosReconhecidos)
+            {
+                alimentos += item.Item + " - " + item.Quantidade + "g" + '\n';
+            }
+
+            return alimentos;
         }
 
     }

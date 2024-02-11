@@ -1,6 +1,7 @@
 using NutriLens.Entities;
 using NutriLens.Services;
-using ExceptionLibrary; 
+using ExceptionLibrary;
+using NutriLens.Models;
 
 namespace NutriLens.Views;
 
@@ -38,10 +39,29 @@ public partial class MobileCameraPageV2 : ContentPage
 
                 string resultadoAnalise = string.Empty;
 
-                // Chama a função de upload com o caminho da imagem
-                await Task.Run(() => resultadoAnalise = DaoHelperClass.GetFoodVisionAnalisysByLocalPath(filePath));
+                TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
 
-                await ViewServices.PopUpManager.PopPersonalizedAsync("Alimentos identificados", resultadoAnalise, "OK");
+                List<RecognizedImageInfoModel> alimentos = new List<RecognizedImageInfoModel>();
+
+                // Chama a função de upload com o caminho da imagem
+                await Task.Run(() =>
+                {
+                    resultadoAnalise = DaoHelperClass.GetFoodVisionAnalisysByLocalPath(filePath);
+                    // Quando a análise estiver completa, sinalize o TaskCompletionSource
+                    tcs.SetResult(true);
+                });
+
+                await tcs.Task;
+
+                if (tcs.Task.IsCompleted)
+                {
+                    alimentos = AppDataHelperClass.GetRecognizedImageInfoModel(resultadoAnalise);
+                }
+
+                string identificados = AppDataHelperClass.GetRecognizedImageInfoText(alimentos);
+
+                await ViewServices.PopUpManager.PopPersonalizedAsync("Alimentos identificados", identificados, "OK");
+
 
                 EntitiesHelperClass.CloseLoading();
 

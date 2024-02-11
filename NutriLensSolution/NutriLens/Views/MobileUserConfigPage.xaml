@@ -14,21 +14,21 @@
         <VerticalStackLayout Padding="10,20,10,20" Spacing="5">
             <!--<Label Margin="5,0,0,0" Text="Nome"/>
             <Entry Keyboard="Text" Placeholder="Digite seu nome..." Text="{Binding UserInfo.Name}" />-->
-            <Label Margin="5,0,0,0" Text="Sexo"/>
-            <Picker ItemsSource="{Binding GenderOptions}" SelectedIndex="{Binding GenderIndex}"/>
-            <Label Margin="5,0,0,0" Text="Data de nascimento"/>
-            <DatePicker Date="{Binding UserInfo.BornDate}" />
-            <Label Margin="5,0,0,0" Text="Massa (kg)"/>
-            <Entry Keyboard="Numeric" Placeholder="Digite seu peso..." Text="{Binding WeightEntry}" />
-            <Label Margin="5,0,0,0" Text="Altura (m)"/>
-            <Entry Keyboard="Numeric" Placeholder="Digite sua altura..." Text="{Binding HeightEntry}" />
-            <Label Margin="5,0,0,0" Text="Nível de atividade física"/>
-            <Picker ItemsSource="{Binding HabitualPhysicalActivityOptions}" SelectedIndex="{Binding HabitualPhysicalActivityIndex}">
+            <Label Margin="5,0,0,0" Text="Sexo" FontAttributes="Bold"/>
+            <Picker ItemsSource="{Binding GenderOptions}" SelectedIndex="{Binding GenderIndex}" Background="Azure"/>
+            <Label Margin="5,0,0,0" Text="Data de nascimento" FontAttributes="Bold"/>
+            <DatePicker Date="{Binding UserInfo.BornDate}" Background="Azure"/>
+            <Label Margin="5,0,0,0" Text="Massa (kg)" FontAttributes="Bold"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite seu peso..." Text="{Binding WeightEntry}" Background="Azure"/>
+            <Label Margin="5,0,0,0" Text="Altura (m)" FontAttributes="Bold"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite sua altura..." Text="{Binding HeightEntry}" Background="Azure"/>
+            <Label Margin="5,0,0,0" Text="Nível de atividade física" FontAttributes="Bold"/>
+            <Picker ItemsSource="{Binding HabitualPhysicalActivityOptions}" SelectedIndex="{Binding HabitualPhysicalActivityIndex}" Background="Azure">
                 <Picker.Behaviors>
                     <xct:EventToCommandBehavior EventName="SelectedIndexChanged" Command="{Binding CaloricSuggestChangedCommand}" EventArgsConverter="{StaticResource selectedIndexChangedEventArgsConverter}"></xct:EventToCommandBehavior>
                 </Picker.Behaviors>
-            </Picker> 
-            <Label Margin="5,0,0,0" Text="Unidade de energia"/>
+            </Picker>
+            <Label Margin="5,0,0,0" Text="Unidade de energia" FontAttributes="Bold"/>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
@@ -40,8 +40,8 @@
                 <RadioButton Grid.Row="0" Grid.Column="0" Content="kcal (quilocalorias)" IsChecked="{Binding KcalEnabled}"></RadioButton>
                 <RadioButton Grid.Row="0" Grid.Column="1" Content="kJ (quilojoules)" IsChecked="{Binding KJEnabled}"></RadioButton>
             </Grid>
-            <Label Margin="5,0,0,0" Text="Objetivo desejado:"/>
-            <Picker ItemsSource="{Binding DailyKiloCaloriesObjectiveOptions}" SelectedIndex="{Binding DailyKiloCaloriesObjectiveIndex}">
+            <Label Margin="5,0,0,0" Text="Objetivo desejado:" FontAttributes="Bold"/>
+            <Picker ItemsSource="{Binding DailyKiloCaloriesObjectiveOptions}" SelectedIndex="{Binding DailyKiloCaloriesObjectiveIndex}" Background="Azure">
                 <Picker.Behaviors>
                     <xct:EventToCommandBehavior EventName="SelectedIndexChanged" Command="{Binding CaloricSuggestChangedCommand}" EventArgsConverter="{StaticResource selectedIndexChangedEventArgsConverter}"></xct:EventToCommandBehavior>
                 </Picker.Behaviors>
@@ -51,11 +51,11 @@
             <Label Margin="5,0,0,0" Text="{Binding BasalDailyCalories}"/>
             <Label Margin="5,0,0,0" Text="Gasto energético diário: "/>
             <Label Margin="5,0,0,0" Text="{Binding DailyKiloCaloriesBurn}"/>
-            <Label Margin="5,0,0,0" Text="Consumo diário de calorias sugerido: "/>
+            <Label Margin="5,0,0,0" Text="Consumo diário de calorias sugerido: " FontAttributes="Bold"/>
             <Label Margin="5,0,0,0" Text="{Binding DailyKiloCaloriesGoal}"/>
-            <Label Margin="5,0,0,0" Text="Meta diária de consumo de calorias"/>
-            <Entry Keyboard="Numeric" Placeholder="Digite sua meta diária de consumo..." Text="{Binding UserInfo.KiloCaloriesDiaryObjective}" />
-            <Label Margin="5,0,0,0" Text="Doenças crônicas não transmissíveis (DCNT)"/>
+            <Label Margin="5,0,0,0" Text="Meta diária de consumo de calorias" FontAttributes="Bold"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite sua meta diária de consumo..." Text="{Binding UserInfo.KiloCaloriesDiaryObjective}" Background="Azure"/>
+            <Label Margin="5,0,0,0" Text="Doenças crônicas não transmissíveis (DCNT)" FontAttributes="Bold"/>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>

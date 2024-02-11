@@ -165,11 +165,12 @@ namespace NutriLens.ViewModels
             UserInfo.Gender = (Gender)GenderIndex;
             UserInfo.HabitualPhysicalActivity = (HabitualPhysicalActivity)HabitualPhysicalActivityIndex;
             UserInfo.DailyKiloCaloriesObjective = (DailyKiloCaloriesObjective)DailyKiloCaloriesObjectiveIndex;
+            UserInfo.Weight = double.Parse(WeightEntry);
 
             DateTime born = UserInfo.BornDate;
             int age = AppDataHelperClass.GetAge(born);
             string gender = UserInfo.Gender.ToString();
-            double basal = AppDataHelperClass.GetBasalDailyCalories(age, gender);
+            double basal = AppDataHelperClass.GetBasalDailyCalories(age, gender, UserInfo.Weight);
             BasalDailyCalories = basal.ToString("0.00");
 
             string activity = UserInfo.HabitualPhysicalActivity.ToString();
@@ -211,8 +212,10 @@ namespace NutriLens.ViewModels
             DateTime born = UserInfo.BornDate;
             int age = AppDataHelperClass.GetAge(born);
             UserInfo.Gender = (Gender)GenderIndex;
+            UserInfo.Weight = double.Parse(WeightEntry);
+            double weight = UserInfo.Weight;
             string gender = UserInfo.Gender.ToString();
-            double basal = AppDataHelperClass.GetBasalDailyCalories(age, gender);
+            double basal = AppDataHelperClass.GetBasalDailyCalories(age, gender, weight);
             BasalDailyCalories = basal.ToString("0.00");
             OnPropertyChanged(nameof(BasalDailyCalories));
 

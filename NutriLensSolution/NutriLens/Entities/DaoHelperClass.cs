@@ -403,7 +403,7 @@ namespace NutriLens.Entities
             OpenAiVisionInputModel inputModel = new OpenAiVisionInputModel
             {
                 UserPrompt = "Analise essa foto.",
-                SystemPrompt = "Você identifica itens alimentícios de uma refeição, trazendo seu nome e a quantidade em gramas ou ml, em itens. Eu sei que as quantidades são aproximadas, portanto, não é necessário escrever aproximadamente ou coisa do tipo. Você é objetivo e não retorna mais nada além do solicitado.",
+                SystemPrompt = "Você identifica itens alimentícios de uma refeição, trazendo em json os nomes e as quantidades em gramas ou ml, em itens. Eu sei que as quantidades são aproximadas, portanto, não é necessário escrever aproximadamente ou coisa do tipo. Você é objetivo e não retorna mais nada além do solicitado.",
                 MaxTokens = 300,
                 Base64 = false,
                 Url = url
@@ -421,8 +421,8 @@ namespace NutriLens.Entities
 
             OpenAiVisionInputModel inputModel = new OpenAiVisionInputModel
             {
-                UserPrompt = "Analise essa foto.",
-                SystemPrompt = "Você identifica itens alimentícios de uma refeição, trazendo seu nome e a quantidade em gramas ou ml, em itens. Eu sei que as quantidades são aproximadas, portanto, não é necessário escrever aproximadamente ou coisa do tipo. Você é objetivo e não retorna mais nada além do solicitado.",
+                UserPrompt = "Analise essa foto. Retorne em json no formato: [{Item:item,Quantidade:g},{Item:item,Quantidade:g}]",
+                SystemPrompt = "Você identifica itens alimentícios de uma refeição, trazendo em json uma lista de item e quantidade em gramas ou ml, de cada item. Eu sei que as quantidades são aproximadas, portanto, não é necessário escrever aproximadamente ou coisa do tipo. Você é objetivo e não retorna mais nada além do solicitado.",
                 MaxTokens = 300,
                 Base64 = false,
                 Url = $"data:image/jpeg;base64,{base64Image}"

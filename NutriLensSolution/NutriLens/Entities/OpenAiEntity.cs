@@ -9,7 +9,7 @@ namespace NutriLens.Entities
     public static class OpenAiEntity
     {
         private static readonly string _routeApiChatCompletions = "https://api.openai.com/v1/chat/completions";
-        private static readonly string _apiKey = "Na planilha e rumo a API";
+        private static readonly string _apiKey = "Na planilha";
         private static readonly string _gpt3dot5Turbo = "gpt-3.5-turbo";
         private static readonly string _gpt4VisionPreview = "gpt-4-vision-preview";
 
