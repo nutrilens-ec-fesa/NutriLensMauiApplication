@@ -37,36 +37,6 @@ namespace NutriLens.ViewModels
         }
 
         [RelayCommand]
-        public async Task AddNewItem()
-        {
-            AddFoodItemPopup addFoodItemPopup = new AddFoodItemPopup();
-            await Application.Current.MainPage.ShowPopupAsync(addFoodItemPopup);
-
-            if (addFoodItemPopup.Confirmed)
-            {
-                FoodItem foodItem = new()
-                {
-                    Name = addFoodItemPopup.InputItem,
-                    Portion = addFoodItemPopup.InputPortion,
-                    KiloCalories = addFoodItemPopup.InputCalories
-                };
-
-                // Se não informou as calorias
-                if (addFoodItemPopup.InputCalories == -1)
-                {
-                    string gptJson = DaoHelperClass.GetNutritionalInfo(foodItem);
-                    GptNutritionalInfo gptNutritionalInfo = JsonConvert.DeserializeObject<GptNutritionalInfo>(gptJson);
-                    foodItem.KiloCalories = gptNutritionalInfo.CaloriesValue;
-                }
-
-                FoodItems.Add(foodItem);
-
-                OnPropertyChanged(nameof(FoodItemsQuantity));
-                OnPropertyChanged(nameof(KiloCalories));
-            }
-        }
-
-        [RelayCommand]
         public async Task AddNewItemFromTbca()
         {
             AddTbcaFoodItemPopup addFoodItemPopup = new AddTbcaFoodItemPopup();
