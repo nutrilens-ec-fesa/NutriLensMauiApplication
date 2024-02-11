@@ -47,5 +47,28 @@ namespace NutriLensWebApp.Services
             return tokenHandler.WriteToken(token);
         }
 
+        public static string GenerateToken(UserInfo userInfo)
+        {
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+
+            byte[] key = Encoding.ASCII.GetBytes(_secret);
+
+            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Sid, userInfo.Id)
+                }),
+                Expires = DateTime.UtcNow.AddHours(_hoursToExpire),
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature
+                )
+            };
+
+            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return tokenHandler.WriteToken(token);
+        }
     }
 }
