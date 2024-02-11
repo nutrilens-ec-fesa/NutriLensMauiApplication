@@ -98,3 +98,15 @@ public class EmailAlreadyRegisteredException : Exception
     public EmailAlreadyRegisteredException(string message) : base(message) { }
     public EmailAlreadyRegisteredException(string message, Exception inner) : base(message, inner) { }
 }
+
+/// <summary>
+/// Exceção para indicar que a requisição efetuada não obteve êxito
+/// </summary>
+[Serializable]
+public class UnsuccessfullRequestException : Exception
+{
+    public UnsuccessfullRequestException() : base() { }
+    public UnsuccessfullRequestException(string message) : base(message) { }
+    public UnsuccessfullRequestException(string message, Exception inner) : base(message, inner) { }
+}
+
