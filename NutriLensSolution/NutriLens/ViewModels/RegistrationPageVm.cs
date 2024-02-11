@@ -72,24 +72,20 @@ namespace NutriLens.ViewModels
 
             EntitiesHelperClass.ShowLoading("Criando novo usuário.");
 
-            UserInfo userInserted = null;
-
             try
             {
-                await Task.Run(() => userInserted = DaoHelperClass.InsertNewLoginModel(newLogin));
+                await Task.Run(() => DaoHelperClass.InsertNewLoginModel(newLogin));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                await ViewServices.PopUpManager.PopErrorAsync(ExceptionManager.ExceptionMessage(ex));
+                await ViewServices.PopUpManager.PopErrorAsync("Houve algum problema para inserir o novo usuário tente novamente mais tarde. " + ExceptionManager.ExceptionMessage(ex));
+                return;
             }
 
             await EntitiesHelperClass.CloseLoading();
 
-            if (userInserted != null)
-                await ViewServices.PopUpManager.PopPersonalizedAsync("Usuário criado", "O usuário foi criado com sucesso!", "OK");
-            else
-                await ViewServices.PopUpManager.PopErrorAsync("Houve algum problema para inserir o novo usuário tente novamente mais tarde");
-            
+            await ViewServices.PopUpManager.PopPersonalizedAsync("Usuário criado", "O usuário foi criado com sucesso!", "OK");
+
             await _navigation.PopAsync();
         }
     }

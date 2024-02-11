@@ -56,12 +56,12 @@ namespace NutriLens.ViewModels
             if (_addProduct)
             {
                 verb = "adicionado";
-                await Task.Run((Func<bool>)(() => result = DaoHelperClass.InsertBarCodeItem(BarcodeItem)));
+                await Task.Run(() => DaoHelperClass.InsertBarCodeItem(BarcodeItem));
             }
             else
             {
                 verb = "alterado";
-                await Task.Run((Func<bool>)(() => result = DaoHelperClass.UpdateBarCodeItem(BarcodeItem)));
+                await Task.Run(() => DaoHelperClass.UpdateBarCodeItem(BarcodeItem));
             }
 
             EntitiesHelperClass.CloseLoading();

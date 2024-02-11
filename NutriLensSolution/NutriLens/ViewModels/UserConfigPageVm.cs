@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ExceptionLibrary;
 using MongoDB.Bson.Serialization.Serializers;
 using NutriLens.Entities;
 using NutriLens.Models;
@@ -122,29 +123,32 @@ namespace NutriLens.ViewModels
             UserInfo.Gender = (Gender)GenderIndex;
             UserInfo.HabitualPhysicalActivity = (HabitualPhysicalActivity)HabitualPhysicalActivityIndex;
 
-            bool userUpdatedSuccesfully = false;
-
             EntitiesHelperClass.ShowLoading("Atualizando usuário");
 
-            await Task.Run(() => userUpdatedSuccesfully = DaoHelperClass.UpdateUserInfo(UserInfo));
+            try
+            {
+                await Task.Run(() => DaoHelperClass.UpdateUserInfo(UserInfo));
+            }
+            catch (Exception ex)
+            {
+                await ViewServices.PopUpManager.PopErrorAsync("Houve algum problema para atualizar as informações de usuário. Aguarde uns instantes e tente novamente." + ExceptionManager.ExceptionMessage(ex));
+                EntitiesHelperClass.CloseLoading();
+                return;
+            }
 
             EntitiesHelperClass.CloseLoading();
 
-            if (userUpdatedSuccesfully)
-            {
-                AppDataHelperClass.SetUserInfo(UserInfo);
+            AppDataHelperClass.SetUserInfo(UserInfo);
 
-                if (KcalEnabled)
-                    AppConfigHelperClass.SetEnergeticUnit(EnergeticUnit.kcal);
-                else
-                    AppConfigHelperClass.SetEnergeticUnit(EnergeticUnit.kJ);
-
-                await ViewServices.PopUpManager.PopInfoAsync("Configurações salvas com sucesso!");
-
-                await _navigation.PopAsync();
-            }
+            if (KcalEnabled)
+                AppConfigHelperClass.SetEnergeticUnit(EnergeticUnit.kcal);
             else
-                await ViewServices.PopUpManager.PopErrorAsync("Houve algum problema para atualizar as informações de usuário. Aguarde uns instantes e tente novamente.");
+                AppConfigHelperClass.SetEnergeticUnit(EnergeticUnit.kJ);
+
+            await ViewServices.PopUpManager.PopInfoAsync("Configurações salvas com sucesso!");
+
+            await _navigation.PopAsync();
+
         }
     }
 }

@@ -25,10 +25,8 @@ public partial class MobileCameraPageV2 : ContentPage
 
                 EntitiesHelperClass.ShowLoading("Sincronizando imagem na nuvem...");
 
-                string resultadoUpload = string.Empty;
-
                 // Chama a função de upload com o caminho da imagem
-                await Task.Run(() => resultadoUpload = DaoHelperClass.UploadImage(filePath));
+                await Task.Run(() => DaoHelperClass.UploadImage(filePath));
 
                 await ViewServices.PopUpManager.PopInfoAsync($"Imagem '{Path.GetFileName(filePath)}' salva com sucesso!");
 
