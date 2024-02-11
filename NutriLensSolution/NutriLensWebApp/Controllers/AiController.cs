@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ExceptionLibrary;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NutriLensWebApp.Models;
 using static NutriLensWebApp.Entities.OpenAiEntity;
-using ExceptionLibrary;
 
 namespace NutriLensWebApp.Controllers
 {
@@ -16,7 +16,7 @@ namespace NutriLensWebApp.Controllers
     public class AiController : ControllerBase
     {
         [HttpPost, Route("v1/DetectFoodByUrl")]
-        public IActionResult DetectFoodByUrl([FromBody]string url)
+        public IActionResult DetectFoodByUrl([FromBody] string url)
         {
             try
             {

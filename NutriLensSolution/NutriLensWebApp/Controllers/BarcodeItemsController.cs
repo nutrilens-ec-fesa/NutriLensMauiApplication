@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ExceptionLibrary;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NutriLensWebApp.Interfaces;
-using ExceptionLibrary;
 using NutriLensClassLibrary.Models;
-using Microsoft.AspNetCore.Http.Extensions;
+using NutriLensWebApp.Interfaces;
 
 namespace NutriLensWebApp.Controllers
 {
