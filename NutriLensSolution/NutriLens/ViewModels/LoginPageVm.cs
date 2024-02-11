@@ -1,10 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CryptographyLibrary;
+using ExceptionLibrary;
 using NutriLens.Entities;
-using NutriLens.Models;
 using NutriLens.Services;
 using NutriLens.ViewInterfaces;
-using CryptographyLibrary;
+using NutriLensClassLibrary.Models;
 using PermissionsLibrary;
 
 namespace NutriLens.ViewModels
@@ -42,23 +43,24 @@ namespace NutriLens.ViewModels
 
             EntitiesHelperClass.ShowLoading("Verificando usuário...");
 
-            UserInfo userInfo = null;
-
-            await Task.Run(() => userInfo = DaoHelperClass.CheckUserLogin(LoginModel));
+            try
+            {
+                await Task.Run(() => DaoHelperClass.Login(LoginModel));
+            }
+            catch (Exception ex)
+            {
+                await EntitiesHelperClass.CloseLoading();
+                PasswordEntry = string.Empty;
+                OnPropertyChanged(nameof(PasswordEntry));
+                await ViewServices.PopUpManager.PopPersonalizedAsync("Falha ao logar", ExceptionManager.ExceptionMessage(ex) , "OK");
+                return;
+            }
 
             await EntitiesHelperClass.CloseLoading();
 
-            if (userInfo != null)
-            {
-                AppDataHelperClass.SetUserInfo(userInfo);
-                await _navigation.PushAsync(ViewServices.ResolvePage<IMainMenuPage>());
-            }
-            else
-            {
-                PasswordEntry = string.Empty;
-                OnPropertyChanged(nameof(PasswordEntry));
-                await ViewServices.PopUpManager.PopPersonalizedAsync("Usuário não encontrado", "Usuário e/ou senha incorretos, verifique e tente novamente", "OK");
-            }
+            AppDataHelperClass.SetUserInfo(DaoHelperClass.GetUserInfoByAuthenticatedUser());
+            await _navigation.PushAsync(ViewServices.ResolvePage<IMainMenuPage>());
+
         }
 
         [RelayCommand]
@@ -82,6 +84,8 @@ namespace NutriLens.ViewModels
             // Se houver informações de usuário
             if (AppDataHelperClass.HasUserInfo)
             {
+                DaoHelperClass.LoginWithUserInfoId(AppDataHelperClass.UserInfo.Id);
+
                 // Vai direto para a tela inicial
 
                 // Chama a StartPage 

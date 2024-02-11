@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui.Views;
 using NutriLens.Views.Popups;
+using NutriLensClassLibrary.Entities;
 
 namespace NutriLens.Entities
 {

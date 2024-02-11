@@ -13,7 +13,7 @@ namespace NutriLens.ViewModels
         /// <summary>
         /// Produto a ser adicionado ou editado
         /// </summary>
-        public BarcodeItem BarcodeItem { get; set; }
+        public BarcodeItemEntry BarcodeItem { get; set; }
 
         /// <summary>
         /// Texto da Navigation Bar da página
@@ -31,13 +31,13 @@ namespace NutriLens.ViewModels
             _navigation = navigation;
             _addProduct = true;
             PageTitle = "Adicionar novo produto";
-            BarcodeItem = new BarcodeItem
+            BarcodeItem = new BarcodeItemEntry
             {
                 Barcode = barcode
             };
         }
 
-        public AddBarcodeProductVm(INavigation navigation, BarcodeItem barcodeItem)
+        public AddBarcodeProductVm(INavigation navigation, BarcodeItemEntry barcodeItem)
         {
             _navigation = navigation;
             _addProduct = false;
@@ -56,12 +56,12 @@ namespace NutriLens.ViewModels
             if (_addProduct)
             {
                 verb = "adicionado";
-                await Task.Run(() => result = DaoHelperClass.InsertBarCodeItem(BarcodeItem));
+                await Task.Run(() => DaoHelperClass.InsertBarCodeItem(BarcodeItem));
             }
             else
             {
                 verb = "alterado";
-                await Task.Run(() => result = DaoHelperClass.UpdateBarCodeItem(BarcodeItem));
+                await Task.Run(() => DaoHelperClass.UpdateBarCodeItem(BarcodeItem));
             }
 
             EntitiesHelperClass.CloseLoading();

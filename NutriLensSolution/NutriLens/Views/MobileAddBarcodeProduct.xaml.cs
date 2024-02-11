@@ -12,7 +12,7 @@ public partial class MobileAddBarcodeProduct : ContentPage, IAddBarcodeProductPa
         BindingContext = new AddBarcodeProductVm(Navigation, barcode);
     }
 
-    public MobileAddBarcodeProduct(BarcodeItem barcodeItem)
+    public MobileAddBarcodeProduct(BarcodeItemEntry barcodeItem)
     {
         InitializeComponent();
         BindingContext = new AddBarcodeProductVm(Navigation, barcodeItem);

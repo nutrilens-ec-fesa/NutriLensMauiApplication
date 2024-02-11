@@ -21,7 +21,7 @@ namespace NutriLens.ViewModels
         private DateTime? _lastBarCodeDetected;
 
         public string BarCodeText { get; set; }
-        public ObservableCollection<BarcodeItem> BarCodesRead { get; set; }
+        public ObservableCollection<BarcodeItemEntry> BarCodesRead { get; set; }
         public bool AutoStartPreview { get; set; } = false;
         private CameraInfo _camera = null;
         public CameraInfo Camera
@@ -104,9 +104,9 @@ namespace NutriLens.ViewModels
         {
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
-                List<BarcodeItem> barcodeItems = BarCodesRead.ToList();
+                List<BarcodeItemEntry> barcodeItems = BarCodesRead.ToList();
 
-                BarcodeItem foundBarCodeItem = BarCodesRead.FirstOrDefault(x => x.Barcode == barcode);
+                BarcodeItemEntry foundBarCodeItem = BarCodesRead.FirstOrDefault(x => x.Barcode == barcode);
 
                 if (foundBarCodeItem != null)
                 {
@@ -121,7 +121,7 @@ namespace NutriLens.ViewModels
 
                 EntitiesHelperClass.ShowLoading($"Buscando código '{BarCodeText}' na base de dados");
 
-                BarcodeItem barcodeItem = null;
+                BarcodeItemEntry barcodeItem = null;
 
                 await Task.Run(() => barcodeItem = DaoHelperClass.GetBarCodeItem(BarCodeText));
 
@@ -139,8 +139,9 @@ namespace NutriLens.ViewModels
                     string consumptionQuantity = await ViewServices.PopUpManager.PopFreeInputAsync(barcodeItem.ProductName, $"Quantos(as) '{barcodeItem.PortionDefinition}' você irá consumir?");
 
                     if (double.TryParse(consumptionQuantity, out var quantity))
-                    { 
-                        await ViewServices.PopUpManager.PopInfoAsync("Total de calorias: " + (quantity * barcodeItem.EnergeticValue) / barcodeItem.UnitsPerPortion);
+                    {
+                        double totalCalories = (quantity * barcodeItem.EnergeticValue) / barcodeItem.UnitsPerPortion;
+                        await ViewServices.PopUpManager.PopInfoAsync("Total de calorias: " + totalCalories);
                         BarCodesRead.Add(barcodeItem);
                         OnPropertyChanged(nameof(BarCodesRead));
                     }
@@ -154,7 +155,7 @@ namespace NutriLens.ViewModels
         public BarCodePageVm(INavigation navigation)
         {
             _navigation = navigation;
-            BarCodesRead = new ObservableCollection<BarcodeItem>();
+            BarCodesRead = new ObservableCollection<BarcodeItemEntry>();
 
             BarCodeOptions = new BarcodeDecodeOptions
             {

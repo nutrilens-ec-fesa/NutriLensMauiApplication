@@ -62,7 +62,7 @@
 		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="2.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-		<PackageReference Include="MongoDB.Bson" Version="2.22.0" />
+		<PackageReference Include="MongoDB.Bson" Version="2.23.1" />
 		<PackageReference Include="MongoDB.Driver" Version="2.22.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Plugin.Maui.Audio" Version="1.0.0" />
@@ -79,6 +79,7 @@
 	  <ProjectReference Include="..\CryptographyLibrary\CryptographyLibrary.csproj" />
 	  <ProjectReference Include="..\DictionaryLibrary\DictionaryLibrary.csproj" />
 	  <ProjectReference Include="..\ExceptionLibrary\ExceptionLibrary.csproj" />
+	  <ProjectReference Include="..\NutriLensClassLibrary\NutriLensClassLibrary.csproj" />
 	  <ProjectReference Include="..\PermissionsLibrary\PermissionsLibrary.csproj" />
 	  <ProjectReference Include="..\PopupLibrary\PopupLibrary.csproj" />
 	  <ProjectReference Include="..\WebLibrary\WebLibrary.csproj" />
