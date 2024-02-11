@@ -79,6 +79,7 @@
 	  <ProjectReference Include="..\CryptographyLibrary\CryptographyLibrary.csproj" />
 	  <ProjectReference Include="..\DictionaryLibrary\DictionaryLibrary.csproj" />
 	  <ProjectReference Include="..\ExceptionLibrary\ExceptionLibrary.csproj" />
+	  <ProjectReference Include="..\NutriLensClassLibrary\NutriLensClassLibrary.csproj" />
 	  <ProjectReference Include="..\PermissionsLibrary\PermissionsLibrary.csproj" />
 	  <ProjectReference Include="..\PopupLibrary\PopupLibrary.csproj" />
 	  <ProjectReference Include="..\WebLibrary\WebLibrary.csproj" />
