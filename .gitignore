@@ -397,3 +397,4 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 NutriLensSolution/NutriLens/Entities/OpenAiEntity.cs
+NutriLensSolution/NutriLensWebApp/appsettings.json
