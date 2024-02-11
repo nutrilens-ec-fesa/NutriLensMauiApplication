@@ -9,5 +9,7 @@
         public static readonly string appConfigurationPath = Path.Combine(FileSystem.AppDataDirectory, _appConfigFile);
         public static readonly string appDataPath = Path.Combine(FileSystem.AppDataDirectory, _appDataFile);
         public static readonly string databasePicturesPath = Path.Combine(FileSystem.AppDataDirectory, _databasePicturesDirectory);
+
+        public static string ApiUrl = "https://nutrilenswebapp.azurewebsites.net";
     }
 }
