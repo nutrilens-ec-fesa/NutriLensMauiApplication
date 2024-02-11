@@ -23,5 +23,17 @@ namespace NutriLensWebApp.Repositories
                 throw new DatabaseQueryException("Houve algum problema para resgatar as informações do usuário", ex);
             }
         }
+
+        public void UpdateUserInfo(UserInfo userInfo)
+        {
+            try
+            {
+                AppMongoDbContext.UserInfo.ReplaceOne(doc => doc.Id == userInfo.Id, userInfo);
+            }
+            catch (Exception ex)
+            {
+                throw new DatabaseQueryException("Houve algum problema para atualizar as informações de usuário", ex);
+            }
+        }
     }
 }

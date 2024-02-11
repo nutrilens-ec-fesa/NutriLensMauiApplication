@@ -1,9 +1,8 @@
-﻿using NutriLensClassLibrary.Models;
+﻿using ExceptionLibrary;
+using MongoDB.Driver;
+using NutriLensClassLibrary.Models;
 using NutriLensWebApp.Entities;
 using NutriLensWebApp.Interfaces;
-using ExceptionLibrary;
-using System.Linq;
-using MongoDB.Driver;
 
 namespace NutriLensWebApp.Repositories
 {

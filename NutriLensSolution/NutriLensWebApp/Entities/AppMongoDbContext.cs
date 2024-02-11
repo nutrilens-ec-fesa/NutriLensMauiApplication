@@ -97,7 +97,7 @@ namespace NutriLensWebApp.Entities
         {
             get
             {
-                _mongoImage ??= Client.GetDatabase(_database).GetCollection<MongoImage>("BarCodeProductsCollection");
+                _mongoImage ??= Client.GetDatabase(_database).GetCollection<MongoImage>("TestCollection");
                 return _mongoImage;
             }
         }
