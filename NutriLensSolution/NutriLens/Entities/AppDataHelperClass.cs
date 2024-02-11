@@ -29,12 +29,18 @@ namespace NutriLens.Entities
             /// <summary>
             /// Itens alimentícios da tabela TBCA
             /// </summary>
-            TbcaFoodItems
+            TbcaFoodItems,
+
+            /// <summary>
+            /// Token da API do NutriLens
+            /// </summary>
+            NutriLensApiToken
         }
 
         private static List<Meal> _mealList;
         private static UserInfo _userInfo;
-        private static List<TbcaItem> _tbcaFoodItemsItems; 
+        private static List<TbcaItem> _tbcaFoodItemsItems;
+        private static string _nutriLensApiToken;
 
         /// <summary>
         /// Lista de refeições
@@ -105,6 +111,32 @@ namespace NutriLens.Entities
                 }
 
                 return _tbcaFoodItemsItems;
+            }
+        }
+
+        /// <summary>
+        /// Token de acesso à API do NutriLens
+        /// </summary>
+        public static string NutriLensApiToken
+        {
+            get
+            {
+                if (_nutriLensApiToken == null)
+                {
+                    try
+                    {
+                        _nutriLensApiToken = ViewServices.AppDataManager.GetItem<string>(DataItems.NutriLensApiToken);
+
+                        if (_nutriLensApiToken == null)
+                            _nutriLensApiToken = string.Empty;
+                    }
+                    catch (NotFoundException)
+                    {
+                        _nutriLensApiToken = string.Empty;
+                    }
+                }
+
+                return _nutriLensApiToken;
             }
         }
 
@@ -188,6 +220,10 @@ namespace NutriLens.Entities
             _userInfo = null;
         }
 
+        /// <summary>
+        /// Obtém o objetivo de consumo energético atual
+        /// </summary>
+        /// <returns></returns>
         public static double GetEnergeticDiaryObjective()
         {
             if (AppConfigHelperClass.EnergeticUnit == EnergeticUnit.kJ)
@@ -196,11 +232,25 @@ namespace NutriLens.Entities
                 return UserInfo.KiloCaloriesDiaryObjective;
         }
 
+        /// <summary>
+        /// Seta os items da TBCA na memória do dispositivo
+        /// </summary>
+        /// <param name="tbcaItems"></param>
         public static void SetTbcaItems(List<TbcaItem> tbcaItems)
         {
             ViewServices.AppDataManager.SetItem(DataItems.TbcaFoodItems, tbcaItems);
             _tbcaFoodItemsItems = tbcaItems;
         }
 
+        /// <summary>
+        /// Seta no dispositivo o token de acesso aos recursos da API do NutriLens
+        /// </summary>
+        /// <param name="token"></param>
+        public static void SetNutriLensApiToken(string token)
+        {
+            token = token.Replace("\"", string.Empty);
+            ViewServices.AppDataManager.SetItem(DataItems.NutriLensApiToken, token);
+            _nutriLensApiToken = token;
+        }
     }
 }
