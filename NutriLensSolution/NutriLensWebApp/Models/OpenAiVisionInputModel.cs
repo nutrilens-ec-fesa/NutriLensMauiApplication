@@ -1,4 +1,4 @@
-﻿namespace NutriLens.Models
+﻿namespace NutriLensWebApp.Models
 {
     public class OpenAiVisionInputModel
     {
