@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 
-namespace NutriLens.Models
+namespace NutriLensClassLibrary.Models
 {
     public enum HabitualPhysicalActivity
     {

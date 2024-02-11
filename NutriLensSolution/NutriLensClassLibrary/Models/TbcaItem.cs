@@ -2,7 +2,7 @@
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 
-namespace NutriLens.Models
+namespace NutriLensClassLibrary.Models
 {
     public class TbcaItem
     {

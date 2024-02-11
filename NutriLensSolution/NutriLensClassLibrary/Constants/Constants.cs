@@ -1,4 +1,4 @@
-﻿namespace NutriLens.Entities
+﻿namespace NutriLensClassLibrary.Entities
 {
     public static class Constants
     {

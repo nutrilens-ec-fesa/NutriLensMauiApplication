@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 
-namespace NutriLens.Models
+namespace NutriLensClassLibrary.Models
 {
     public class MongoImage
     {

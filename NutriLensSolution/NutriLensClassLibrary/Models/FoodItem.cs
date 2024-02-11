@@ -1,9 +1,8 @@
-﻿using Amazon.Runtime.SharedInterfaces;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using Newtonsoft.Json;
-using NutriLens.Entities;
+using NutriLensClassLibrary.Entities;
 
-namespace NutriLens.Models
+namespace NutriLensClassLibrary.Models
 {
     /// <summary>
     /// Representa um modelo de item alimentício

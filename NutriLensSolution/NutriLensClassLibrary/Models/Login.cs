@@ -1,9 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using static Android.Renderscripts.ScriptGroup;
 
-namespace NutriLens.Models
+namespace NutriLensClassLibrary.Models
 {
     public class Login
     {
@@ -18,6 +16,9 @@ namespace NutriLens.Models
         {
             get
             {
+                if (string.IsNullOrEmpty(Id))
+                    return string.Empty;
+
                 string userInfoIdentifier = string.Empty;
                 int biggerLength = Id.Length > Email.Length ? Id.Length : Email.Length;
 
