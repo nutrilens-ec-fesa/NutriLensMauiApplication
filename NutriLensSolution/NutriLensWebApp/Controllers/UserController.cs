@@ -25,7 +25,7 @@ namespace NutriLensWebApp.Controllers
                 loginRepo.InsertNewUser(login);
                 return Ok();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ExceptionManager.ExceptionMessage(ex));
             }
@@ -43,7 +43,22 @@ namespace NutriLensWebApp.Controllers
                 else
                     return Ok(userInfo);
             }
-            catch(Exception ex)
+            catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
+        [HttpPut, Route("v1/UpdateUserInfo")]
+        public IActionResult UpdateUserInfo([FromBody] UserInfo userInfo,
+            [FromServices] IUserInfo userInfoRepo)
+        {
+            try
+            {
+                userInfoRepo.UpdateUserInfo(userInfo);
+                return Ok();
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ExceptionManager.ExceptionMessage(ex));
             }
