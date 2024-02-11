@@ -75,7 +75,7 @@ public static class HttpManager
             if (bool.TryParse(content, out bool value))
                 return (T)(object)value;
         }
-        else if (typeof(T) == typeof(object))
+        else
             return JsonConvert.DeserializeObject<T>(content);
 
         throw new HttpContentParseException($"Falha na conversão do content para {typeof(T)}");
