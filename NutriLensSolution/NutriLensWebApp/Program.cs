@@ -38,8 +38,6 @@ OpenAiEntity.SetApiKey(builder.Configuration.GetValue<string>("OpenAiKey"));
 
 #endregion
 
-#if DEBUG
-
 #region Swagger Config
 
 builder.Services.AddSwaggerGen(x =>
@@ -55,8 +53,6 @@ builder.Services.AddSwaggerGen(x =>
 });
 
 #endregion
-
-#endif
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -103,12 +99,10 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-#if DEBUG
 app.UseSwagger();
 app.UseSwaggerUI(x =>
 {
     x.SwaggerEndpoint("/swagger/v1/swagger.json", $"NutriLens API");
 });
-#endif
 
 app.Run();
