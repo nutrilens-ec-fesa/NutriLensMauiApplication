@@ -36,10 +36,12 @@ public partial class MobileCameraPageV2 : ContentPage
                 EntitiesHelperClass.ShowLoading("Realizando análise dos alimentos...");
 
                 string resultadoAnalise = string.Empty;
+                string identificados = string.Empty;
 
                 TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
 
-                List<RecognizedImageInfoModel> alimentos = new List<RecognizedImageInfoModel>();
+                List<RecognizedImageInfoTxtModel> alimentosTxt = new List<RecognizedImageInfoTxtModel>();
+                List<RecognizedImageInfoModel> alimentosJson = new List<RecognizedImageInfoModel>();
 
                 // Chama a função de upload com o caminho da imagem
                 await Task.Run(() =>
@@ -53,10 +55,18 @@ public partial class MobileCameraPageV2 : ContentPage
 
                 if (tcs.Task.IsCompleted)
                 {
-                    alimentos = AppDataHelperClass.GetRecognizedImageInfoModel(resultadoAnalise);
+                    if (resultadoAnalise.Contains('['))
+                    {
+                        alimentosJson = AppDataHelperClass.GetRecognizedImageInfoModel(resultadoAnalise);
+                        identificados = AppDataHelperClass.GetRecognizedImageInfoText(alimentosJson);
+                    }
+                    else
+                    {
+                        alimentosTxt = AppDataHelperClass.GetRecognizedImageInfoTxtModel(resultadoAnalise);
+                        identificados = AppDataHelperClass.GetRecognizedImageInfoText(alimentosTxt);
+                    }
+                    
                 }
-
-                string identificados = AppDataHelperClass.GetRecognizedImageInfoText(alimentos);
 
                 await ViewServices.PopUpManager.PopPersonalizedAsync("Alimentos identificados", identificados, "OK");
 

@@ -244,6 +244,11 @@ namespace NutriLens.Entities
             _tbcaFoodItemsItems = tbcaItems;
         }
 
+        /// <summary>
+        /// Calcular idade a partir da data de nascimento
+        /// </summary>
+        /// <param name="bornDate"></param>
+        /// <returns></returns>
         public static int GetAge(DateTime bornDate)
         {
             TimeSpan dif = DateTime.Now - bornDate;
@@ -251,6 +256,13 @@ namespace NutriLens.Entities
             return age;
         }
 
+        /// <summary>
+        /// Calculo calorias basal
+        /// </summary>
+        /// <param name="age"></param>
+        /// <param name="genero"></param>
+        /// <param name="weight"></param>
+        /// <returns></returns>
         public static double GetBasalDailyCalories (int age, string genero, double weight)
         {
             double basalCalories = -1;
@@ -317,6 +329,12 @@ namespace NutriLens.Entities
             return basalCalories;
         }
 
+        /// <summary>
+        /// Calculo de gasto diario calorias conforme nivel atividade fisica
+        /// </summary>
+        /// <param name="basalDailyCalories"></param>
+        /// <param name="activity"></param>
+        /// <returns></returns>
         public static double GetDailyKiloCaloriesBurn (double basalDailyCalories, string activity)
         {
             double dailyKiloCaloriesBurn = 0;
@@ -339,7 +357,12 @@ namespace NutriLens.Entities
 
         }
 
-
+        /// <summary>
+        /// Calculo de ingestao de calorias diarias conforme objetivo do usuario
+        /// </summary>
+        /// <param name="dailyKiloCaloriesBurn"></param>
+        /// <param name="objective"></param>
+        /// <returns></returns>
         public static double GetDailyKiloCaloriesGoal(double dailyKiloCaloriesBurn, string objective)
         {
             double dailyKiloCaloriesGoal = 0;
@@ -362,23 +385,80 @@ namespace NutriLens.Entities
 
         }
 
-        public static List<RecognizedImageInfoModel> GetRecognizedImageInfoModel(string resultadoAnalise) 
+        /// <summary>
+        /// Obter lista de itens reconhecidos a partir de uma string em json
+        /// </summary>
+        /// <param name="resultadoAnaliseJson"></param>
+        /// <returns></returns>
+        public static List<RecognizedImageInfoModel> GetRecognizedImageInfoModel(string resultadoAnaliseJson) 
         { 
-            int ini = resultadoAnalise.IndexOf('[');
-            int fim = resultadoAnalise.IndexOf(']');
+
+            int ini = resultadoAnaliseJson.IndexOf('[');
+            int fim = resultadoAnaliseJson.IndexOf(']');
             int len = (fim - ini)+1;
-            string texto = resultadoAnalise.Substring(ini, len);
-            List<RecognizedImageInfoModel> alimentosReconhecidos = Newtonsoft.Json.JsonConvert.DeserializeObject<List<RecognizedImageInfoModel>>(texto);
-            return alimentosReconhecidos;
+            if(ini != -1 || fim != -1)
+            {
+                string texto = resultadoAnaliseJson.Substring(ini, len);
+                List<RecognizedImageInfoModel> alimentosReconhecidos = Newtonsoft.Json.JsonConvert.DeserializeObject<List<RecognizedImageInfoModel>>(texto);
+                return alimentosReconhecidos;
+            }
+            else
+            {
+                List<RecognizedImageInfoModel> alimentosReconhecidos = new List<RecognizedImageInfoModel>();
+                return alimentosReconhecidos;
+            }
+            
         }
 
+        /// <summary>
+        /// Obter string de itens reconhecidos para exibir em tela
+        /// </summary>
+        /// <param name="alimentosReconhecidos"></param>
+        /// <returns></returns>
         public static string GetRecognizedImageInfoText (List<RecognizedImageInfoModel> alimentosReconhecidos)
         {
             string alimentos = string.Empty;
 
             foreach(RecognizedImageInfoModel item in alimentosReconhecidos)
             {
-                alimentos += item.Item + " - " + item.Quantidade + "g" + '\n';
+                alimentos += item.Item + " - " + item.Quantidade + '\n';
+            }
+
+            return alimentos;
+        }
+
+        public static string GetRecognizedImageInfoText(List<RecognizedImageInfoTxtModel> alimentosReconhecidos)
+        {
+            string alimentos = string.Empty;
+
+            foreach (RecognizedImageInfoTxtModel item in alimentosReconhecidos)
+            {
+                alimentos += item.Item + " - " + item.Quantidade + '\n';
+            }
+
+            return alimentos;
+        }
+
+        public static List<RecognizedImageInfoTxtModel> GetRecognizedImageInfoTxtModel(string resultadoAnalise)
+        {
+            List<RecognizedImageInfoTxtModel> alimentos = new List<RecognizedImageInfoTxtModel>();
+
+            string[] linhas = resultadoAnalise.Split('\n');
+
+            foreach(string linha in linhas)
+            {
+                RecognizedImageInfoTxtModel alimento = new RecognizedImageInfoTxtModel();
+                int div = linha.IndexOf('-');
+                if (div == -1)
+                {
+                    div = linha.IndexOf(':');
+                }
+                int len = linha.Length - div;
+
+                alimento.Item = linha.Substring(0, div);
+                alimento.Quantidade = linha.Substring(div+1, len-1);
+
+                alimentos.Add(alimento);
             }
 
             return alimentos;
