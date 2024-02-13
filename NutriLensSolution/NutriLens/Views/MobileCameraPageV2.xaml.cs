@@ -37,6 +37,7 @@ public partial class MobileCameraPageV2 : ContentPage
 
                 string resultadoAnalise = string.Empty;
                 string identificados = string.Empty;
+                string tbcaTeste = string.Empty;
 
                 TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
 
@@ -64,11 +65,13 @@ public partial class MobileCameraPageV2 : ContentPage
                     {
                         alimentosTxt = AppDataHelperClass.GetRecognizedImageInfoTxtModel(resultadoAnalise);
                         identificados = AppDataHelperClass.GetRecognizedImageInfoText(alimentosTxt);
+                        tbcaTeste = AppDataHelperClass.GetTbcaItemsByImageInfo(alimentosTxt);
                     }
                     
                 }
 
                 await ViewServices.PopUpManager.PopPersonalizedAsync("Alimentos identificados", identificados, "OK");
+                await ViewServices.PopUpManager.PopPersonalizedAsync("Items TBCA Detectados", tbcaTeste, "OK");
 
 
                 EntitiesHelperClass.CloseLoading();

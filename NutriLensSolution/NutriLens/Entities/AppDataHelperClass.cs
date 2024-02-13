@@ -5,6 +5,10 @@ using NutriLens.Models;
 using NutriLens.Services;
 using NutriLensClassLibrary.Entities;
 using NutriLensClassLibrary.Models;
+using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using static Android.Provider.UserDictionary;
+using System.Reflection;
 
 namespace NutriLens.Entities
 {
@@ -263,7 +267,7 @@ namespace NutriLens.Entities
         /// <param name="genero"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public static double GetBasalDailyCalories (int age, string genero, double weight)
+        public static double GetBasalDailyCalories(int age, string genero, double weight)
         {
             double basalCalories = -1;
 
@@ -335,7 +339,7 @@ namespace NutriLens.Entities
         /// <param name="basalDailyCalories"></param>
         /// <param name="activity"></param>
         /// <returns></returns>
-        public static double GetDailyKiloCaloriesBurn (double basalDailyCalories, string activity)
+        public static double GetDailyKiloCaloriesBurn(double basalDailyCalories, string activity)
         {
             double dailyKiloCaloriesBurn = 0;
 
@@ -390,13 +394,13 @@ namespace NutriLens.Entities
         /// </summary>
         /// <param name="resultadoAnaliseJson"></param>
         /// <returns></returns>
-        public static List<RecognizedImageInfoModel> GetRecognizedImageInfoModel(string resultadoAnaliseJson) 
-        { 
+        public static List<RecognizedImageInfoModel> GetRecognizedImageInfoModel(string resultadoAnaliseJson)
+        {
 
             int ini = resultadoAnaliseJson.IndexOf('[');
             int fim = resultadoAnaliseJson.IndexOf(']');
-            int len = (fim - ini)+1;
-            if(ini != -1 || fim != -1)
+            int len = (fim - ini) + 1;
+            if (ini != -1 || fim != -1)
             {
                 string texto = resultadoAnaliseJson.Substring(ini, len);
                 List<RecognizedImageInfoModel> alimentosReconhecidos = Newtonsoft.Json.JsonConvert.DeserializeObject<List<RecognizedImageInfoModel>>(texto);
@@ -407,7 +411,7 @@ namespace NutriLens.Entities
                 List<RecognizedImageInfoModel> alimentosReconhecidos = new List<RecognizedImageInfoModel>();
                 return alimentosReconhecidos;
             }
-            
+
         }
 
         /// <summary>
@@ -415,11 +419,11 @@ namespace NutriLens.Entities
         /// </summary>
         /// <param name="alimentosReconhecidos"></param>
         /// <returns></returns>
-        public static string GetRecognizedImageInfoText (List<RecognizedImageInfoModel> alimentosReconhecidos)
+        public static string GetRecognizedImageInfoText(List<RecognizedImageInfoModel> alimentosReconhecidos)
         {
             string alimentos = string.Empty;
 
-            foreach(RecognizedImageInfoModel item in alimentosReconhecidos)
+            foreach (RecognizedImageInfoModel item in alimentosReconhecidos)
             {
                 alimentos += item.Item + " - " + item.Quantidade + '\n';
             }
@@ -445,7 +449,7 @@ namespace NutriLens.Entities
 
             string[] linhas = resultadoAnalise.Split('\n');
 
-            foreach(string linha in linhas)
+            foreach (string linha in linhas)
             {
                 RecognizedImageInfoTxtModel alimento = new RecognizedImageInfoTxtModel();
                 int div = linha.IndexOf('-');
@@ -456,7 +460,7 @@ namespace NutriLens.Entities
                 int len = linha.Length - div;
 
                 alimento.Item = linha.Substring(0, div);
-                alimento.Quantidade = linha.Substring(div+1, len-1);
+                alimento.Quantidade = linha.Substring(div + 1, len - 1);
 
                 alimentos.Add(alimento);
             }
@@ -475,5 +479,46 @@ namespace NutriLens.Entities
             ViewServices.AppDataManager.SetItem(DataItems.NutriLensApiToken, token);
             _nutriLensApiToken = token;
         }
+
+        public static ObservableCollection<TbcaItem> TbcaItems { get; set; }
+
+        public static string GetTbcaItemsByImageInfo(List<RecognizedImageInfoTxtModel> alimentos)
+        {
+            string tbcaStringItems = string.Empty;
+            TbcaItems = new ObservableCollection<TbcaItem>();
+            List <TbcaItem> detectados = new List<TbcaItem>();
+
+            if (AppDataHelperClass.TbcaFoodItems == null || AppDataHelperClass.TbcaFoodItems.Count == 0)
+            {
+                List<TbcaItem> tbcaItems = DaoHelperClass.GetTbcaItemsList();
+                AppDataHelperClass.SetTbcaItems(tbcaItems.OrderBy(x => x.Alimento).ToList());
+            }
+
+            foreach (RecognizedImageInfoTxtModel a in alimentos)
+            {
+                detectados.AddRange(AppDataHelperClass.TbcaFoodItems.Where(x => x.Alimento.Contains(a.Item)).Take(1).ToList());
+            }
+
+            foreach(TbcaItem tbca in detectados)
+            {
+                // Obtém todas as propriedades públicas da classe TbcaItem
+                PropertyInfo[] propriedades = typeof(TbcaItem).GetProperties();
+
+                // Itera sobre cada propriedade e adiciona seu nome e valor à string
+                foreach (PropertyInfo propriedade in propriedades)
+                {
+                    object valor = propriedade.GetValue(tbca, null);
+                    tbcaStringItems += $"{propriedade.Name}: {valor}\n";
+                }
+
+                // Adiciona uma quebra de linha entre os itens da lista
+                tbcaStringItems += "\n";
+            }
+
+            return tbcaStringItems;
+
+
+        }
     }
 }
+

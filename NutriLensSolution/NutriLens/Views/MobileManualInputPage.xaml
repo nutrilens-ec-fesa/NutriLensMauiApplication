@@ -18,14 +18,14 @@
         <StackLayout Grid.Row="1" Padding="20,0,20,0">
             <Button Text="Adicionar novo item" Command="{Binding AddNewItemFromTbcaCommand}"></Button>
         </StackLayout>
-        <StackLayout Grid.Row="2" Padding="0,20,0,0">
-            <ListView ItemsSource="{Binding FoodItems}">
+        <StackLayout Grid.Row="2" Padding="10">
+            <ListView ItemsSource="{Binding FoodItems}" RowHeight="120">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View>
                                 <StackLayout Padding="10">
-                                    <Label TextColor="Black" Text="{Binding NamePlusPortionPlusKcalInfo}" />
+                                    <Label TextColor="Black" Text="{Binding NamePlusPortionPlusKcalInfo}" LineBreakMode="WordWrap" />
                                 </StackLayout>
                             </ViewCell.View>
                         </ViewCell>
