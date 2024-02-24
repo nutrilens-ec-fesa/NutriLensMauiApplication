@@ -115,6 +115,12 @@ namespace NutriLens.ViewModels
                     break;
                 case MealHistoryFilter.PerPeriod:
                     break;
+                case MealHistoryFilter.All:
+                    foreach (Meal meal in meals.OrderByDescending(x => x.DateTime))
+                    {
+                        MealsList[^1].MealList.Add(meal);
+                    }
+                    break;
             }
 
             foreach (MealListClass meal in MealsList)
@@ -126,6 +132,9 @@ namespace NutriLens.ViewModels
                         break;
                     case MealHistoryFilter.PerMonth:
                         MealsListString.Add(meal.MonthlyInfo);
+                        break;
+                    case MealHistoryFilter.All:
+                        MealsListString.Add(meal.MealList[0].ToString());
                         break;
                 }
 
