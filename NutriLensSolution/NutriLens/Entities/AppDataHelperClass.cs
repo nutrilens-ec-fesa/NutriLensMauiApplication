@@ -486,7 +486,7 @@ namespace NutriLens.Entities
         {
             string tbcaStringItems = string.Empty;
             TbcaItems = new ObservableCollection<TbcaItem>();
-            List <TbcaItem> detectados = new List<TbcaItem>();
+            List<TbcaItem> detectados = new List<TbcaItem>();
 
             if (AppDataHelperClass.TbcaFoodItems == null || AppDataHelperClass.TbcaFoodItems.Count == 0)
             {
@@ -494,12 +494,25 @@ namespace NutriLens.Entities
                 AppDataHelperClass.SetTbcaItems(tbcaItems.OrderBy(x => x.Alimento).ToList());
             }
 
+            // Verifica se o nome do alimento identificado esta com nome composto tipo Arroz Grego, se sim, Busca por Arroz Grego e após busca apenas por Arroz
             foreach (RecognizedImageInfoTxtModel a in alimentos)
             {
+                int numDetectadosAntes = detectados.Count;
+                int numPalavrasNomeAlimento = a.Item.Split(' ').Length;
                 detectados.AddRange(AppDataHelperClass.TbcaFoodItems.Where(x => x.Alimento.Contains(a.Item)).Take(1).ToList());
+                int numDetectadosApos = detectados.Count;
+
+                //Verifica se não foi encontrado nenhum item na TBCA com nome de alimento composto, e busca com o primeiro nome na proxima tentativa
+                if (numDetectadosAntes == numDetectadosApos && numPalavrasNomeAlimento > 1)
+                {
+                    string[] nomesAlimentos = a.Item.Split(' ');
+                    a.Item = nomesAlimentos[0];
+                    detectados.AddRange(AppDataHelperClass.TbcaFoodItems.Where(x => x.Alimento.Contains(a.Item)).Take(1).ToList());
+
+                }
             }
 
-            foreach(TbcaItem tbca in detectados)
+            foreach (TbcaItem tbca in detectados)
             {
                 // Obtém todas as propriedades públicas da classe TbcaItem
                 PropertyInfo[] propriedades = typeof(TbcaItem).GetProperties();
