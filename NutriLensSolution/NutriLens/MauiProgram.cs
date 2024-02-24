@@ -59,6 +59,7 @@ namespace NutriLens
             builder.Services.AddSingleton<IUserConfigPage, MobileUserConfigPage>();
             builder.Services.AddSingleton<ILoginPage, MobileLoginPage>();
             builder.Services.AddSingleton<IRegistrationPage, MobileRegistrationPage>();
+            builder.Services.AddSingleton<IAiModelPromptPage, MobileAiModelPromptView>();
 #elif WINDOWS
 
 #endif

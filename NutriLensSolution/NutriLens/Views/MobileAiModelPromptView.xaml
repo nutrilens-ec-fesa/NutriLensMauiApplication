@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NutriLens.Views.MobileAiModelPromptView"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Title="Editar prompt GPT-4">
+    <ContentPage.Behaviors>
+        <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
+    </ContentPage.Behaviors>
+    <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0" Grid.Column="0" Padding="30" Text="System Prompt" HorizontalTextAlignment="Center"/>
+        <Editor Grid.Row="1" Grid.Column="0" Margin="30, 0, 30, 0" Keyboard="Text" BackgroundColor="LightGray" Text="{Binding OpenAiPrompt.SystemPrompt}"/>
+        <Label Grid.Row="2" Grid.Column="0" Padding="30" Text="User Prompt" HorizontalTextAlignment="Center"/>
+        <Editor Grid.Row="3" Grid.Column="0" Margin="30, 0, 30, 0" Keyboard="Text" BackgroundColor="LightGray" Text="{Binding OpenAiPrompt.UserPrompt}"/>
+        <Button Grid.Row="4" Grid.Column="0" Margin="20" Text="Atualizar prompt" Command="{Binding UpdatePromptCommand}" />
+    </Grid>
+</ContentPage>
