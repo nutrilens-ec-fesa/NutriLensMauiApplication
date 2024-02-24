@@ -8,6 +8,7 @@ using WebLibrary.HttpRequests;
 using WebLibrary;
 using System.Net;
 using ZXing.QrCode.Internal;
+using Newtonsoft.Json;
 
 namespace NutriLens.Entities
 {
@@ -146,6 +147,41 @@ namespace NutriLens.Entities
                 throw new UnsuccessfullRequestException(content);
             else
                 return content.Replace("\"", string.Empty).Replace("\\n", Environment.NewLine);
+        }
+
+        /// <summary>
+        /// Obtém o último prompt da OpenAi registrado
+        /// </summary>
+        /// <returns></returns>
+        public static OpenAiPrompt GetOpenAiPrompt()
+        {
+            GetRequest httpRequest = new(UriAndPaths.ApiUrl, "Ai/v1/GetActualGpt4VisionPrompt")
+            {
+                Token = AppDataHelperClass.NutriLensApiToken
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (!resp.IsSuccessStatusCode)
+                throw new UnsuccessfullRequestException(content);
+            else
+                return JsonConvert.DeserializeObject<OpenAiPrompt>(content);
+        }
+
+        public static void PostNewOpenAiPrompt(OpenAiPrompt openAiPrompt)
+        {
+            PostRequest httpRequest = new(UriAndPaths.ApiUrl, "Ai/v1/InsertNewGpt4VisionPrompt")
+            {
+                Body = openAiPrompt,
+                Token = AppDataHelperClass.NutriLensApiToken
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (!resp.IsSuccessStatusCode)
+                throw new UnsuccessfullRequestException(content);
+            else
+                return;
         }
 
         #endregion
