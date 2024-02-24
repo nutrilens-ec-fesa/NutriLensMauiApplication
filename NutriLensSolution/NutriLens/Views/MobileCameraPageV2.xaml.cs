@@ -2,11 +2,16 @@ using NutriLens.Entities;
 using NutriLens.Services;
 using ExceptionLibrary;
 using NutriLens.Models;
+using CommunityToolkit.Mvvm.Input;
+using NutriLens.ViewInterfaces;
+using NutriLensClassLibrary.Models;
 
 namespace NutriLens.Views;
 
 public partial class MobileCameraPageV2 : ContentPage
 {
+    private INavigation _navigation;
+
     public MobileCameraPageV2()
     {
         InitializeComponent();
@@ -43,6 +48,7 @@ public partial class MobileCameraPageV2 : ContentPage
 
                 List<RecognizedImageInfoTxtModel> alimentosTxt = new List<RecognizedImageInfoTxtModel>();
                 List<RecognizedImageInfoModel> alimentosJson = new List<RecognizedImageInfoModel>();
+                List<FoodItem> foods = new List<FoodItem>();
 
                 // Chama a função de upload com o caminho da imagem
                 await Task.Run(() =>
@@ -65,7 +71,8 @@ public partial class MobileCameraPageV2 : ContentPage
                     {
                         alimentosTxt = AppDataHelperClass.GetRecognizedImageInfoTxtModel(resultadoAnalise);
                         identificados = AppDataHelperClass.GetRecognizedImageInfoText(alimentosTxt);
-                        tbcaTeste = AppDataHelperClass.GetTbcaItemsByImageInfo(alimentosTxt);
+                        tbcaTeste = AppDataHelperClass.GetStringTbcaItemsByImageInfo(alimentosTxt);
+                        foods = AppDataHelperClass.GetFoodItems(alimentosTxt);
                     }
                     
                 }
@@ -73,10 +80,21 @@ public partial class MobileCameraPageV2 : ContentPage
                 await ViewServices.PopUpManager.PopPersonalizedAsync("Alimentos identificados", identificados, "OK");
                 await ViewServices.PopUpManager.PopPersonalizedAsync("Items TBCA Detectados", tbcaTeste, "OK");
 
+                Meal newMeal = new()
+                {
+                    DateTime = DateTime.Now,
+                    Name = "Refeição",
+                    FoodItems = foods
+                };
+
+                AppDataHelperClass.AddMeal(newMeal);
+
+                await ViewServices.PopUpManager.PopInfoAsync("Refeição registrada com sucesso!");
 
                 EntitiesHelperClass.CloseLoading();
 
                 EntitiesHelperClass.DeleteTempPictures();
+
 
                 await Navigation.PopAsync();
             }
@@ -121,4 +139,6 @@ public partial class MobileCameraPageV2 : ContentPage
         string fileName = $"nlpTemp{DateTime.Now.Ticks}.png";
         return Path.Combine(FileSystem.AppDataDirectory, fileName);
     }
+
+
 }
