@@ -101,5 +101,16 @@ namespace NutriLensWebApp.Entities
                 return _mongoImage;
             }
         }
+
+        private static IMongoCollection<OpenAiPrompt>? _openAiPrompt;
+
+        public static IMongoCollection<OpenAiPrompt> OpenAiPrompt
+        {
+            get
+            {
+                _openAiPrompt ??= Client.GetDatabase(_database).GetCollection<OpenAiPrompt>("GptVisionPromptCollection");
+                return _openAiPrompt;
+            }
+        }
     }
 }
