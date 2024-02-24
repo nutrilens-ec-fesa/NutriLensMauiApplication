@@ -17,7 +17,8 @@ namespace NutriLens.Entities
         PerDay,
         PerWeek,
         PerMonth,
-        PerPeriod
+        PerPeriod,
+        All
     }
 
     internal class EnumeratorsClass
