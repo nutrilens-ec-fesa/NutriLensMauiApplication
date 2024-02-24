@@ -116,6 +116,12 @@ namespace NutriLens.ViewModels
         }
 
         [RelayCommand]
+        private async Task ListAll()
+        {
+            await _navigation.PushAsync(ViewServices.ResolvePage<IMealHistoricPage>(MealHistoryFilter.All));
+        }
+
+        [RelayCommand]
         private async Task OpenGallery()
         {
             await _navigation.PushAsync(ViewServices.ResolvePage<IPicturesGridPage>());
@@ -125,6 +131,12 @@ namespace NutriLens.ViewModels
         private async Task EditBarCodeProducts()
         {
             await _navigation.PushAsync(ViewServices.ResolvePage<IEditBarCodeProductsPage>());
+        }
+
+        [RelayCommand]
+        private async Task EditAiModelPrompt()
+        {
+            await _navigation.PushAsync(ViewServices.ResolvePage<IAiModelPromptPage>());
         }
 
         [RelayCommand]
