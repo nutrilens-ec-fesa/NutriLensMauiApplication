@@ -29,12 +29,26 @@ namespace NutriLensWebApp.Controllers
             }
         }
 
+        [HttpGet, Route("v1/GetAllImagesByAuthUser")]
+        public IActionResult GetAllImagesByAuthUser([FromServices] IMongoImage mongoImageRepo)
+        {
+            try
+            {
+                return Ok(mongoImageRepo.GetImagesByUserIdentifier(EntitiesHelperClass.AuthenticatedUserIdentifier(this)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
         [HttpPost, Route("v1/UploadImage")]
         public IActionResult UploadImage([FromBody] MongoImage mongoImage,
             [FromServices] IMongoImage mongoImageRepo)
         {
             try
             {
+                mongoImage.DateTime = DateTime.Now;
                 mongoImage.UserIdentifier = EntitiesHelperClass.AuthenticatedUserIdentifier(this);
                 mongoImageRepo.InsertNew(mongoImage);
                 return Created(string.Empty, null);
