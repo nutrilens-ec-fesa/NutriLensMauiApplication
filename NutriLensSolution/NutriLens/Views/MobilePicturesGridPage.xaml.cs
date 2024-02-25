@@ -50,20 +50,41 @@ public partial class MobilePicturesGridPage : ContentPage, IPicturesGridPage
 
     private async void BtnSyncDatabase_Clicked(object sender, EventArgs e)
     {
+        await SyncDatabaseImages(false);
+    }
+
+    private async void BtnSyncUserDatabase_Clicked(object sender, EventArgs e)
+    {
+        await SyncDatabaseImages(true);
+    }
+
+    private async Task SyncDatabaseImages(bool userOnly)
+    {
         try
         {
             EntitiesHelperClass.ShowLoading("Sincronizando imagens...");
 
+            BtnSyncUserDatabase.IsVisible = false;
             BtnSyncDatabase.IsVisible = false;
 
             if (!Directory.Exists(UriAndPaths.databasePicturesPath))
                 Directory.CreateDirectory(UriAndPaths.databasePicturesPath);
 
+            string[] localPictures = Directory.GetFiles(UriAndPaths.databasePicturesPath);
+
+            foreach (string localPicture in localPictures)
+            {
+                File.Delete(localPicture);
+            }
+
             List<MongoImage> mongoImages = new List<MongoImage>();
 
             await Task.Run(() =>
             {
-                DaoHelperClass.DownloadImages(UriAndPaths.databasePicturesPath, out mongoImages);
+                if(userOnly)
+                    DaoHelperClass.DownloadUserImages(UriAndPaths.databasePicturesPath, out mongoImages);
+                else
+                    DaoHelperClass.DownloadImages(UriAndPaths.databasePicturesPath, out mongoImages);
             });
 
             string[] cloudPictures = Directory.GetFiles(UriAndPaths.databasePicturesPath);
@@ -77,7 +98,7 @@ public partial class MobilePicturesGridPage : ContentPage, IPicturesGridPage
                 foreach (string picture in cloudPictures)
                 {
                     Image img = new Image { Source = picture, Aspect = Aspect.AspectFill, Margin = new Thickness(0, 0, 0, 20), HeightRequest = 250, WidthRequest = 200 };
-                    
+
                     var tapGestureRecognizer = new TapGestureRecognizer();
                     tapGestureRecognizer.Tapped += async (s, e) =>
                     {

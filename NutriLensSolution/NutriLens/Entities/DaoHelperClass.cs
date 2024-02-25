@@ -226,6 +226,32 @@ namespace NutriLens.Entities
             };
 
             HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+            
+            if (!resp.IsSuccessStatusCode)
+                throw new UnsuccessfullRequestException(content);
+
+            mongoImages = HttpManager.GetContent<List<MongoImage>>(content);
+
+            foreach (MongoImage mongoImage in mongoImages)
+            {
+                if (!string.IsNullOrEmpty(mongoImage.FileName) && !File.Exists(Path.Combine(downloadDirectory, mongoImage.FileName)))
+                    File.WriteAllBytes(Path.Combine(downloadDirectory, mongoImage.FileName), mongoImage.ImageBytes);
+            }
+        }
+
+        /// <summary>
+        /// Realiza o download das imagens registradas na base de dados vinculadas ao usuário logado
+        /// </summary>
+        /// <param name="downloadDirectory">Diretório a ser armazenada as imagens</param>
+        /// <exception cref="UnsuccessfullRequestException"></exception>
+        public static void DownloadUserImages(string downloadDirectory, out List<MongoImage> mongoImages)
+        {
+            GetRequest httpRequest = new(UriAndPaths.ApiUrl, "Image/v1/GetAllImagesByAuthUser")
+            {
+                Token = AppDataHelperClass.NutriLensApiToken
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
 
             if (!resp.IsSuccessStatusCode)
                 throw new UnsuccessfullRequestException(content);
