@@ -11,5 +11,6 @@ namespace NutriLensClassLibrary.Models
         public byte[] ImageBytes { get; set; }
         public string VisionRawResult { get; set; }
         public string FileName { get; set; }
+        public DateTime DateTime { get; set; }
     }
 }

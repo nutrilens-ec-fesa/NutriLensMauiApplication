@@ -198,7 +198,7 @@ namespace NutriLens.Entities
             MongoImage image = new()
             {
                 FileName = Path.GetFileName(imagePath),
-                ImageBytes = File.ReadAllBytes(imagePath)
+                ImageBytes = File.ReadAllBytes(imagePath),
             };
 
             PostRequest httpRequest = new(UriAndPaths.ApiUrl, "Image/v1/UploadImage")
@@ -218,7 +218,7 @@ namespace NutriLens.Entities
         /// </summary>
         /// <param name="downloadDirectory">Diretório a ser armazenada as imagens</param>
         /// <exception cref="UnsuccessfullRequestException"></exception>
-        public static void DownloadImages(string downloadDirectory)
+        public static void DownloadImages(string downloadDirectory, out List<MongoImage> mongoImages)
         {
             GetRequest httpRequest = new(UriAndPaths.ApiUrl, "Image/v1/GetAllImages")
             {
@@ -230,13 +230,30 @@ namespace NutriLens.Entities
             if (!resp.IsSuccessStatusCode)
                 throw new UnsuccessfullRequestException(content);
 
-            List<MongoImage> images = HttpManager.GetContent<List<MongoImage>>(content);
+            mongoImages = HttpManager.GetContent<List<MongoImage>>(content);
 
-            foreach (MongoImage mongoImage in images)
+            foreach (MongoImage mongoImage in mongoImages)
             {
                 if (!string.IsNullOrEmpty(mongoImage.FileName) && !File.Exists(Path.Combine(downloadDirectory, mongoImage.FileName)))
                     File.WriteAllBytes(Path.Combine(downloadDirectory, mongoImage.FileName), mongoImage.ImageBytes);
             }
+        }
+
+        /// <summary>
+        /// Deleta uma imagem da base
+        /// </summary>
+        /// <param name="mongoImage">Imagem a ser deletada</param>
+        public static void DeleteImage(MongoImage mongoImage)
+        {
+            DeleteRequest httpRequest = new(UriAndPaths.ApiUrl, "Image/v1/DeleteImageById", mongoImage.Id)
+            {
+                Token = AppDataHelperClass.NutriLensApiToken
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (!resp.IsSuccessStatusCode)
+                throw new UnsuccessfullRequestException(content);
         }
 
         #endregion

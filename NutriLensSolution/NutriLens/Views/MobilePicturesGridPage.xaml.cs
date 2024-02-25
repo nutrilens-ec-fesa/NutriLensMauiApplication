@@ -4,6 +4,7 @@ using Microsoft.Maui.Handlers;
 using NutriLens.Entities;
 using NutriLens.Services;
 using NutriLens.ViewInterfaces;
+using NutriLensClassLibrary.Models;
 
 namespace NutriLens.Views;
 
@@ -58,9 +59,11 @@ public partial class MobilePicturesGridPage : ContentPage, IPicturesGridPage
             if (!Directory.Exists(UriAndPaths.databasePicturesPath))
                 Directory.CreateDirectory(UriAndPaths.databasePicturesPath);
 
+            List<MongoImage> mongoImages = new List<MongoImage>();
+
             await Task.Run(() =>
             {
-                DaoHelperClass.DownloadImages(UriAndPaths.databasePicturesPath);
+                DaoHelperClass.DownloadImages(UriAndPaths.databasePicturesPath, out mongoImages);
             });
 
             string[] cloudPictures = Directory.GetFiles(UriAndPaths.databasePicturesPath);
@@ -73,7 +76,21 @@ public partial class MobilePicturesGridPage : ContentPage, IPicturesGridPage
             {
                 foreach (string picture in cloudPictures)
                 {
-                    gridPictures.Children.Add(new Image { Source = picture, Aspect = Aspect.AspectFill, Margin = new Thickness(0, 0, 0, 20), HeightRequest = 250, WidthRequest = 200 });
+                    Image img = new Image { Source = picture, Aspect = Aspect.AspectFill, Margin = new Thickness(0, 0, 0, 20), HeightRequest = 250, WidthRequest = 200 };
+                    
+                    var tapGestureRecognizer = new TapGestureRecognizer();
+                    tapGestureRecognizer.Tapped += async (s, e) =>
+                    {
+                        if (await ViewServices.PopUpManager.PopYesOrNoAsync("Deletar imagem", "Deseja deletar a imagem?"))
+                        {
+                            File.Delete(picture);
+                            DaoHelperClass.DeleteImage(mongoImages.First(x => x.FileName == Path.GetFileName(picture)));
+                            gridPictures.Remove(img);
+                        }
+                    };
+                    tapGestureRecognizer.NumberOfTapsRequired = 2;
+                    img.GestureRecognizers.Add(tapGestureRecognizer);
+                    gridPictures.Children.Add(img);
                 }
             }
         }
