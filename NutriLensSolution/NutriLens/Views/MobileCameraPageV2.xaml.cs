@@ -5,6 +5,7 @@ using NutriLens.Models;
 using CommunityToolkit.Mvvm.Input;
 using NutriLens.ViewInterfaces;
 using NutriLensClassLibrary.Models;
+using Com.Google.Android.Exoplayer2.Metadata.Scte35;
 
 namespace NutriLens.Views;
 
@@ -62,6 +63,7 @@ public partial class MobileCameraPageV2 : ContentPage
 
                 if (tcs.Task.IsCompleted)
                 {
+                    //Verifica se o texto de retorno do GPT veio em JSON ou não
                     if (resultadoAnalise.Contains('['))
                     {
                         alimentosJson = AppDataHelperClass.GetRecognizedImageInfoModel(resultadoAnalise);
@@ -77,26 +79,38 @@ public partial class MobileCameraPageV2 : ContentPage
                     
                 }
 
-                await ViewServices.PopUpManager.PopPersonalizedAsync("Alimentos identificados", identificados, "OK");
-                await ViewServices.PopUpManager.PopPersonalizedAsync("Items TBCA Detectados", tbcaTeste, "OK");
+                int telaEdicao = await ViewServices.PopUpManager.PopPersonalizedAsync("Verifique os alimentos identificados", identificados, "OK", "Editar");
 
-                Meal newMeal = new()
+                if(telaEdicao == 2)
                 {
-                    DateTime = DateTime.Now,
-                    Name = "Refeição",
-                    FoodItems = foods
-                };
+                    EntitiesHelperClass.CloseLoading();
+                    EntitiesHelperClass.DeleteTempPictures();
+                    await _navigation.PushModalAsync(ViewServices.ResolvePage<IManualInputPage>(foods));
+                    await Navigation.PopAsync();
+                }
+                else
+                {
+                    await ViewServices.PopUpManager.PopPersonalizedAsync("Items TBCA Detectados", tbcaTeste, "OK");
 
-                AppDataHelperClass.AddMeal(newMeal);
+                    Meal newMeal = new()
+                    {
+                        DateTime = DateTime.Now,
+                        Name = "Refeição",
+                        FoodItems = foods
+                    };
 
-                await ViewServices.PopUpManager.PopInfoAsync("Refeição registrada com sucesso!");
+                    AppDataHelperClass.AddMeal(newMeal);
 
-                EntitiesHelperClass.CloseLoading();
+                    await ViewServices.PopUpManager.PopInfoAsync("Refeição registrada com sucesso!");
 
-                EntitiesHelperClass.DeleteTempPictures();
+                    EntitiesHelperClass.CloseLoading();
+
+                    EntitiesHelperClass.DeleteTempPictures();
 
 
-                await Navigation.PopAsync();
+                    await Navigation.PopAsync();
+                }
+
             }
             else
                 await ViewServices.PopUpManager.PopErrorAsync("Tire uma foto antes de poder salvar!");
@@ -139,6 +153,5 @@ public partial class MobileCameraPageV2 : ContentPage
         string fileName = $"nlpTemp{DateTime.Now.Ticks}.png";
         return Path.Combine(FileSystem.AppDataDirectory, fileName);
     }
-
 
 }

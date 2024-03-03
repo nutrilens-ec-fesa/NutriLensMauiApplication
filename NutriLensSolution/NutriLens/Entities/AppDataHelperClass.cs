@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using static Android.Provider.UserDictionary;
 using System.Reflection;
 using Android.Hardware.Camera2;
+using static NutriLensClassLibrary.Models.FoodItem;
 
 namespace NutriLens.Entities
 {
@@ -582,10 +583,11 @@ namespace NutriLens.Entities
         {
             List<FoodItem> foods = new List<FoodItem>();
             string tbcaNome = string.Empty;
-            string gptPorcao = string.Empty;
+            string gptPortion = string.Empty;
             double kiloCalories = 0;
             TbcaItems = new ObservableCollection<TbcaItem>();
             List<TbcaItem> detectados = new List<TbcaItem>();
+            TbcaItem itemTBCA = new TbcaItem();
 
             if (AppDataHelperClass.TbcaFoodItems == null || AppDataHelperClass.TbcaFoodItems.Count == 0)
             {
@@ -611,20 +613,22 @@ namespace NutriLens.Entities
                 }
 
                 tbcaNome = detectados[detectados.Count - 1].Alimento.Trim();
-                gptPorcao = a.Quantidade.Replace('g',' ');
-                gptPorcao = gptPorcao.Replace("ramas", " ");
-                gptPorcao = gptPorcao.Trim();
-                double kcal = double.Parse(gptPorcao);
-                double kcalTbca = (double)detectados[detectados.Count - 1].EnergiaKcal;
+                gptPortion = a.Quantidade.Replace('g',' ');
+                gptPortion = gptPortion.Replace("ramas", " ");
+                gptPortion = gptPortion.Trim();
+                double kcal = double.Parse(gptPortion);
+                double kcalTbca = (double)detectados.First().EnergiaKcal;
                 kiloCalories = (kcal * kcalTbca) / 100;
+                itemTBCA = detectados.Last();
 
                 FoodItem foodItem;
 
                 foodItem = new()
                 {
                     Name = tbcaNome,
-                    Portion = gptPorcao,
-                    KiloCalories = kiloCalories  
+                    Portion = gptPortion,
+                    KiloCalories = kiloCalories,
+                    TbcaFoodItem = GetTbcaFoodItem(itemTBCA, gptPortion)
                 };
 
                 foods.Add(foodItem);
@@ -634,6 +638,48 @@ namespace NutriLens.Entities
             return foods;
 
             
+        }
+
+        public static TbcaItem GetTbcaFoodItem(TbcaItem tbca, string portion)
+        {
+            double portionDouble = double.Parse(portion);
+
+            tbca.UmidadeG = (tbca.UmidadeG * portionDouble / 100);
+            tbca.CarboidratoTotal = (tbca.CarboidratoTotal * portionDouble) / 100;
+            tbca.CarboidratoDisponivel = (tbca.CarboidratoDisponivel * portionDouble) / 100;
+            tbca.Proteina = (tbca.Proteina * portionDouble) / 100;
+            tbca.Lipidios = (tbca.Lipidios * portionDouble) / 100;
+            tbca.FibraAlimentar = (tbca.FibraAlimentar * portionDouble) / 100;
+            tbca.Alcool = (tbca.Alcool * portionDouble) / 100;
+            tbca.Cinzas = (tbca.Cinzas * portionDouble) / 100;
+            tbca.Colesterol = (tbca.Colesterol * portionDouble) / 100;
+            tbca.AcidosGraxosSaturados = (tbca.AcidosGraxosSaturados * portionDouble) / 100;
+            tbca.AcidosGraxosMonoinsaturados = (tbca.AcidosGraxosMonoinsaturados * portionDouble) / 100;
+            tbca.AcidosGraxosPolinsaturados = (tbca.AcidosGraxosPolinsaturados * portionDouble) / 100;
+            tbca.AcidosGraxosTrans = (tbca.AcidosGraxosTrans * portionDouble) / 100;
+            tbca.Calcio = (tbca.Calcio * portionDouble) / 100;
+            tbca.Ferro = (tbca.Ferro * portionDouble) / 100;
+            tbca.Sodio = (tbca.Sodio * portionDouble) / 100;
+            tbca.Magnesio = (tbca.Magnesio * portionDouble) / 100;
+            tbca.Fosforo = (tbca.Fosforo * portionDouble) / 100;
+            tbca.Potassio = (tbca.Potassio * portionDouble) / 100;
+            tbca.Zinco = (tbca.Zinco * portionDouble) / 100;
+            tbca.Cobre = (tbca.Cobre * portionDouble) / 100;
+            tbca.Selenio = (tbca.Selenio * portionDouble) / 100;
+            tbca.VitaminaARae = (tbca.VitaminaARae * portionDouble) / 100;
+            tbca.VitaminaD = (tbca.VitaminaD * portionDouble) / 100;
+            tbca.VitaminaE = (tbca.VitaminaE * portionDouble) / 100;
+            tbca.Tiamina = (tbca.Tiamina * portionDouble) / 100;
+            tbca.Riboflavina = (tbca.Riboflavina * portionDouble) / 100;
+            tbca.Niacina = (tbca.Niacina * portionDouble) / 100;
+            tbca.VitaminaB6 = (tbca.VitaminaB6 * portionDouble) / 100;
+            tbca.VitaminaB12 = (tbca.VitaminaB12 * portionDouble) / 100;
+            tbca.VitaminaC = (tbca.VitaminaC * portionDouble) / 100;
+            tbca.EquivalenteDeFolato = (tbca.EquivalenteDeFolato * portionDouble) / 100;
+            tbca.SalDeAdicao = (tbca.SalDeAdicao * portionDouble) / 100;
+            tbca.AcucarDeAdicao = (tbca.AcucarDeAdicao * portionDouble) / 100;
+
+            return tbca;
         }
     }
 }

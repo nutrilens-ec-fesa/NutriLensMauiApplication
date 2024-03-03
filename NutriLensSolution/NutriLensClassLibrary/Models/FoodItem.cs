@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using Newtonsoft.Json;
 using NutriLensClassLibrary.Entities;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NutriLensClassLibrary.Models
 {
@@ -31,6 +32,9 @@ namespace NutriLensClassLibrary.Models
         /// </summary>
         public double KiloCalories { get; set; }
 
+        public TbcaItem TbcaFoodItem { get; set; }
+
+
         #endregion
 
         #region Getters only
@@ -49,6 +53,9 @@ namespace NutriLensClassLibrary.Models
         public string KiloJoulesInfo { get => $"{KiloCalories * Constants.kcalToKJFactor} {Constants.kJUnit}"; }
         [JsonIgnore]
         public string GptQueryString { get => $"{Name}{(string.IsNullOrEmpty(Portion) ? string.Empty : $" - {Portion}")}"; }
+
+
+
 
         #endregion
 
