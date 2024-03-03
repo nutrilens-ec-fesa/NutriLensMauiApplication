@@ -681,6 +681,8 @@ namespace NutriLens.Entities
 
             return tbca;
         }
+
+        public static List<FoodItem> foods;
     }
 }
 

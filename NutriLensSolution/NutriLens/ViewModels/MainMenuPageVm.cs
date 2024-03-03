@@ -54,7 +54,7 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private async Task OpenCamera()
         {
-            await _navigation.PushAsync(new MobileCameraPageV2());
+            await _navigation.PushAsync(new MobileCameraPageV2(_navigation));
         }
 
         [RelayCommand]

@@ -13,9 +13,10 @@ public partial class MobileCameraPageV2 : ContentPage
 {
     private INavigation _navigation;
 
-    public MobileCameraPageV2()
+    public MobileCameraPageV2(INavigation navigation)
     {
         InitializeComponent();
+        _navigation = navigation;
     }
 
     private async void BtnSavePicture_Clicked(object sender, EventArgs e)
@@ -83,10 +84,12 @@ public partial class MobileCameraPageV2 : ContentPage
 
                 if(telaEdicao == 2)
                 {
-                    EntitiesHelperClass.CloseLoading();
+                    await EntitiesHelperClass.CloseLoading();
                     EntitiesHelperClass.DeleteTempPictures();
-                    await _navigation.PushModalAsync(ViewServices.ResolvePage<IManualInputPage>(foods));
+                    AppDataHelperClass.foods = foods;
                     await Navigation.PopAsync();
+                    await OpenManualInput();
+                    
                 }
                 else
                 {
@@ -152,6 +155,12 @@ public partial class MobileCameraPageV2 : ContentPage
     {
         string fileName = $"nlpTemp{DateTime.Now.Ticks}.png";
         return Path.Combine(FileSystem.AppDataDirectory, fileName);
+    }
+
+    [RelayCommand]
+    private async Task OpenManualInput()
+    {
+        await _navigation.PushAsync(ViewServices.ResolvePage<IManualInputPage>());
     }
 
 }

@@ -15,6 +15,8 @@ namespace NutriLens.ViewModels
     {
         private INavigation _navigation;
 
+
+
         private ObservableCollection<FoodItem> _foodItems;
         public ObservableCollection<FoodItem> FoodItems
         {
@@ -34,6 +36,16 @@ namespace NutriLens.ViewModels
         {
             _navigation = navigation;
             FoodItems = new ObservableCollection<FoodItem>();
+        }
+
+        public ManualInputPageVm(INavigation navigation, List<FoodItem> foods)
+        {
+            _navigation = navigation;
+            FoodItems = new ObservableCollection<FoodItem>();
+            foreach(FoodItem food in foods)
+            {
+                FoodItems.Add(food);
+            }
         }
 
         [RelayCommand]
@@ -93,6 +105,23 @@ namespace NutriLens.ViewModels
 
             await ViewServices.PopUpManager.PopInfoAsync("Refeição registrada com sucesso!");
             await _navigation.PopAsync();
+        }
+
+        [RelayCommand]
+        private void Appearing()
+        {
+            foreach (FoodItem food in AppDataHelperClass.foods)
+            {
+                FoodItems.Add(food);
+            }
+            OnPropertyChanged(nameof(FoodItemsQuantity));
+            OnPropertyChanged(nameof(KiloCalories));
+        }
+
+        [RelayCommand]
+        private void Disappearing()
+        {
+
         }
     }
 }
