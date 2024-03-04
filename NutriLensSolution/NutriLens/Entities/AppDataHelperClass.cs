@@ -615,6 +615,7 @@ namespace NutriLens.Entities
                 tbcaNome = detectados[detectados.Count - 1].Alimento.Trim();
                 gptPortion = a.Quantidade.Replace('g',' ');
                 gptPortion = gptPortion.Replace("ramas", " ");
+                gptPortion = gptPortion.Replace("ml", " ");
                 gptPortion = gptPortion.Trim();
                 double kcal = double.Parse(gptPortion);
                 double kcalTbca = (double)detectados.First().EnergiaKcal;

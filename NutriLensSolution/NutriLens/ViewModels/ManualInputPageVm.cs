@@ -110,12 +110,23 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private void Appearing()
         {
-            foreach (FoodItem food in AppDataHelperClass.foods)
+            try
             {
-                FoodItems.Add(food);
+                if (AppDataHelperClass.foods.Count > 0)
+                {
+                    foreach (FoodItem food in AppDataHelperClass.foods)
+                    {
+                        FoodItems.Add(food);
+                    }
+                    OnPropertyChanged(nameof(FoodItemsQuantity));
+                    OnPropertyChanged(nameof(KiloCalories));
+                }
+            }catch(Exception ex)
+            {
+                //ViewServices.PopUpManager.PopErrorAsync("Erro ao carregar os dados");
             }
-            OnPropertyChanged(nameof(FoodItemsQuantity));
-            OnPropertyChanged(nameof(KiloCalories));
+            
+            
         }
 
         [RelayCommand]
