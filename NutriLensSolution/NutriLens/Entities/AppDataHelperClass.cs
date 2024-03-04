@@ -683,7 +683,7 @@ namespace NutriLens.Entities
             return tbca;
         }
 
-        public static List<FoodItem> foods;
+        public static List<FoodItem> foods = new List<FoodItem>();
     }
 }
 

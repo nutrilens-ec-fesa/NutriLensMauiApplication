@@ -102,7 +102,10 @@ namespace NutriLens.ViewModels
             };
 
             AppDataHelperClass.AddMeal(newMeal);
-
+            if(AppDataHelperClass.foods != null)
+            {
+                AppDataHelperClass.foods.Clear();
+            }
             await ViewServices.PopUpManager.PopInfoAsync("Refeição registrada com sucesso!");
             await _navigation.PopAsync();
         }
@@ -112,7 +115,7 @@ namespace NutriLens.ViewModels
         {
             try
             {
-                if (AppDataHelperClass.foods.Count > 0)
+                if (AppDataHelperClass.foods != null)
                 {
                     foreach (FoodItem food in AppDataHelperClass.foods)
                     {
@@ -123,7 +126,7 @@ namespace NutriLens.ViewModels
                 }
             }catch(Exception ex)
             {
-                //ViewServices.PopUpManager.PopErrorAsync("Erro ao carregar os dados");
+                ViewServices.PopUpManager.PopErrorAsync("Erro ao carregar os dados");
             }
             
             
