@@ -63,5 +63,45 @@ namespace NutriLensWebApp.Controllers
                 return BadRequest(ExceptionManager.ExceptionMessage(ex));
             }
         }
+
+        [HttpGet, Route("v1/GetTermsAccepted")]
+        public IActionResult GetTermsAccepted([FromServices] IUserInfo userInfoRepo)
+        {
+            try
+            {
+                UserInfo userInfo = userInfoRepo.GetUserInfoById(EntitiesHelperClass.AuthenticatedUserIdentifier(this));
+
+                if (userInfo == null)
+                    return NotFound("Não foi encontrada informação do usuário autenticado");
+                else
+                    return Ok(userInfo.TermsAccepted != null && ((bool)userInfo.TermsAccepted));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
+        [HttpPut, Route("v1/UpdateTermsAccepted/{accepted}")]
+        public IActionResult UpdateTermsAccepted(bool accepted, [FromServices] IUserInfo userInfoRepo)
+        {
+            try
+            {
+                UserInfo userInfo = userInfoRepo.GetUserInfoById(EntitiesHelperClass.AuthenticatedUserIdentifier(this));
+
+                if (userInfo == null)
+                    return NotFound("Não foi encontrada informação do usuário autenticado");
+                else
+                {
+                    userInfo.TermsAccepted = accepted;
+                    userInfoRepo.UpdateUserInfo(userInfo);
+                    return Ok();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
     }
 }
