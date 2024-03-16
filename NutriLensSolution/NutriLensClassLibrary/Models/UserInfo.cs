@@ -101,6 +101,11 @@ namespace NutriLensClassLibrary.Models
         public bool GlutenIntolerant { get; set; }
 
         /// <summary>
+        /// Informa se o usuário aceitou os Termos de Uso do aplicativo
+        /// </summary>
+        public bool? TermsAccepted { get; set; }
+
+        /// <summary>
         /// Define o grau de intensidade em atividades físicas
         /// </summary>
         public HabitualPhysicalActivity HabitualPhysicalActivity { get; set; }
