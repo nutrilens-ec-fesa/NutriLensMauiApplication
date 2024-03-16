@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="NutriLens.Views.Popups.AddPhysicalActivityPopup"
+             CanBeDismissedByTappingOutsideOfPopup="False"
+             Color="#00000000">
+    <Frame BackgroundColor="#2B2B2B" 
+           Padding="20"
+           HasShadow="True"
+           CornerRadius="10">
+        <Frame.Content>
+            <Grid BackgroundColor="#2B2B2B" RowSpacing="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="50"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="50"></RowDefinition>
+                    <RowDefinition Height="50"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Nome da atividade (corrida, musculação, etc):" TextColor="White"></Label>
+                <Entry Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="inputActivityName" BackgroundColor="Black" TextColor="White" HorizontalOptions="FillAndExpand"></Entry>
+
+                <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="Perda calórica (kcal): " TextColor="White"></Label>
+                <Entry Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" x:Name="inputCalories" BackgroundColor="Black" TextColor="White" HorizontalOptions="FillAndExpand"></Entry>
+
+                <Button Grid.Row="4" Grid.Column="0" Margin="10,0,10,0" x:Name="btnCancel" Text="Cancelar" Clicked="btnCancel_Clicked"></Button>
+
+                <Button Grid.Row="4" Grid.Column="1" Margin="10,0,10,0" x:Name="btnConfirmActivity" Text="Confirmar atividade" Clicked="btnConfirmActivity_Clicked"></Button>
+
+            </Grid>
+        </Frame.Content>
+    </Frame>
+</toolkit:Popup>
