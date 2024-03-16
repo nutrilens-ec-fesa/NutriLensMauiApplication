@@ -2,9 +2,12 @@
 using NutriLens.Entities;
 using NutriLens.Models;
 using NutriLens.Services;
+using NutriLens.ViewInterfaces;
+using NutriLensClassLibrary.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
+using System.Text;
 
 namespace NutriLens.ViewModels
 {
@@ -38,7 +41,7 @@ namespace NutriLens.ViewModels
             List<Meal> meals;
             meals = AppDataHelperClass.GetAllMeals();
 
-            if(meals.Count == 0)
+            if (meals.Count == 0)
             {
                 ViewServices.PopUpManager.PopPersonalizedAsync("Sem refeições", "Não foram encontradas refeições registradas no dispositivo", "OK");
                 _navigation.PopAsync();
@@ -118,6 +121,7 @@ namespace NutriLens.ViewModels
                 case MealHistoryFilter.All:
                     foreach (Meal meal in meals.OrderByDescending(x => x.DateTime))
                     {
+                        MealsList.Add(new MealListClass(new List<Meal>()));
                         MealsList[^1].MealList.Add(meal);
                     }
                     break;
@@ -134,7 +138,24 @@ namespace NutriLens.ViewModels
                         MealsListString.Add(meal.MonthlyInfo);
                         break;
                     case MealHistoryFilter.All:
-                        MealsListString.Add(meal.MealList[0].ToString());
+                        string mealInfo = meal.MealList[0].ToString() + Environment.NewLine + Environment.NewLine;
+
+                        StringBuilder mealInfoBuilder = new StringBuilder(mealInfo);
+
+                        foreach (FoodItem foodItem in meal.MealList[0].FoodItems)
+                        {
+                            // Se for um item contido na TBCA
+                            if (foodItem.TbcaFoodItem != null)
+                            {
+                                mealInfoBuilder.Append($"   * {foodItem.TbcaFoodItem.Alimento} ({foodItem.Portion} g/ml) - {foodItem.KiloCalorieInfo}{Environment.NewLine}");
+                            }
+                            else
+                            {
+                                mealInfoBuilder.Append($"  * {foodItem.Name} ({foodItem.Portion} g/ml - {foodItem.KiloCalorieInfo}{Environment.NewLine}");
+                            }
+                        }
+
+                        MealsListString.Add(mealInfoBuilder.ToString());
                         break;
                 }
 
@@ -150,8 +171,15 @@ namespace NutriLens.ViewModels
                 MealHistoryFilter.PerWeek => "Histórico por semana",
                 MealHistoryFilter.PerMonth => "Histórico por mês",
                 MealHistoryFilter.PerPeriod => "Histórico por período",
+                MealHistoryFilter.All => "Todas as refeições",
                 _ => string.Empty,
             };
+        }
+
+        [RelayCommand]
+        private async void MealTapped(object obj)
+        {
+            // TODO: Tomar ação para quando o item for clicado
         }
 
         //public static int GetWeekOfYear(DateTime date1)
