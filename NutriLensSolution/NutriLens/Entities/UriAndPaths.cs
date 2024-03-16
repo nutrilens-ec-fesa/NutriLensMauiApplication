@@ -9,6 +9,7 @@
         public static readonly string appConfigurationPath = Path.Combine(FileSystem.AppDataDirectory, _appConfigFile);
         public static readonly string appDataPath = Path.Combine(FileSystem.AppDataDirectory, _appDataFile);
         public static readonly string databasePicturesPath = Path.Combine(FileSystem.AppDataDirectory, _databasePicturesDirectory);
+        public static readonly string termsOfUsePath = "https://cefsaedu-my.sharepoint.com/:b:/g/personal/082190011_faculdade_cefsa_edu_br/ET0nI8ylg71CrDFMLteqiXIB49m2RQA0EWYc9XEdNZLZCQ?e=QH25f1";
 
         public static string ApiUrl = "https://nutrilenswebapp.azurewebsites.net";
     }
