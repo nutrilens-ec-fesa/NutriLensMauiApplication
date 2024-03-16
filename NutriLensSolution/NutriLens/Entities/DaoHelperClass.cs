@@ -120,6 +120,41 @@ namespace NutriLens.Entities
                 throw new UnsuccessfullRequestException(content);
         }
 
+        /// <summary>
+        /// Verifica na base de dados se o usuário aceitou os termos de uso da aplicação
+        /// </summary>
+        /// <returns>True, caso aceitou. False, caso contrário</returns>
+        /// <exception cref="UnsuccessfullRequestException"></exception>
+        public static bool GetTermsAcceptedByAuthenticatedUser()
+        {
+            GetRequest httpRequest = new(UriAndPaths.ApiUrl, "User/v1/GetTermsAccepted")
+            {
+                Token = AppDataHelperClass.NutriLensApiToken
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (!resp.IsSuccessStatusCode)
+                throw new UnsuccessfullRequestException(content);
+            else
+                return HttpManager.GetContent<bool>(content);
+        }
+
+        public static void UpdateTermsAcceptedByAuthenticatedUser(bool termsAccepted)
+        {
+            PutRequest httpRequest = new(UriAndPaths.ApiUrl, "User/v1/UpdateTermsAccepted", termsAccepted.ToString())
+            {
+                Token = AppDataHelperClass.NutriLensApiToken
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (!resp.IsSuccessStatusCode)
+                throw new UnsuccessfullRequestException(content);
+            else
+                return;
+        }
+
         #endregion
 
         #region Open AI
