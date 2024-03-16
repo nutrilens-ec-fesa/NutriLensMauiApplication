@@ -24,7 +24,7 @@
             <Button Text="Adicionar novo item" Command="{Binding AddNewItemFromTbcaCommand}"></Button>
         </StackLayout>
         <StackLayout Grid.Row="2" Padding="10">
-            <ListView ItemsSource="{Binding FoodItems}" RowHeight="120">
+            <ListView ItemsSource="{Binding FoodItems}" HasUnevenRows="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
