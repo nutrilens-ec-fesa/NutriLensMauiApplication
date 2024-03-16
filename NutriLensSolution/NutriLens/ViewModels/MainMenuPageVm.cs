@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui.Extensions;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Maui.ApplicationModel;
@@ -7,7 +8,10 @@ using NutriLens.Models;
 using NutriLens.Services;
 using NutriLens.ViewInterfaces;
 using NutriLens.Views;
+using NutriLens.Views.Popups;
+using NutriLensClassLibrary.Models;
 using System.Reflection;
+using ExceptionLibrary;
 
 namespace NutriLens.ViewModels
 {
@@ -16,13 +20,20 @@ namespace NutriLens.ViewModels
         private INavigation _navigation;
 
         private MealListClass _mealList;
+        private List<PhysicalActivity> _physicalActivitiesList;
+
+        private double _caloricBalance;
+        private double _mealCalories;
+        private double _physicalActivitiesCalories;
 
         public string TodayTotalEnergeticConsumption
         {
             get
             {
                 _mealList = new MealListClass(AppDataHelperClass.GetTodayMeals());
-                return _mealList.TotalEnergeticConsumption();
+                _physicalActivitiesList = AppDataHelperClass.GetTodayPhysicalActivities();
+                _caloricBalance = _mealList.TotalEnergeticConsumption() - EntitiesHelperClass.TotalEnergeticConsumption(_physicalActivitiesList);
+                return _caloricBalance.ToString("0.00") + " " + AppConfigHelperClass.EnergeticUnit;  
             }
         }
 
@@ -31,11 +42,31 @@ namespace NutriLens.ViewModels
             get
             {
                 _mealList = new MealListClass(AppDataHelperClass.GetTodayMeals());
+                _physicalActivitiesList = AppDataHelperClass.GetTodayPhysicalActivities();
 
-                double todayCalories = double.Parse(_mealList.TotalEnergeticConsumption(true));
+                _mealCalories = _mealList.TotalEnergeticConsumption();
+                _physicalActivitiesCalories = EntitiesHelperClass.TotalEnergeticConsumption(_physicalActivitiesList);
+                _caloricBalance = _mealCalories - _physicalActivitiesCalories;
+
                 double diaryObjective = AppDataHelperClass.GetEnergeticDiaryObjective();
 
-                return $"{todayCalories} / {diaryObjective} {AppConfigHelperClass.EnergeticUnit}{Environment.NewLine}({todayCalories / diaryObjective * 100:0.00}% atingido)";
+                return $"{_caloricBalance:0.00} / {diaryObjective} {AppConfigHelperClass.EnergeticUnit}{Environment.NewLine}({_caloricBalance / diaryObjective * 100:0.00}% atingido)";
+            }
+        }
+
+        public string TodayMealCalories
+        {
+            get
+            {
+                return $"Ganho calórico: + {_mealCalories:0.00} {AppConfigHelperClass.EnergeticUnit}";
+            }
+        }
+
+        public string TodayPhysicalActivitiesCalories
+        {
+            get
+            {
+                return $"Perda calórica: - {_physicalActivitiesCalories:0.00} {AppConfigHelperClass.EnergeticUnit}";
             }
         }
 
@@ -67,6 +98,21 @@ namespace NutriLens.ViewModels
         private async Task OpenManualInput()
         {
             await _navigation.PushAsync(ViewServices.ResolvePage<IManualInputPage>());
+        }
+
+        [RelayCommand]
+        private async Task VoiceInput()
+        {
+            await ViewServices.PopUpManager.PopInDevelopment(MethodBase.GetCurrentMethod());
+        }
+
+        [RelayCommand]
+        private async Task RegisterPhysicalActivity()
+        {
+            AddPhysicalActivityPopup physicalActivityPopup = new AddPhysicalActivityPopup();
+            await Application.Current.MainPage.ShowPopupAsync(physicalActivityPopup);
+            OnPropertyChanged(nameof(TodayProgressInfo));
+            OnPropertyChanged(nameof(TodayPhysicalActivitiesCalories));
         }
 
         [RelayCommand]
@@ -118,7 +164,14 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private async Task ListAll()
         {
-            await _navigation.PushAsync(ViewServices.ResolvePage<IMealHistoricPage>(MealHistoryFilter.All));
+            try
+            {
+                await _navigation.PushAsync(ViewServices.ResolvePage<IMealHistoricPage>(MealHistoryFilter.All));
+            }
+            catch(Exception ex)
+            {
+                await ViewServices.PopUpManager.PopErrorAsync(ExceptionManager.ExceptionMessage(ex));
+            }
         }
 
         [RelayCommand]
@@ -146,9 +199,18 @@ namespace NutriLens.ViewModels
         }
 
         [RelayCommand]
+        private async Task OpenTermsOfUse()
+        {
+            TermsOfUsePopup termsOfUsePopup = new TermsOfUsePopup(true);
+            await Application.Current.MainPage.ShowPopupAsync(termsOfUsePopup);
+        }
+
+        [RelayCommand]
         private void Appearing()
         {
             OnPropertyChanged(nameof(TodayProgressInfo));
+            OnPropertyChanged(nameof(TodayMealCalories));
+            OnPropertyChanged(nameof(TodayPhysicalActivitiesCalories));
         }
 
         [RelayCommand]

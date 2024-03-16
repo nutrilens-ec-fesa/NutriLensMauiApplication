@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui.Views;
 using NutriLens.Views.Popups;
 using NutriLensClassLibrary.Entities;
+using NutriLensClassLibrary.Models;
 
 namespace NutriLens.Entities
 {
@@ -47,6 +48,32 @@ namespace NutriLens.Entities
                 return result;
             else
                 return double.NaN;
+        }
+
+        /// <summary>
+        /// Retorna um double do gasto energético total das atividades físicas da lista
+        /// </summary>
+        /// <returns></returns>
+        public static double TotalEnergeticConsumption(List<PhysicalActivity> physicalActivities)
+        {
+            double totalCalories;
+
+            try
+            {
+                totalCalories = physicalActivities
+                    .Sum(physicalActivity => physicalActivity.Calories);
+            }
+            catch
+            {
+                totalCalories = 0;
+            }
+
+            return AppConfigHelperClass.EnergeticUnit switch
+            {
+                EnergeticUnit.kcal => totalCalories,
+                EnergeticUnit.kJ => totalCalories * Constants.kcalToKJFactor,
+                _ => default
+            };
         }
     }
 }

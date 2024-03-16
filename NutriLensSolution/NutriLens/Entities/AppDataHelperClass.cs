@@ -1,16 +1,10 @@
 ﻿using ExceptionLibrary;
-using Newtonsoft.Json;
-using MongoDB.Bson.IO;
 using NutriLens.Models;
 using NutriLens.Services;
 using NutriLensClassLibrary.Entities;
 using NutriLensClassLibrary.Models;
 using System.Collections.ObjectModel;
-using System.Collections.Generic;
-using static Android.Provider.UserDictionary;
 using System.Reflection;
-using Android.Hardware.Camera2;
-using static NutriLensClassLibrary.Models.FoodItem;
 
 namespace NutriLens.Entities
 {
@@ -42,12 +36,18 @@ namespace NutriLens.Entities
             /// <summary>
             /// Token da API do NutriLens
             /// </summary>
-            NutriLensApiToken
+            NutriLensApiToken,
+
+            /// <summary>
+            /// Lista de atividades físicas realizadas
+            /// </summary>
+            PhysicalActivityList
         }
 
         private static List<Meal> _mealList;
         private static UserInfo _userInfo;
         private static List<TbcaItem> _tbcaFoodItemsItems;
+        private static List<PhysicalActivity> _physicalActivityList;
         private static string _nutriLensApiToken;
 
         /// <summary>
@@ -62,6 +62,9 @@ namespace NutriLens.Entities
                     try
                     {
                         _mealList = ViewServices.AppDataManager.GetItem<List<Meal>>(DataItems.MealList);
+                        _mealList = _mealList
+                            .Where(x => x.FoodItems != null && x.FoodItems.Count > 0)
+                            .ToList();
                     }
                     catch (NotFoundException)
                     {
@@ -123,6 +126,29 @@ namespace NutriLens.Entities
         }
 
         /// <summary>
+        /// Lista de atividades físicas realizadas
+        /// </summary>
+        private static List<PhysicalActivity> PhysicalActivityList
+        {
+            get
+            {
+                if (_physicalActivityList == null)
+                {
+                    try
+                    {
+                        _physicalActivityList = ViewServices.AppDataManager.GetItem<List<PhysicalActivity>>(DataItems.PhysicalActivityList);
+                    }
+                    catch (NotFoundException)
+                    {
+                        _physicalActivityList = new List<PhysicalActivity>();
+                    }
+                }
+
+                return _physicalActivityList;
+            }
+        }
+
+        /// <summary>
         /// Token de acesso à API do NutriLens
         /// </summary>
         public static string NutriLensApiToken
@@ -152,6 +178,8 @@ namespace NutriLens.Entities
         /// Verifica se existe informações de usuário salvas no aplicativo
         /// </summary>
         public static bool HasUserInfo { get => UserInfo != null && !string.IsNullOrEmpty(UserInfo.Id); }
+
+        #region Meal methods
 
         /// <summary>
         /// Adiciona uma nova refeição
@@ -208,6 +236,66 @@ namespace NutriLens.Entities
                 .ToList();
         }
 
+        #endregion
+
+        #region Physical Activity Methods
+
+        /// <summary>
+        /// Adiciona uma nova atividade física
+        /// </summary>
+        /// <param name="physicalActivity"></param>
+        public static void AddPhysicalActivity(PhysicalActivity physicalActivity)
+        {
+            PhysicalActivityList.Add(physicalActivity);
+            ViewServices.AppDataManager.SetItem(DataItems.PhysicalActivityList, PhysicalActivityList);
+        }
+
+        /// <summary>
+        /// Retorna todas as atividades físicas salvas
+        /// </summary>
+        /// <returns></returns>
+        public static List<PhysicalActivity> GetAllPhysicalActivities()
+        {
+            return PhysicalActivityList;
+        }
+
+        /// <summary>
+        /// Retorna todas as atividades físicas da data atual
+        /// </summary>
+        /// <returns></returns>
+        public static List<PhysicalActivity> GetTodayPhysicalActivities()
+        {
+            return PhysicalActivityList
+                .Where(x => x.DateTime.Date == DateTime.Today)
+                .ToList();
+        }
+
+        /// <summary>
+        /// Retorna todas as atividades físicas em uma data específica
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static List<PhysicalActivity> GetPhysicalActivitiesByDate(DateTime date)
+        {
+            return PhysicalActivityList
+                .Where(x => x.DateTime.Date == date.Date)
+                .ToList();
+        }
+
+        /// <summary>
+        /// Retorna as atividades físicas que aconteceram entre um intervalo específico
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        public static List<PhysicalActivity> GetPhysicalActivitiesByDateRange(DateTime startDate, DateTime endDate)
+        {
+            return PhysicalActivityList
+                .Where(x => x.DateTime >= startDate && x.DateTime <= endDate)
+                .ToList();
+        }
+
+        #endregion
         /// <summary>
         /// Seta as informações de usuário
         /// </summary>

@@ -14,12 +14,18 @@
             <StackLayout Spacing="10">
                 <Button x:Name="btnTest" Text="Informações do aplicativo" Command="{Binding OpenFlyoutCommand}" />
                 <Button x:Name="btnConfig" Text="Configurações" Command="{Binding OpenConfigCommand}" />
-                <Label Text="Consumo calórico de hoje:" FontSize="Large" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
-                <Label Text="{Binding TodayProgressInfo}" FontSize="Title" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" HorizontalTextAlignment="Center" />
+                <Button x:Name="btnTermsOfUse" Text="Termos de Uso e Privacidade" Command="{Binding OpenTermsOfUseCommand}" />
+                <Label Text="Saldo calórico de hoje:" FontSize="Large" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+                <Label Text="{Binding TodayProgressInfo}" FontSize="Title" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0" HorizontalTextAlignment="Center" />
+                <Label Text="{Binding TodayMealCalories}" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" HorizontalTextAlignment="Center" TextColor="IndianRed" />
+                <Label Text="{Binding TodayPhysicalActivitiesCalories}" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center" TextColor="Green" />
                 <Label Text="Registrar refeição" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
                 <Button x:Name="btnCamera" Text="Por foto" Command="{Binding OpenCameraCommand}" />
                 <Button x:Name="btnBarCode" Text="Por código de barras" Command="{Binding OpenBarCodeCommand}" />
                 <Button x:Name="btnManual" Text="Por inserção manual" Command="{Binding OpenManualInputCommand}" />
+                <Button x:Name="btnVoice" Text="Por voz" Command="{Binding VoiceInputCommand}" />
+                <Label Text="Registrar atividade física" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+                <Button x:Name="btnPhysicalActivity" Text="Informar nova atividade física" Command="{Binding RegisterPhysicalActivityCommand}" />
                 <Label Text="Consultar histórico" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
                 <Button x:Name="btnPerDayHistoric" Text="Por dia" Command="{Binding PerDayHistoricCommand}"/>
                 <Button x:Name="btnPerWeekHistoric" Text="Por semana" Command="{Binding PerWeekHistoricCommand}"/>

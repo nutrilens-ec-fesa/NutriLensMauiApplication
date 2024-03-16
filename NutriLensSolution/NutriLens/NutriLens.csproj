@@ -52,6 +52,7 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\AppIcon\icon_nutrilens_1.svg" />
+	  <None Remove="Resources\Images\document_link.png" />
 	  <None Remove="Resources\Images\nutrilenslogo.jpg" />
 	  <None Remove="Resources\Raw\beep.mp3" />
 	</ItemGroup>
@@ -99,6 +100,9 @@
 	  </Compile>
 	  <Compile Update="Views\MobilePicturesGridPage.xaml.cs">
 	    <DependentUpon>MobilePicturesGridPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Popups\TermsOfUsePopup.xaml.cs">
+	    <DependentUpon>TermsOfUsePopup.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\Popups\AddTbcaFoodItemPopup.xaml.cs">
 	    <DependentUpon>AddTbcaFoodItemPopup.xaml</DependentUpon>
@@ -153,6 +157,12 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\MobileUserConfigPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Popups\TermsOfUsePopup.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Popups\AddPhysicalActivityPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Popups\AddTbcaFoodItemPopup.xaml">

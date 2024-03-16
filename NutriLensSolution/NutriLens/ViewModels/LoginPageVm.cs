@@ -1,10 +1,12 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CryptographyLibrary;
 using ExceptionLibrary;
 using NutriLens.Entities;
 using NutriLens.Services;
 using NutriLens.ViewInterfaces;
+using NutriLens.Views.Popups;
 using NutriLensClassLibrary.Models;
 using PermissionsLibrary;
 
@@ -72,21 +74,44 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private async Task Appearing()
         {
+            EntitiesHelperClass.ShowLoading("    Carregando    ");
+
             // Tempo para a tela renderizar
             await Task.Run(() => Thread.Sleep(1000));
 
             ViewServices.PopUpManager.UpdateDeviceDisplay(DeviceDisplay.Current);
 
-            // Chama o comando de navegar para a StartPage
-
             await HandlePermissions();
 
-            // Se houver informações de usuário
-            if (AppDataHelperClass.HasUserInfo)
-            {
-                DaoHelperClass.LoginWithUserInfoId(AppDataHelperClass.UserInfo.Id);
 
-                // Vai direto para a tela inicial
+            bool hasUserInfo = false;
+
+            await Task.Run(() => hasUserInfo = AppDataHelperClass.HasUserInfo);
+
+            await EntitiesHelperClass.CloseLoading();
+
+            // Se houver informações de usuário
+            if (hasUserInfo)
+            {
+                EntitiesHelperClass.ShowLoading("Realizando login automático");
+
+                await Task.Run(() => DaoHelperClass.LoginWithUserInfoId(AppDataHelperClass.UserInfo.Id));
+
+                await EntitiesHelperClass.CloseLoading();
+
+                EntitiesHelperClass.ShowLoading("Verificando termos de uso");
+
+                bool termsAccepted = false;
+
+                await Task.Run(() => termsAccepted = DaoHelperClass.GetTermsAcceptedByAuthenticatedUser());
+
+                await EntitiesHelperClass.CloseLoading();
+
+                if (!termsAccepted)
+                {
+                    TermsOfUsePopup termsOfUsePopup = new TermsOfUsePopup();
+                    await Application.Current.MainPage.ShowPopupAsync(termsOfUsePopup);
+                }
 
                 // Chama a StartPage 
                 // Retira a LaunchPage da Stack, para não permitir que o usuário possa acessá-la via botão voltar           

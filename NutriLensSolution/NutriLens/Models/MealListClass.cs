@@ -57,6 +57,28 @@ namespace NutriLens.Models
         /// <returns></returns>
         public string TotalEnergeticConsumption(bool valueOnly = false)
         {
+            double totalCalories = TotalEnergeticConsumption();
+
+            if (valueOnly)
+                return totalCalories.ToString("0.00");
+            else
+            {
+                return AppConfigHelperClass.EnergeticUnit switch
+                {
+                    EnergeticUnit.kcal => $"{totalCalories} {Constants.kcalUnit}",
+                    EnergeticUnit.kJ => $"{totalCalories} {Constants.kJUnit}",
+                    _ => default
+                };
+            }
+        }
+
+        /// <summary>
+        /// Retorna um double do consumo energético total das refeições da lista
+        /// </summary>
+        /// <param name="energeticUnit">Unidade de consumo energético a ser retornado</param>
+        /// <returns></returns>
+        public double TotalEnergeticConsumption()
+        {
             double totalCalories;
 
             try
@@ -72,8 +94,8 @@ namespace NutriLens.Models
 
             return AppConfigHelperClass.EnergeticUnit switch
             {
-                EnergeticUnit.kcal => $"{totalCalories}{(valueOnly ? string.Empty : " " + Constants.kcalUnit)}",
-                EnergeticUnit.kJ => $"{totalCalories * Constants.kcalToKJFactor:0.}{(valueOnly ? string.Empty : " " + Constants.kJUnit)}",
+                EnergeticUnit.kcal => totalCalories,
+                EnergeticUnit.kJ => totalCalories * Constants.kcalToKJFactor,
                 _ => default
             };
         }
