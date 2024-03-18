@@ -34,6 +34,11 @@ namespace NutriLens.Entities
             TbcaFoodItems,
 
             /// <summary>
+            /// Itens alimentícios da tabela TACO
+            /// </summary>
+            TacoFoodItems,
+
+            /// <summary>
             /// Token da API do NutriLens
             /// </summary>
             NutriLensApiToken,
@@ -46,7 +51,8 @@ namespace NutriLens.Entities
 
         private static List<Meal> _mealList;
         private static UserInfo _userInfo;
-        private static List<TbcaItem> _tbcaFoodItemsItems;
+        private static List<TbcaItem> _tbcaFoodItems;
+        private static List<TacoItem> _tacoFoodItems;
         private static List<PhysicalActivity> _physicalActivityList;
         private static string _nutriLensApiToken;
 
@@ -109,19 +115,39 @@ namespace NutriLens.Entities
         {
             get
             {
-                if (_tbcaFoodItemsItems == null)
+                if (_tbcaFoodItems == null)
                 {
                     try
                     {
-                        _tbcaFoodItemsItems = ViewServices.AppDataManager.GetItem<List<TbcaItem>>(DataItems.TbcaFoodItems);
+                        _tbcaFoodItems = ViewServices.AppDataManager.GetItem<List<TbcaItem>>(DataItems.TbcaFoodItems);
                     }
                     catch (NotFoundException)
                     {
-                        _tbcaFoodItemsItems = new List<TbcaItem>();
+                        _tbcaFoodItems = new List<TbcaItem>();
                     }
                 }
 
-                return _tbcaFoodItemsItems;
+                return _tbcaFoodItems;
+            }
+        }
+
+        public static List<TacoItem> TacoFoodItems
+        {
+            get
+            {
+                if (_tacoFoodItems == null)
+                {
+                    try
+                    {
+                        _tacoFoodItems = ViewServices.AppDataManager.GetItem<List<TacoItem>>(DataItems.TbcaFoodItems);
+                    }
+                    catch (NotFoundException)
+                    {
+                        _tacoFoodItems = new List<TacoItem>();
+                    }
+                }
+
+                return _tacoFoodItems;
             }
         }
 
@@ -335,7 +361,17 @@ namespace NutriLens.Entities
         public static void SetTbcaItems(List<TbcaItem> tbcaItems)
         {
             ViewServices.AppDataManager.SetItem(DataItems.TbcaFoodItems, tbcaItems);
-            _tbcaFoodItemsItems = tbcaItems;
+            _tbcaFoodItems = tbcaItems;
+        }
+
+        /// <summary>
+        /// Seta os items da TACO na memória do dispositivo
+        /// </summary>
+        /// <param name="tacoItems"></param>
+        public static void SetTacoItems(List<TacoItem> tacoItems)
+        {
+            ViewServices.AppDataManager.SetItem(DataItems.TacoFoodItems, tacoItems);
+            _tacoFoodItems = tacoItems;
         }
 
         /// <summary>
@@ -429,20 +465,29 @@ namespace NutriLens.Entities
         /// <param name="basalDailyCalories"></param>
         /// <param name="activity"></param>
         /// <returns></returns>
-        public static double GetDailyKiloCaloriesBurn(double basalDailyCalories, string activity)
+        public static double GetDailyKiloCaloriesBurn(double basalDailyCalories, string activity, string genero)
         {
             double dailyKiloCaloriesBurn = 0;
 
             switch (activity)
             {
                 case ("LightActivity"):
-                    dailyKiloCaloriesBurn = basalDailyCalories * 1.55;
+                    if(genero == "Masculine")
+                        dailyKiloCaloriesBurn = basalDailyCalories * 1.55;
+                    else
+                        dailyKiloCaloriesBurn = basalDailyCalories * 1.56;
                     break;
                 case ("ModeratelyActive"):
-                    dailyKiloCaloriesBurn = basalDailyCalories * 1.84;
+                    if (genero == "Masculine")
+                        dailyKiloCaloriesBurn = basalDailyCalories * 1.78;
+                    else
+                        dailyKiloCaloriesBurn = basalDailyCalories * 1.64;
                     break;
                 case ("VigorouslyActive"):
-                    dailyKiloCaloriesBurn = basalDailyCalories * 2.2;
+                    if (genero == "Masculine")
+                        dailyKiloCaloriesBurn = basalDailyCalories * 2.10;
+                    else
+                        dailyKiloCaloriesBurn = basalDailyCalories * 1.82;
                     break;
 
             }
@@ -572,6 +617,8 @@ namespace NutriLens.Entities
 
         public static ObservableCollection<TbcaItem> TbcaItems { get; set; }
 
+        public static ObservableCollection<TacoItem> TacoItems { get; set; }
+
 
         /// <summary>
         /// Apenas para testes, DELETAR POSTERIORMENTE
@@ -671,16 +718,37 @@ namespace NutriLens.Entities
         {
             List<FoodItem> foods = new List<FoodItem>();
             string tbcaNome = string.Empty;
+            string tacoNome = string.Empty;
             string gptPortion = string.Empty;
             double kiloCalories = 0;
             TbcaItems = new ObservableCollection<TbcaItem>();
             List<TbcaItem> detectados = new List<TbcaItem>();
             TbcaItem itemTBCA = new TbcaItem();
+            bool isTbca = false;
+
+            TacoItems = new ObservableCollection<TacoItem>();
+            List<TacoItem> detectadosTaco = new List<TacoItem>();
+            TacoItem itemTACO = new TacoItem();
+            bool isTaco = false;
 
             if (AppDataHelperClass.TbcaFoodItems == null || AppDataHelperClass.TbcaFoodItems.Count == 0)
             {
                 List<TbcaItem> tbcaItems = DaoHelperClass.GetTbcaItemsList();
                 AppDataHelperClass.SetTbcaItems(tbcaItems.OrderBy(x => x.Alimento).ToList());
+                if(tbcaItems.Count > 0)
+                {
+                    isTbca = true;
+                }
+            }
+
+            if (AppDataHelperClass.TacoFoodItems == null || AppDataHelperClass.TacoFoodItems.Count == 0)
+            {
+                List<TacoItem> tacoItems = DaoHelperClass.GetTacoItemsList();
+                AppDataHelperClass.SetTacoItems(tacoItems.OrderBy(x => x.Nome).ToList());
+                if (tacoItems.Count > 0)
+                {
+                    isTaco = true;
+                }
             }
 
             // Verifica se o nome do alimento identificado esta com nome composto tipo Arroz Grego, se sim, Busca por Arroz Grego e após busca apenas por Arroz
@@ -698,34 +766,60 @@ namespace NutriLens.Entities
                     a.Item = nomesAlimentos[0];
                     detectados.AddRange(AppDataHelperClass.TbcaFoodItems.Where(x => x.Alimento.Contains(a.Item)).Take(1).ToList());
 
+                    detectadosTaco.AddRange(AppDataHelperClass.TacoFoodItems.Where(x => x.Nome.Contains(a.Item)).Take(1).ToList());
+
                 }
 
-                tbcaNome = detectados[detectados.Count - 1].Alimento.Trim();
-                gptPortion = a.Quantidade.Replace('g',' ');
-                gptPortion = gptPortion.Replace("ramas", " ");
-                gptPortion = gptPortion.Replace("ml", " ");
-                gptPortion = gptPortion.Trim();
-                double kcal = double.Parse(gptPortion);
-                double kcalTbca = (double)detectados.First().EnergiaKcal;
-                kiloCalories = (kcal * kcalTbca) / 100;
-                itemTBCA = detectados.Last();
-
-                FoodItem foodItem;
-
-                foodItem = new()
+                if(isTbca)
                 {
-                    Name = tbcaNome,
-                    Portion = gptPortion,
-                    KiloCalories = kiloCalories,
-                    TbcaFoodItem = GetTbcaFoodItem(itemTBCA, gptPortion)
-                };
+                    tbcaNome = detectados[detectados.Count - 1].Alimento.Trim();
+                    gptPortion = a.Quantidade.Replace('g', ' ');
+                    gptPortion = gptPortion.Replace("ramas", " ");
+                    gptPortion = gptPortion.Replace("ml", " ");
+                    gptPortion = gptPortion.Trim();
+                    double kcal = double.Parse(gptPortion);
+                    double kcalTbca = (double)detectados.First().EnergiaKcal;
+                    kiloCalories = (kcal * kcalTbca) / 100;
+                    itemTBCA = detectados.Last();
 
-                foods.Add(foodItem);
+                    FoodItem foodItem;
+
+                    foodItem = new()
+                    {
+                        Name = tbcaNome,
+                        Portion = gptPortion,
+                        KiloCalories = kiloCalories,
+                        TbcaFoodItem = GetTbcaFoodItem(itemTBCA, gptPortion)
+                    };
+                    foods.Add(foodItem);
+                }
+                else
+                {
+                    tacoNome = detectadosTaco[detectadosTaco.Count - 1].Nome.Trim();
+                    gptPortion = a.Quantidade.Replace('g', ' ');
+                    gptPortion = gptPortion.Replace("ramas", " ");
+                    gptPortion = gptPortion.Replace("ml", " ");
+                    gptPortion = gptPortion.Trim();
+                    double kcal = double.Parse(gptPortion);
+                    double kcalTbca = (double)detectadosTaco.First().EnergiaKcal;
+                    kiloCalories = (kcal * kcalTbca) / 100;
+                    itemTACO = detectadosTaco.Last();
+
+                    FoodItem foodItem;
+
+                    foodItem = new()
+                    {
+                        Name = tacoNome,
+                        Portion = gptPortion,
+                        KiloCalories = kiloCalories,
+                        TacoFoodItem = GetTacoFoodItem(itemTACO, gptPortion)
+                    };
+                    foods.Add(foodItem);
+                }
 
             }
 
             return foods;
-
             
         }
 
@@ -771,7 +865,80 @@ namespace NutriLens.Entities
             return tbca;
         }
 
+        public static TacoItem GetTacoFoodItem(TacoItem taco, string portion)
+        {
+            double portionDouble = double.Parse(portion);
+
+            taco.Umidade = (taco.Umidade * portionDouble / 100);
+            taco.Proteina = (taco.Proteina * portionDouble / 100);
+            taco.Lipideos = (taco.Lipideos * portionDouble / 100);
+            taco.Colesterol = (taco.Colesterol * portionDouble / 100);
+            taco.Carboidrato = (taco.Carboidrato * portionDouble) / 100;
+            taco.FibraAlimentar = (taco.FibraAlimentar * portionDouble / 100);
+            taco.Cinzas = (taco.Cinzas * portionDouble / 100);
+            taco.Calcio = (taco.Calcio * portionDouble / 100);
+            taco.Magnesio = (taco.Magnesio * portionDouble / 100);
+            taco.Manganes = (taco.Manganes * portionDouble / 100);
+            taco.Fosforo = (taco.Fosforo * portionDouble / 100);
+            taco.Ferro = (taco.Ferro * portionDouble / 100);
+            taco.Sodio = (taco.Sodio * portionDouble / 100);
+            taco.Potassio = (taco.Potassio * portionDouble / 100);
+            taco.Cobre = (taco.Cobre * portionDouble / 100);
+            taco.Zinco = (taco.Zinco * portionDouble / 100);
+            taco.Retinol = (taco.Retinol * portionDouble / 100);
+            taco.RE = (taco.RE * portionDouble / 100);
+            taco.RAE = (taco.RAE * portionDouble / 100);
+            taco.Tiamina = (taco.Tiamina * portionDouble / 100);
+            taco.Riboflavina = (taco.Riboflavina * portionDouble / 100);
+            taco.Piridoxina = (taco.Piridoxina * portionDouble / 100);
+            taco.Niacina = (taco.Niacina * portionDouble / 100);
+            taco.VitaminaC = (taco.VitaminaC * portionDouble / 100);
+
+
+            return taco;
+        }
+
         public static List<FoodItem> foods = new List<FoodItem>();
+
+        /// <summary>
+        /// Constroi a lista de itens TACO a partir de List<RecognizedImageInfoTxtModel>
+        /// </summary>
+        /// <param name="alimentos"></param>
+        /// <returns></returns>
+        public static List<TacoItem> GetTacoItemsByImageInfo(List<RecognizedImageInfoTxtModel> alimentos)
+        {
+            string tacoStringItems = string.Empty;
+            TacoItems = new ObservableCollection<TacoItem>();
+            List<TacoItem> detectados = new List<TacoItem>();
+
+            if (AppDataHelperClass.TacoFoodItems == null || AppDataHelperClass.TacoFoodItems.Count == 0)
+            {
+                List<TacoItem> tacoItems = DaoHelperClass.GetTacoItemsList();
+                AppDataHelperClass.SetTacoItems(tacoItems.OrderBy(x => x.Nome).ToList());
+            }
+
+            // Verifica se o nome do alimento identificado esta com nome composto tipo Arroz Grego, se sim, Busca por Arroz Grego e após busca apenas por Arroz
+            foreach (RecognizedImageInfoTxtModel a in alimentos)
+            {
+                int numDetectadosAntes = detectados.Count;
+                int numPalavrasNomeAlimento = a.Item.Split(' ').Length;
+                detectados.AddRange(AppDataHelperClass.TacoFoodItems.Where(x => x.Nome.Contains(a.Item)).Take(1).ToList());
+                int numDetectadosApos = detectados.Count;
+
+                //Verifica se não foi encontrado nenhum item na TACO com nome de alimento composto, e busca com o primeiro nome na proxima tentativa
+                if (numDetectadosAntes == numDetectadosApos && numPalavrasNomeAlimento > 1)
+                {
+                    string[] nomesAlimentos = a.Item.Split(' ');
+                    a.Item = nomesAlimentos[0];
+                    detectados.AddRange(AppDataHelperClass.TacoFoodItems.Where(x => x.Nome.Contains(a.Item)).Take(1).ToList());
+                }
+            }
+
+            return detectados;
+
+        }
+
+
     }
 }
 

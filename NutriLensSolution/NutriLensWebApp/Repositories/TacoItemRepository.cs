@@ -6,14 +6,14 @@ using NutriLensWebApp.Interfaces;
 
 namespace NutriLensWebApp.Repositories
 {
-    public class TbcaItemRepository : ITbcaItemRepository
+    public class TacoItemRepository : ITacoItemRepository
     {
-        public List<TbcaItem> GetList()
+        public List<TacoItem> GetList()
         {
             try
             {
-                return AppMongoDbContext.TbcaItem
-                    .Find(Builders<TbcaItem>.Filter.Empty)
+                return AppMongoDbContext.TacoItem
+                    .Find(Builders<TacoItem>.Filter.Empty)
                     .ToList();
             }
             catch(Exception ex)

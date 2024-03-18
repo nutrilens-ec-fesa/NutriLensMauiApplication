@@ -34,6 +34,8 @@ namespace NutriLensClassLibrary.Models
 
         public TbcaItem TbcaFoodItem { get; set; }
 
+        public TacoItem TacoFoodItem { get; set; }
+
 
         #endregion
 

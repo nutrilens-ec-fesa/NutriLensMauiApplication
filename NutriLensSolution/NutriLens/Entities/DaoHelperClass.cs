@@ -425,5 +425,29 @@ namespace NutriLens.Entities
         }
 
         #endregion
+
+        #region TACO
+
+        /// <summary>
+        /// Obtém a lista de todos os itens da TACO
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="UnsuccessfullRequestException"></exception>
+        public static List<TacoItem> GetTacoItemsList()
+        {
+            GetRequest httpRequest = new(UriAndPaths.ApiUrl, "Taco/v1/GetList")
+            {
+                Token = AppDataHelperClass.NutriLensApiToken
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (!resp.IsSuccessStatusCode)
+                throw new UnsuccessfullRequestException(content);
+            else
+                return HttpManager.GetContent<List<TacoItem>>(content);
+        }
+
+        #endregion
     }
 }

@@ -12,6 +12,7 @@ namespace NutriLensClassLibrary.Models
         public string Nome { get; set; }
         public int? EnergiaKj { get; set; }
         public int? EnergiaKcal { get; set; }
+        public double? Umidade { get; set; }
         public double? Proteina { get; set; }
         public double? Lipideos { get; set; }
         public double? Colesterol { get; set; }
@@ -32,6 +33,7 @@ namespace NutriLensClassLibrary.Models
         public double? RAE { get; set; }
         public double? Tiamina { get; set; }
         public double? Riboflavina { get; set; }
+        public double? Piridoxina { get; set; }
         public double? Niacina { get; set; }
         public double? VitaminaC { get; set; }
 
