@@ -58,6 +58,17 @@ namespace NutriLensWebApp.Entities
             }
         }
 
+        private static IMongoCollection<TacoItem>? _tacoItem;
+
+        public static IMongoCollection<TacoItem> TacoItem
+        {
+            get
+            {
+                _tacoItem ??= Client.GetDatabase(_database).GetCollection<TacoItem>("TacoFoodItemsCollection");
+                return _tacoItem;
+            }
+        }
+
         private static IMongoCollection<Login>? _login;
 
         public static IMongoCollection<Login> Login
