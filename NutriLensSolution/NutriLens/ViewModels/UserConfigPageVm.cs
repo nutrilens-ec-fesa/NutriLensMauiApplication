@@ -176,7 +176,7 @@ namespace NutriLens.ViewModels
             BasalDailyCalories = basal.ToString("0.00");
 
             string activity = UserInfo.HabitualPhysicalActivity.ToString();
-            double dailyKiloCaloriesBurn = AppDataHelperClass.GetDailyKiloCaloriesBurn(basal, activity);
+            double dailyKiloCaloriesBurn = AppDataHelperClass.GetDailyKiloCaloriesBurn(basal, activity, gender);
             DailyKiloCaloriesBurn = dailyKiloCaloriesBurn.ToString("0.00");
 
             string objective = UserInfo.DailyKiloCaloriesObjective.ToString();
@@ -226,7 +226,7 @@ namespace NutriLens.ViewModels
 
             UserInfo.HabitualPhysicalActivity = (HabitualPhysicalActivity)HabitualPhysicalActivityIndex;
             string activity = UserInfo.HabitualPhysicalActivity.ToString();
-            double dailyKiloCaloriesBurn = AppDataHelperClass.GetDailyKiloCaloriesBurn(basal, activity);
+            double dailyKiloCaloriesBurn = AppDataHelperClass.GetDailyKiloCaloriesBurn(basal, activity, gender);
             DailyKiloCaloriesBurn = dailyKiloCaloriesBurn.ToString("0.00");
             OnPropertyChanged(nameof(DailyKiloCaloriesBurn));
 
