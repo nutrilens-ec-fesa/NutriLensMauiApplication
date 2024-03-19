@@ -185,6 +185,27 @@ namespace NutriLens.Entities
         }
 
         /// <summary>
+        /// Realiza análise dos alimentos presentes em uma imagem
+        /// </summary>
+        /// <param name="imageId">Identificador da imagem na base de dados</param>
+        /// <returns></returns>
+        /// <exception cref="UnsuccessfullRequestException"></exception>
+        public static string GetFoodVisionAnalisysByImageId(string imageId)
+        {
+            PostRequest httpRequest = new(UriAndPaths.ApiUrl, "Ai/v1/DetectFoodByMongoImageId", imageId)
+            {
+                Token = AppDataHelperClass.NutriLensApiToken
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (!resp.IsSuccessStatusCode)
+                throw new UnsuccessfullRequestException(content);
+            else
+                return content.Replace("\"", string.Empty).Replace("\\n", Environment.NewLine);
+        }
+
+        /// <summary>
         /// Obtém o último prompt da OpenAi registrado
         /// </summary>
         /// <returns></returns>
@@ -228,7 +249,7 @@ namespace NutriLens.Entities
         /// </summary>
         /// <param name="imagePath">Caminho da imagem</param>
         /// <exception cref="UnsuccessfullRequestException"></exception>
-        public static void UploadImage(string imagePath)
+        public static string UploadImage(string imagePath)
         {
             MongoImage image = new()
             {
@@ -246,6 +267,8 @@ namespace NutriLens.Entities
 
             if (!resp.IsSuccessStatusCode)
                 throw new UnsuccessfullRequestException(content);
+            else
+                return content.Replace("\"", string.Empty);
         }
 
         /// <summary>
