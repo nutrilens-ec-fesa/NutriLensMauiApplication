@@ -72,6 +72,38 @@ namespace NutriLensWebApp.Controllers
             }
         }
 
+        [HttpPost, Route("v1/DetectFoodByMongoImageId/{mongoImageId}")]
+        public IActionResult DetectFoodByMongoImageId(string mongoImageId, 
+            [FromServices] IOpenAiPrompt openAiPromptRepo,
+            [FromServices] IMongoImage mongoImageRepo)
+        {
+            try
+            {
+                OpenAiPrompt openAiPrompt = openAiPromptRepo.GetLast();
+
+                MongoImage mongoImage = mongoImageRepo.GetById(mongoImageId);
+
+                string mongoImageBase64 = Convert.ToBase64String(mongoImage.ImageBytes);
+
+                OpenAiVisionInputModel inputModel = new()
+                {
+                    UserPrompt = openAiPrompt.UserPrompt,
+                    SystemPrompt = openAiPrompt.SystemPrompt,
+                    MaxTokens = 300,
+                    Base64 = false,
+                    Url = $"data:image/jpeg;base64,{mongoImageBase64}"
+                };
+
+                OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4VisionPreview, inputModel);
+
+                return Ok(response.GetResponseMessage());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
         [HttpGet, Route("v1/GetActualGpt4VisionPrompt")]
         public IActionResult GetActualGpt4VisionPrompt([FromServices] IOpenAiPrompt openAiPromptRepo)
         {
