@@ -51,7 +51,7 @@ namespace NutriLensWebApp.Controllers
                 mongoImage.DateTime = DateTime.Now;
                 mongoImage.UserIdentifier = EntitiesHelperClass.AuthenticatedUserIdentifier(this);
                 mongoImageRepo.InsertNew(mongoImage);
-                return Created(string.Empty, null);
+                return Created(mongoImage.Id, mongoImage.Id);
             }
             catch(Exception ex)
             {
