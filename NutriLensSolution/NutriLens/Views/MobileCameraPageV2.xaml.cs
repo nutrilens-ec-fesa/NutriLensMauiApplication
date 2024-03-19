@@ -33,8 +33,10 @@ public partial class MobileCameraPageV2 : ContentPage
 
                 EntitiesHelperClass.ShowLoading("Sincronizando imagem na nuvem...");
 
+                string mongoImageId = string.Empty;
+                
                 // Chama a função de upload com o caminho da imagem
-                await Task.Run(() => DaoHelperClass.UploadImage(filePath));
+                await Task.Run(() => mongoImageId = DaoHelperClass.UploadImage(filePath));
 
                 await ViewServices.PopUpManager.PopInfoAsync($"Imagem '{Path.GetFileName(filePath)}' salva com sucesso!");
 
@@ -55,7 +57,7 @@ public partial class MobileCameraPageV2 : ContentPage
                 // Chama a função de upload com o caminho da imagem
                 await Task.Run(() =>
                 {
-                    resultadoAnalise = DaoHelperClass.GetFoodVisionAnalisysByLocalPath(filePath);
+                    resultadoAnalise = DaoHelperClass.GetFoodVisionAnalisysByImageId(mongoImageId);
                     // Quando a análise estiver completa, sinalize o TaskCompletionSource
                     tcs.SetResult(true);
                 });
@@ -64,20 +66,28 @@ public partial class MobileCameraPageV2 : ContentPage
 
                 if (tcs.Task.IsCompleted)
                 {
-                    //Verifica se o texto de retorno do GPT veio em JSON ou não
-                    if (resultadoAnalise.Contains('['))
+                    try
                     {
-                        alimentosJson = AppDataHelperClass.GetRecognizedImageInfoModel(resultadoAnalise);
-                        identificados = AppDataHelperClass.GetRecognizedImageInfoText(alimentosJson);
+                        //Verifica se o texto de retorno do GPT veio em JSON ou não
+                        if (resultadoAnalise.Contains('['))
+                        {
+                            alimentosJson = AppDataHelperClass.GetRecognizedImageInfoModel(resultadoAnalise);
+                            identificados = AppDataHelperClass.GetRecognizedImageInfoText(alimentosJson);
+                        }
+                        else
+                        {
+                            alimentosTxt = AppDataHelperClass.GetRecognizedImageInfoTxtModel(resultadoAnalise);
+                            identificados = AppDataHelperClass.GetRecognizedImageInfoText(alimentosTxt);
+                            tbcaTeste = AppDataHelperClass.GetStringTbcaItemsByImageInfo(alimentosTxt);
+                            foods = AppDataHelperClass.GetFoodItems(alimentosTxt);
+                        }
                     }
-                    else
+                    catch(Exception ex)
                     {
-                        alimentosTxt = AppDataHelperClass.GetRecognizedImageInfoTxtModel(resultadoAnalise);
-                        identificados = AppDataHelperClass.GetRecognizedImageInfoText(alimentosTxt);
-                        tbcaTeste = AppDataHelperClass.GetStringTbcaItemsByImageInfo(alimentosTxt);
-                        foods = AppDataHelperClass.GetFoodItems(alimentosTxt);
+                        await EntitiesHelperClass.CloseLoading();
+                        await ViewServices.PopUpManager.PopErrorAsync($"Houve algum problema com a análise da foto dos alimentos. {Environment.NewLine} Retorno da API: {resultadoAnalise}. {Environment.NewLine}" + ExceptionManager.ExceptionMessage(ex));
+                        return;
                     }
-                    
                 }
 
                 int telaEdicao = await ViewServices.PopUpManager.PopPersonalizedAsync("Verifique os alimentos identificados", identificados, "OK", "Editar");
