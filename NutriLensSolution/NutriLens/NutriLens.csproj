@@ -101,6 +101,9 @@
 	  <Compile Update="Views\MobilePicturesGridPage.xaml.cs">
 	    <DependentUpon>MobilePicturesGridPage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\Popups\AddTacoFoodItemPopup.xaml.cs">
+	    <DependentUpon>AddTacoFoodItemPopup.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\Popups\TermsOfUsePopup.xaml.cs">
 	    <DependentUpon>TermsOfUsePopup.xaml</DependentUpon>
 	  </Compile>
@@ -157,6 +160,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\MobileUserConfigPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Popups\AddTacoFoodItemPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Popups\TermsOfUsePopup.xaml">

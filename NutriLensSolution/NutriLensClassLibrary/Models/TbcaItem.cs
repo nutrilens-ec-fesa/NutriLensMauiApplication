@@ -8,7 +8,7 @@ namespace NutriLensClassLibrary.Models
     {
         [BsonId, JsonIgnore]
         public ObjectId _id { get; set; }
-        public string Id { get; set; }
+        public int id { get; set; }
         public string Alimento { get; set; }
         public int? EnergiaKj { get; set; }
         public int? EnergiaKcal { get; set; }

@@ -78,7 +78,7 @@ public partial class MobileCameraPageV2 : ContentPage
                         {
                             alimentosTxt = AppDataHelperClass.GetRecognizedImageInfoTxtModel(resultadoAnalise);
                             identificados = AppDataHelperClass.GetRecognizedImageInfoText(alimentosTxt);
-                            tbcaTeste = AppDataHelperClass.GetStringTbcaItemsByImageInfo(alimentosTxt);
+                            //tbcaTeste = AppDataHelperClass.GetStringTbcaItemsByImageInfo(alimentosTxt);
                             foods = AppDataHelperClass.GetFoodItems(alimentosTxt);
                         }
                     }

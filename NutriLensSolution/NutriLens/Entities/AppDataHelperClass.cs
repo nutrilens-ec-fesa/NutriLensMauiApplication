@@ -139,7 +139,7 @@ namespace NutriLens.Entities
                 {
                     try
                     {
-                        _tacoFoodItems = ViewServices.AppDataManager.GetItem<List<TacoItem>>(DataItems.TbcaFoodItems);
+                        _tacoFoodItems = ViewServices.AppDataManager.GetItem<List<TacoItem>>(DataItems.TacoFoodItems);
                     }
                     catch (NotFoundException)
                     {
@@ -620,99 +620,99 @@ namespace NutriLens.Entities
         public static ObservableCollection<TacoItem> TacoItems { get; set; }
 
 
-        /// <summary>
-        /// Apenas para testes, DELETAR POSTERIORMENTE
-        /// </summary>
-        /// <param name="alimentos"></param>
-        /// <returns></returns>
-        public static string GetStringTbcaItemsByImageInfo(List<RecognizedImageInfoTxtModel> alimentos)
-        {
-            string tbcaStringItems = string.Empty;
-            TbcaItems = new ObservableCollection<TbcaItem>();
-            List<TbcaItem> detectados = new List<TbcaItem>();
+        ///// <summary>
+        ///// Apenas para testes, DELETAR POSTERIORMENTE
+        ///// </summary>
+        ///// <param name="alimentos"></param>
+        ///// <returns></returns>
+        //public static string GetStringTbcaItemsByImageInfo(List<RecognizedImageInfoTxtModel> alimentos)
+        //{
+        //    string tbcaStringItems = string.Empty;
+        //    TbcaItems = new ObservableCollection<TbcaItem>();
+        //    List<TbcaItem> detectados = new List<TbcaItem>();
 
-            if (AppDataHelperClass.TbcaFoodItems == null || AppDataHelperClass.TbcaFoodItems.Count == 0)
-            {
-                List<TbcaItem> tbcaItems = DaoHelperClass.GetTbcaItemsList();
-                AppDataHelperClass.SetTbcaItems(tbcaItems.OrderBy(x => x.Alimento).ToList());
-            }
+        //    if (AppDataHelperClass.TbcaFoodItems == null || AppDataHelperClass.TbcaFoodItems.Count == 0)
+        //    {
+        //        List<TbcaItem> tbcaItems = DaoHelperClass.GetTbcaItemsList();
+        //        AppDataHelperClass.SetTbcaItems(tbcaItems.OrderBy(x => x.Alimento).ToList());
+        //    }
 
-            // Verifica se o nome do alimento identificado esta com nome composto tipo Arroz Grego, se sim, Busca por Arroz Grego e após busca apenas por Arroz
-            foreach (RecognizedImageInfoTxtModel a in alimentos)
-            {
-                int numDetectadosAntes = detectados.Count;
-                int numPalavrasNomeAlimento = a.Item.Split(' ').Length;
-                detectados.AddRange(AppDataHelperClass.TbcaFoodItems.Where(x => x.Alimento.Contains(a.Item)).Take(1).ToList());
-                int numDetectadosApos = detectados.Count;
+        //    // Verifica se o nome do alimento identificado esta com nome composto tipo Arroz Grego, se sim, Busca por Arroz Grego e após busca apenas por Arroz
+        //    foreach (RecognizedImageInfoTxtModel a in alimentos)
+        //    {
+        //        int numDetectadosAntes = detectados.Count;
+        //        int numPalavrasNomeAlimento = a.Item.Split(' ').Length;
+        //        detectados.AddRange(AppDataHelperClass.TbcaFoodItems.Where(x => x.Alimento.Contains(a.Item)).Take(1).ToList());
+        //        int numDetectadosApos = detectados.Count;
 
-                //Verifica se não foi encontrado nenhum item na TBCA com nome de alimento composto, e busca com o primeiro nome na proxima tentativa
-                if (numDetectadosAntes == numDetectadosApos && numPalavrasNomeAlimento > 1)
-                {
-                    string[] nomesAlimentos = a.Item.Split(' ');
-                    a.Item = nomesAlimentos[0];
-                    detectados.AddRange(AppDataHelperClass.TbcaFoodItems.Where(x => x.Alimento.Contains(a.Item)).Take(1).ToList());
+        //        //Verifica se não foi encontrado nenhum item na TBCA com nome de alimento composto, e busca com o primeiro nome na proxima tentativa
+        //        if (numDetectadosAntes == numDetectadosApos && numPalavrasNomeAlimento > 1)
+        //        {
+        //            string[] nomesAlimentos = a.Item.Split(' ');
+        //            a.Item = nomesAlimentos[0];
+        //            detectados.AddRange(AppDataHelperClass.TbcaFoodItems.Where(x => x.Alimento.Contains(a.Item)).Take(1).ToList());
 
-                }
-            }
+        //        }
+        //    }
 
-            foreach (TbcaItem tbca in detectados)
-            {
-                // Obtém todas as propriedades públicas da classe TbcaItem
-                PropertyInfo[] propriedades = typeof(TbcaItem).GetProperties();
+        //    foreach (TbcaItem tbca in detectados)
+        //    {
+        //        // Obtém todas as propriedades públicas da classe TbcaItem
+        //        PropertyInfo[] propriedades = typeof(TbcaItem).GetProperties();
 
-                // Itera sobre cada propriedade e adiciona seu nome e valor à string
-                foreach (PropertyInfo propriedade in propriedades)
-                {
-                    object valor = propriedade.GetValue(tbca, null);
-                    tbcaStringItems += $"{propriedade.Name}: {valor}\n";
-                }
+        //        // Itera sobre cada propriedade e adiciona seu nome e valor à string
+        //        foreach (PropertyInfo propriedade in propriedades)
+        //        {
+        //            object valor = propriedade.GetValue(tbca, null);
+        //            tbcaStringItems += $"{propriedade.Name}: {valor}\n";
+        //        }
 
-                // Adiciona uma quebra de linha entre os itens da lista
-                tbcaStringItems += "\n";
-            }
+        //        // Adiciona uma quebra de linha entre os itens da lista
+        //        tbcaStringItems += "\n";
+        //    }
 
-            return tbcaStringItems;
+        //    return tbcaStringItems;
 
 
-        }
+        //}
 
-        /// <summary>
-        /// Constroi a lista de itens TBCA a partir de List<RecognizedImageInfoTxtModel>
-        /// </summary>
-        /// <param name="alimentos"></param>
-        /// <returns></returns>
-        public static List<TbcaItem> GetTbcaItemsByImageInfo(List<RecognizedImageInfoTxtModel> alimentos)
-        {
-            string tbcaStringItems = string.Empty;
-            TbcaItems = new ObservableCollection<TbcaItem>();
-            List<TbcaItem> detectados = new List<TbcaItem>();
+        ///// <summary>
+        ///// Constroi a lista de itens TBCA a partir de List<RecognizedImageInfoTxtModel>
+        ///// </summary>
+        ///// <param name="alimentos"></param>
+        ///// <returns></returns>
+        //public static List<TbcaItem> GetTbcaItemsByImageInfo(List<RecognizedImageInfoTxtModel> alimentos)
+        //{
+        //    string tbcaStringItems = string.Empty;
+        //    TbcaItems = new ObservableCollection<TbcaItem>();
+        //    List<TbcaItem> detectados = new List<TbcaItem>();
 
-            if (AppDataHelperClass.TbcaFoodItems == null || AppDataHelperClass.TbcaFoodItems.Count == 0)
-            {
-                List<TbcaItem> tbcaItems = DaoHelperClass.GetTbcaItemsList();
-                AppDataHelperClass.SetTbcaItems(tbcaItems.OrderBy(x => x.Alimento).ToList());
-            }
+        //    if (AppDataHelperClass.TbcaFoodItems == null || AppDataHelperClass.TbcaFoodItems.Count == 0)
+        //    {
+        //        List<TbcaItem> tbcaItems = DaoHelperClass.GetTbcaItemsList();
+        //        AppDataHelperClass.SetTbcaItems(tbcaItems.OrderBy(x => x.Alimento).ToList());
+        //    }
 
-            // Verifica se o nome do alimento identificado esta com nome composto tipo Arroz Grego, se sim, Busca por Arroz Grego e após busca apenas por Arroz
-            foreach (RecognizedImageInfoTxtModel a in alimentos)
-            {
-                int numDetectadosAntes = detectados.Count;
-                int numPalavrasNomeAlimento = a.Item.Split(' ').Length;
-                detectados.AddRange(AppDataHelperClass.TbcaFoodItems.Where(x => x.Alimento.Contains(a.Item)).Take(1).ToList());
-                int numDetectadosApos = detectados.Count;
+        //    // Verifica se o nome do alimento identificado esta com nome composto tipo Arroz Grego, se sim, Busca por Arroz Grego e após busca apenas por Arroz
+        //    foreach (RecognizedImageInfoTxtModel a in alimentos)
+        //    {
+        //        int numDetectadosAntes = detectados.Count;
+        //        int numPalavrasNomeAlimento = a.Item.Split(' ').Length;
+        //        detectados.AddRange(AppDataHelperClass.TbcaFoodItems.Where(x => x.Alimento.Contains(a.Item)).Take(1).ToList());
+        //        int numDetectadosApos = detectados.Count;
 
-                //Verifica se não foi encontrado nenhum item na TBCA com nome de alimento composto, e busca com o primeiro nome na proxima tentativa
-                if (numDetectadosAntes == numDetectadosApos && numPalavrasNomeAlimento > 1)
-                {
-                    string[] nomesAlimentos = a.Item.Split(' ');
-                    a.Item = nomesAlimentos[0];
-                    detectados.AddRange(AppDataHelperClass.TbcaFoodItems.Where(x => x.Alimento.Contains(a.Item)).Take(1).ToList());
-                }
-            }
+        //        //Verifica se não foi encontrado nenhum item na TBCA com nome de alimento composto, e busca com o primeiro nome na proxima tentativa
+        //        if (numDetectadosAntes == numDetectadosApos && numPalavrasNomeAlimento > 1)
+        //        {
+        //            string[] nomesAlimentos = a.Item.Split(' ');
+        //            a.Item = nomesAlimentos[0];
+        //            detectados.AddRange(AppDataHelperClass.TbcaFoodItems.Where(x => x.Alimento.Contains(a.Item)).Take(1).ToList());
+        //        }
+        //    }
 
-            return detectados;
+        //    return detectados;
 
-        }
+        //}
 
         public static List<FoodItem> GetFoodItems(List<RecognizedImageInfoTxtModel> alimentos)
         {
@@ -721,25 +721,25 @@ namespace NutriLens.Entities
             string tacoNome = string.Empty;
             string gptPortion = string.Empty;
             double kiloCalories = 0;
-            TbcaItems = new ObservableCollection<TbcaItem>();
-            List<TbcaItem> detectados = new List<TbcaItem>();
-            TbcaItem itemTBCA = new TbcaItem();
-            bool isTbca = false;
+            //TbcaItems = new ObservableCollection<TbcaItem>();
+            //List<TbcaItem> detectados = new List<TbcaItem>();
+            //TbcaItem itemTBCA = new TbcaItem();
+            //bool isTbca = false;
 
             TacoItems = new ObservableCollection<TacoItem>();
             List<TacoItem> detectadosTaco = new List<TacoItem>();
             TacoItem itemTACO = new TacoItem();
             bool isTaco = false;
 
-            if (AppDataHelperClass.TbcaFoodItems == null || AppDataHelperClass.TbcaFoodItems.Count == 0)
-            {
-                List<TbcaItem> tbcaItems = DaoHelperClass.GetTbcaItemsList();
-                AppDataHelperClass.SetTbcaItems(tbcaItems.OrderBy(x => x.Alimento).ToList());
-                if(tbcaItems.Count > 0)
-                {
-                    isTbca = true;
-                }
-            }
+            //if (AppDataHelperClass.TbcaFoodItems == null || AppDataHelperClass.TbcaFoodItems.Count == 0)
+            //{
+            //    List<TbcaItem> tbcaItems = DaoHelperClass.GetTbcaItemsList();
+            //    AppDataHelperClass.SetTbcaItems(tbcaItems.OrderBy(x => x.Alimento).ToList());
+            //    if(tbcaItems.Count > 0)
+            //    {
+            //        isTbca = true;
+            //    }
+            //}
 
             if (AppDataHelperClass.TacoFoodItems == null || AppDataHelperClass.TacoFoodItems.Count == 0)
             {
@@ -754,47 +754,47 @@ namespace NutriLens.Entities
             // Verifica se o nome do alimento identificado esta com nome composto tipo Arroz Grego, se sim, Busca por Arroz Grego e após busca apenas por Arroz
             foreach (RecognizedImageInfoTxtModel a in alimentos)
             {
-                int numDetectadosAntes = detectados.Count;
-                int numPalavrasNomeAlimento = a.Item.Split(' ').Length;
-                detectados.AddRange(AppDataHelperClass.TbcaFoodItems.Where(x => x.Alimento.Contains(a.Item)).Take(1).ToList());
-                int numDetectadosApos = detectados.Count;
+                //int numDetectadosAntes = detectados.Count;
+                //int numPalavrasNomeAlimento = a.Item.Split(' ').Length;
+                //detectados.AddRange(AppDataHelperClass.TbcaFoodItems.Where(x => x.Alimento.Contains(a.Item)).Take(1).ToList());
+                //int numDetectadosApos = detectados.Count;
 
-                //Verifica se não foi encontrado nenhum item na TBCA com nome de alimento composto, e busca com o primeiro nome na proxima tentativa
-                if (numDetectadosAntes == numDetectadosApos && numPalavrasNomeAlimento > 1)
-                {
-                    string[] nomesAlimentos = a.Item.Split(' ');
-                    a.Item = nomesAlimentos[0];
-                    detectados.AddRange(AppDataHelperClass.TbcaFoodItems.Where(x => x.Alimento.Contains(a.Item)).Take(1).ToList());
+                ////Verifica se não foi encontrado nenhum item na TBCA com nome de alimento composto, e busca com o primeiro nome na proxima tentativa
+                //if (numDetectadosAntes == numDetectadosApos && numPalavrasNomeAlimento > 1)
+                //{
+                //    string[] nomesAlimentos = a.Item.Split(' ');
+                //    a.Item = nomesAlimentos[0];
+                //    detectados.AddRange(AppDataHelperClass.TbcaFoodItems.Where(x => x.Alimento.Contains(a.Item)).Take(1).ToList());
 
-                    detectadosTaco.AddRange(AppDataHelperClass.TacoFoodItems.Where(x => x.Nome.Contains(a.Item)).Take(1).ToList());
+                //    detectadosTaco.AddRange(AppDataHelperClass.TacoFoodItems.Where(x => x.Nome.Contains(a.Item)).Take(1).ToList());
 
-                }
+                //}
 
-                if(isTbca)
-                {
-                    tbcaNome = detectados[detectados.Count - 1].Alimento.Trim();
-                    gptPortion = a.Quantidade.Replace('g', ' ');
-                    gptPortion = gptPortion.Replace("ramas", " ");
-                    gptPortion = gptPortion.Replace("ml", " ");
-                    gptPortion = gptPortion.Trim();
-                    double kcal = double.Parse(gptPortion);
-                    double kcalTbca = (double)detectados.First().EnergiaKcal;
-                    kiloCalories = (kcal * kcalTbca) / 100;
-                    itemTBCA = detectados.Last();
+                //if(isTbca)
+                //{
+                //    tbcaNome = detectados[detectados.Count - 1].Alimento.Trim();
+                //    gptPortion = a.Quantidade.Replace('g', ' ');
+                //    gptPortion = gptPortion.Replace("ramas", " ");
+                //    gptPortion = gptPortion.Replace("ml", " ");
+                //    gptPortion = gptPortion.Trim();
+                //    double kcal = double.Parse(gptPortion);
+                //    double kcalTbca = (double)detectados.First().EnergiaKcal;
+                //    kiloCalories = (kcal * kcalTbca) / 100;
+                //    itemTBCA = detectados.Last();
 
-                    FoodItem foodItem;
+                //    FoodItem foodItem;
 
-                    foodItem = new()
-                    {
-                        Name = tbcaNome,
-                        Portion = gptPortion,
-                        KiloCalories = kiloCalories,
-                        TbcaFoodItem = GetTbcaFoodItem(itemTBCA, gptPortion)
-                    };
-                    foods.Add(foodItem);
-                }
-                else
-                {
+                //    foodItem = new()
+                //    {
+                //        Name = tbcaNome,
+                //        Portion = gptPortion,
+                //        KiloCalories = kiloCalories,
+                //        TbcaFoodItem = GetTbcaFoodItem(itemTBCA, gptPortion)
+                //    };
+                //    foods.Add(foodItem);
+                //}
+                //else
+                //{
                     tacoNome = detectadosTaco[detectadosTaco.Count - 1].Nome.Trim();
                     gptPortion = a.Quantidade.Replace('g', ' ');
                     gptPortion = gptPortion.Replace("ramas", " ");
@@ -815,7 +815,7 @@ namespace NutriLens.Entities
                         TacoFoodItem = GetTacoFoodItem(itemTACO, gptPortion)
                     };
                     foods.Add(foodItem);
-                }
+                //}
 
             }
 
@@ -869,31 +869,55 @@ namespace NutriLens.Entities
         {
             double portionDouble = double.Parse(portion);
 
-            taco.Umidade = (taco.Umidade * portionDouble / 100);
-            taco.Proteina = (taco.Proteina * portionDouble / 100);
-            taco.Lipideos = (taco.Lipideos * portionDouble / 100);
-            taco.Colesterol = (taco.Colesterol * portionDouble / 100);
-            taco.Carboidrato = (taco.Carboidrato * portionDouble) / 100;
-            taco.FibraAlimentar = (taco.FibraAlimentar * portionDouble / 100);
-            taco.Cinzas = (taco.Cinzas * portionDouble / 100);
-            taco.Calcio = (taco.Calcio * portionDouble / 100);
-            taco.Magnesio = (taco.Magnesio * portionDouble / 100);
-            taco.Manganes = (taco.Manganes * portionDouble / 100);
-            taco.Fosforo = (taco.Fosforo * portionDouble / 100);
-            taco.Ferro = (taco.Ferro * portionDouble / 100);
-            taco.Sodio = (taco.Sodio * portionDouble / 100);
-            taco.Potassio = (taco.Potassio * portionDouble / 100);
-            taco.Cobre = (taco.Cobre * portionDouble / 100);
-            taco.Zinco = (taco.Zinco * portionDouble / 100);
-            taco.Retinol = (taco.Retinol * portionDouble / 100);
-            taco.RE = (taco.RE * portionDouble / 100);
-            taco.RAE = (taco.RAE * portionDouble / 100);
-            taco.Tiamina = (taco.Tiamina * portionDouble / 100);
-            taco.Riboflavina = (taco.Riboflavina * portionDouble / 100);
-            taco.Piridoxina = (taco.Piridoxina * portionDouble / 100);
-            taco.Niacina = (taco.Niacina * portionDouble / 100);
-            taco.VitaminaC = (taco.VitaminaC * portionDouble / 100);
+            taco.Umidade = (taco.GetValue(nameof(taco.Umidade)) * portionDouble / 100);
+            taco.Proteina = (taco.GetValue(nameof(taco.Proteina)) * portionDouble / 100);
+            taco.Lipideos = (taco.GetValue(nameof(taco.Lipideos)) * portionDouble / 100);
+            taco.Colesterol = (taco.GetValue(nameof(taco.Colesterol)) * portionDouble / 100);
+            taco.Carboidrato = (taco.GetValue(nameof(taco.Carboidrato)) * portionDouble) / 100;
+            taco.FibraAlimentar = (taco.GetValue(nameof(taco.FibraAlimentar)) * portionDouble / 100);
+            taco.Cinzas = (taco.GetValue(nameof(taco.Cinzas)) * portionDouble / 100);
+            taco.Calcio = (taco.GetValue(nameof(taco.Calcio)) * portionDouble / 100);
+            taco.Magnesio = (taco.GetValue(nameof(taco.Magnesio)) * portionDouble / 100);
+            taco.Manganes = (taco.GetValue(nameof(taco.Manganes)) * portionDouble / 100);
+            taco.Fosforo = (taco.GetValue(nameof(taco.Fosforo)) * portionDouble / 100);
+            taco.Ferro = (taco.GetValue(nameof(taco.Ferro)) * portionDouble / 100);
+            taco.Sodio = (taco.GetValue(nameof(taco.Sodio)) * portionDouble / 100);
+            taco.Potassio = (taco.GetValue(nameof(taco.Potassio)) * portionDouble / 100);
+            taco.Cobre = (taco.GetValue(nameof(taco.Cobre)) * portionDouble / 100);
+            taco.Zinco = (taco.GetValue(nameof(taco.Zinco)) * portionDouble / 100);
+            taco.Retinol = (taco.GetValue(nameof(taco.Retinol)) * portionDouble / 100);
+            taco.RE = (taco.GetValue(nameof(taco.RE)) * portionDouble / 100);
+            taco.RAE = (taco.GetValue(nameof(taco.RAE)) * portionDouble / 100);
+            taco.Tiamina = (taco.GetValue(nameof(taco.Tiamina)) * portionDouble / 100);
+            taco.Riboflavina = (taco.GetValue(nameof(taco.Riboflavina)) * portionDouble / 100);
+            taco.Piridoxina = (taco.GetValue(nameof(taco.Piridoxina)) * portionDouble / 100);
+            taco.Niacina = (taco.GetValue(nameof(taco.Niacina)) * portionDouble / 100);
+            taco.VitaminaC = (taco.GetValue(nameof(taco.VitaminaC)) * portionDouble / 100);
 
+            //taco.Umidade = (taco.Umidade * portionDouble / 100);
+            //taco.Proteina = (taco.Proteina * portionDouble / 100);
+            //taco.Lipideos = (taco.Lipideos * portionDouble / 100);
+            //taco.Colesterol = (taco.Colesterol * portionDouble / 100);
+            //taco.Carboidrato = (taco.Carboidrato * portionDouble) / 100;
+            //taco.FibraAlimentar = (taco.FibraAlimentar * portionDouble / 100);
+            //taco.Cinzas = (taco.Cinzas * portionDouble / 100);
+            //taco.Calcio = (taco.Calcio * portionDouble / 100);
+            //taco.Magnesio = (taco.Magnesio * portionDouble / 100);
+            //taco.Manganes = (taco.Manganes * portionDouble / 100);
+            //taco.Fosforo = (taco.Fosforo * portionDouble / 100);
+            //taco.Ferro = (taco.Ferro * portionDouble / 100);
+            //taco.Sodio = (taco.Sodio * portionDouble / 100);
+            //taco.Potassio = (taco.Potassio * portionDouble / 100);
+            //taco.Cobre = (taco.Cobre * portionDouble / 100);
+            //taco.Zinco = (taco.Zinco * portionDouble / 100);
+            //taco.Retinol = (taco.Retinol * portionDouble / 100);
+            //taco.RE = (taco.RE * portionDouble / 100);
+            //taco.RAE = (taco.RAE * portionDouble / 100);
+            //taco.Tiamina = (taco.Tiamina * portionDouble / 100);
+            //taco.Riboflavina = (taco.Riboflavina * portionDouble / 100);
+            //taco.Piridoxina = (taco.Piridoxina * portionDouble / 100);
+            //taco.Niacina = (taco.Niacina * portionDouble / 100);
+            //taco.VitaminaC = (taco.VitaminaC * portionDouble / 100);
 
             return taco;
         }

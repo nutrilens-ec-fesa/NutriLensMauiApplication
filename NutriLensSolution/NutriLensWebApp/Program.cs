@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddTransient<ILogin, LoginRepository>();
 builder.Services.AddTransient<ITbcaItemRepository, TbcaItemRepository>();
+builder.Services.AddTransient<ITacoItemRepository, TacoItemRepository>();
 builder.Services.AddTransient<IUserInfo, UserInfoRepository>();
 builder.Services.AddTransient<IBarcodeItem, BarcodeItemRepository>();
 builder.Services.AddTransient<IMongoImage, MongoImageRepository>();

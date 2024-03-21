@@ -18,7 +18,7 @@ namespace NutriLensWebApp.Repositories
             }
             catch(Exception ex)
             {
-                throw new DatabaseQueryException("Houve algum problema na obtenção da lista de produtos TBCA", ex);
+                throw new DatabaseQueryException("Houve algum problema na obtenção da lista de produtos TACO", ex);
             }
         }
     }

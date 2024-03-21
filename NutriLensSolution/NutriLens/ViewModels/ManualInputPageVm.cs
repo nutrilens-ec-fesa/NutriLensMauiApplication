@@ -14,9 +14,6 @@ namespace NutriLens.ViewModels
     public partial class ManualInputPageVm : ObservableObject
     {
         private INavigation _navigation;
-
-
-
         private ObservableCollection<FoodItem> _foodItems;
         public ObservableCollection<FoodItem> FoodItems
         {
@@ -63,6 +60,43 @@ namespace NutriLens.ViewModels
                     foodItem = new()
                     {
                         Name = addFoodItemPopup.SelectedItem.Alimento,
+                        Portion = addFoodItemPopup.InputPortion,
+                        KiloCalories = addFoodItemPopup.InputCalories
+                    };
+                }
+                else
+                    return;
+
+                // Se não informou as calorias
+                //if (addFoodItemPopup.InputCalories == -1)
+                //{
+                //    string gptJson = DaoHelperClass.GetNutritionalInfo(foodItem);
+                //    GptNutritionalInfo gptNutritionalInfo = JsonConvert.DeserializeObject<GptNutritionalInfo>(gptJson);
+                //    foodItem.KiloCalories = gptNutritionalInfo.CaloriesValue;
+                //}
+
+                FoodItems.Add(foodItem);
+
+                OnPropertyChanged(nameof(FoodItemsQuantity));
+                OnPropertyChanged(nameof(KiloCalories));
+            }
+        }
+
+        [RelayCommand]
+        public async Task AddNewItemFromTaco()
+        {
+            AddTacoFoodItemPopup addFoodItemPopup = new AddTacoFoodItemPopup();
+            await Application.Current.MainPage.ShowPopupAsync(addFoodItemPopup);
+
+            if (addFoodItemPopup.Confirmed)
+            {
+                FoodItem foodItem;
+
+                if (addFoodItemPopup.SelectedItem != null)
+                {
+                    foodItem = new()
+                    {
+                        Name = addFoodItemPopup.SelectedItem.Nome,
                         Portion = addFoodItemPopup.InputPortion,
                         KiloCalories = addFoodItemPopup.InputCalories
                     };

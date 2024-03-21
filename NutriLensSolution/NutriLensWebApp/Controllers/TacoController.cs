@@ -7,8 +7,8 @@ using NutriLensWebApp.Interfaces;
 namespace NutriLensWebApp.Controllers
 {
 #if DEBUG
-    // [AllowAnonymous]
-    [Authorize]
+    [AllowAnonymous]
+    //[Authorize]
 #else
     [Authorize]
 #endif
