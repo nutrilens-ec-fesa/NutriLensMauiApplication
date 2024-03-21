@@ -1,0 +1,78 @@
+﻿@model object
+
+<div class="container" style="padding: 40px 0px 0px 0px; ">
+    <div class="row">
+        <div class="col">
+            <h2>
+                Testar modelo GPT-4 Vision
+            </h2>
+        </div>
+        <div class="col div-col-right-alligned">
+            <a class="btn btn-warning" id="getLastNutriLensPrompt">Resgatar último prompt NutriLens</a>
+        </div>
+        <div class="col div-col-right-alligned">
+            <a class="btn btn-success ml-3" id="saveNutriLensPrompt">Salvar prompt NutriLens</a>
+        </div>
+    </div>
+
+    <table class="mt-5 w-100">
+        <tr>
+            <td>
+                <span>Prompt de sistema:</span>    
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <textarea class="mb-3" id="systemPrompt" type="text" placeholder="Digitir o prompt de sistema..."></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span>Prompt de usuário:</span>    
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <textarea class="mb-3" id="userPrompt" type="text" placeholder="Digitar o prompt de usuário..."></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span>Quantidade máxima de tokens:</span>    
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input class="w-100 mb-3" id="maxTokens" type="number" placeholder="Quantidade máxima de tokens..." value="300" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="mb-3">Imagem a ser processada:</span>    
+                <a id="selectImageButton" class="btn btn-success mb-3 ml-5">Carregar imagem</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="file" id="fileInput" style="display: none;" accept="image/*" />
+                <img class="mb-3" id="img" src="/img/filter_picture.png"></img>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a class="btn btn-success mb-3 ml-5" id="sendRequestButton">Enviar requisição</a>
+            </td>
+        </tr>
+    </table>
+
+    <h4 class="mt-5">
+        Retorno do modelo GPT-4 Vision:
+    </h4>
+    <h5 class="mt-5 bb-5" id="resultParagraph">
+        Ainda não foi feita requisição alguma...
+    </h5>
+</div>
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+

@@ -1,0 +1,24 @@
+﻿@model object
+
+@{
+    Layout = "_Layout";
+}
+
+<div class="container" style="padding: 40px 0px 0px 0px; ">
+
+    <h2 class="mb-5">
+        Visualizar todas as fotos do NutriLens
+    </h2>
+
+    <div id="imagesGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px;">
+        <!-- Images will be added here dynamically -->
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.js">
+
+</script>
+
+<script src="~/js/pictures.js">
+
+</script>
