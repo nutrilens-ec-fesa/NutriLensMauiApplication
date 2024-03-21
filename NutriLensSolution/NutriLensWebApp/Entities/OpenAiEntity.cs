@@ -60,6 +60,8 @@ namespace NutriLensWebApp.Entities
         {
             [JsonProperty("url")]
             public string Url { get; set; }
+            [JsonProperty("detail")]
+            public string Detail { get; set; }
         }
 
         public class Choice
@@ -227,7 +229,8 @@ namespace NutriLensWebApp.Entities
                             {
                                 ImageUrl = new ImageUrl
                                 {
-                                    Url = inputModel.Url
+                                    Url = inputModel.Url,
+                                    Detail = "high"
                                 }
                             }
                         }
