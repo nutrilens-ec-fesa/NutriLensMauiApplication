@@ -104,7 +104,21 @@ namespace NutriLensWebApp.Controllers
             }
         }
 
-        [HttpGet, Route("v1/GetActualGpt4VisionPrompt")]
+        [HttpPost, Route("v1/Gpt4VisionTest"), AllowAnonymous]
+        public IActionResult Gpt4VisionTest([FromBody] OpenAiVisionInputModel inputModel)
+        {
+            try
+            {
+                OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4VisionPreview, inputModel);
+                return Ok(response.GetResponseMessage());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
+        [HttpGet, Route("v1/GetActualGpt4VisionPrompt"), AllowAnonymous]
         public IActionResult GetActualGpt4VisionPrompt([FromServices] IOpenAiPrompt openAiPromptRepo)
         {
             try
@@ -117,7 +131,7 @@ namespace NutriLensWebApp.Controllers
             }
         }
 
-        [HttpPost, Route("v1/InsertNewGpt4VisionPrompt")]
+        [HttpPost, Route("v1/InsertNewGpt4VisionPrompt"), AllowAnonymous]
         public IActionResult InsertNewPrompt([FromBody] OpenAiPrompt openAiPrompt,
             [FromServices] IOpenAiPrompt openAiPromptRepo)
         {

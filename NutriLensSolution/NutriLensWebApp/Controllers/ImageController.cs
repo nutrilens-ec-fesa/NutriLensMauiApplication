@@ -16,7 +16,7 @@ namespace NutriLensWebApp.Controllers
     [Route("[controller]")]
     public class ImageController : ControllerBase
     {
-        [HttpGet, Route("v1/GetAllImages")]
+        [HttpGet, Route("v1/GetAllImages"), AllowAnonymous]
         public IActionResult GetAllImages([FromServices] IMongoImage mongoImageRepo)
         {
             try
