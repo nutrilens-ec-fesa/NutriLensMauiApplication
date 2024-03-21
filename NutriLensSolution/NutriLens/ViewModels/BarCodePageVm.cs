@@ -4,6 +4,7 @@ using NutriLens.Entities;
 using NutriLens.Models;
 using NutriLens.Services;
 using NutriLens.ViewInterfaces;
+using NutriLensClassLibrary.Models;
 using Plugin.Maui.Audio;
 using PopupLibrary;
 using System.Collections.ObjectModel;
@@ -111,10 +112,7 @@ namespace NutriLens.ViewModels
                 if (foundBarCodeItem != null)
                 {
                     if (await ViewServices.PopUpManager.PopYesOrNoAsync("Produto já inserido", "Produto já foi previamente inserido, deseja inserir mais uma vez?"))
-                    {
-                        BarCodesRead.Add(foundBarCodeItem);
-                        OnPropertyChanged(nameof(BarCodesRead));
-                    }
+                        await BarcodeProductPrompt(foundBarCodeItem);
 
                     return;
                 }
@@ -132,26 +130,34 @@ namespace NutriLens.ViewModels
                     if (await ViewServices.PopUpManager.PopYesOrNoAsync("Produto não encontrado", $"O produto com o código de barras '{barcode}' não foi encontrado. Deseja registrá-lo?"))
                     {
                         await _navigation.PushAsync(ViewServices.ResolvePage<IAddBarcodeProductPage>(barcode));
+
+                        await CheckProduct(barcode);
                     }
                 }
                 else
                 {
-                    string consumptionQuantity = await ViewServices.PopUpManager.PopFreeInputAsync(barcodeItem.ProductName, $"Quantos(as) '{barcodeItem.PortionDefinition}' você irá consumir?");
-
-                    if (double.TryParse(consumptionQuantity, out var quantity))
-                    {
-                        double totalCalories = (quantity * barcodeItem.EnergeticValue) / barcodeItem.UnitsPerPortion;
-                        await ViewServices.PopUpManager.PopInfoAsync("Total de calorias: " + totalCalories);
-                        BarCodesRead.Add(barcodeItem);
-                        OnPropertyChanged(nameof(BarCodesRead));
-                    }
-                    else
-                    {
-                        await ViewServices.PopUpManager.PopErrorAsync("Não foi possível identificar a quantidade estipulada. Tente novamente.");
-                    }
+                    await BarcodeProductPrompt(barcodeItem);
                 }
             });
         }
+
+        public async Task BarcodeProductPrompt(BarcodeItemEntry barcodeItem)
+        {
+            string consumptionQuantity = await ViewServices.PopUpManager.PopFreeInputAsync(barcodeItem.ProductName, $"Quantos(as) '{barcodeItem.PortionDefinition}' você irá consumir?");
+
+            if (double.TryParse(consumptionQuantity, out var quantity))
+            {
+                barcodeItem.QuantityConsumption = quantity;
+                await ViewServices.PopUpManager.PopInfoAsync("Total de calorias: " + barcodeItem.TotalCaloriesConsumption);
+                BarCodesRead.Add(barcodeItem);
+                OnPropertyChanged(nameof(BarCodesRead));
+            }
+            else
+            {
+                await ViewServices.PopUpManager.PopErrorAsync("Não foi possível identificar a quantidade estipulada. Tente novamente.");
+            }
+        }
+
         public BarCodePageVm(INavigation navigation)
         {
             _navigation = navigation;

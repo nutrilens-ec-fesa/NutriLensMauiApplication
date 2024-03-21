@@ -25,12 +25,12 @@
                            TakeAutoSnapShot="{Binding TakeSnapshot}"></cv:CameraView>
         </StackLayout>
         <StackLayout Grid.Row="1">
-            <ListView ItemsSource="{Binding BarCodesRead}">
+            <ListView ItemsSource="{Binding BarCodesRead}" HasUnevenRows="True" Margin="0,30,0,0">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View>
-                                <Label Padding="20,10,0,0" TextColor="White" Text="{Binding ProductName}" />
+                                <Label Padding="20,10,0,0" TextColor="Black" Text="{Binding ProductName}" />
                             </ViewCell.View>
                         </ViewCell>
                     </DataTemplate>

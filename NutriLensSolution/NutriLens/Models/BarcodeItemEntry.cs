@@ -76,5 +76,19 @@ namespace NutriLens.Models
             get => Sodium.ToString("0.00");
             set { Sodium = EntitiesHelperClass.ParseDoubleValue(value); }
         }
+
+        /// <summary>
+        /// Quantidade a ser consumida
+        /// </summary>
+        [JsonIgnore, BsonIgnore]
+        public double QuantityConsumption { get; set; }
+
+        [JsonIgnore, BsonIgnore]
+        public double TotalCaloriesConsumption { get => (QuantityConsumption * EnergeticValue) / UnitsPerPortion; }
+
+        public override string ToString()
+        {
+            return base.ToString() + Environment.NewLine + Environment.NewLine + $"{QuantityConsumption} {PortionDefinition} - {TotalCaloriesConsumption}";
+        }
     }
 }
