@@ -147,11 +147,11 @@ namespace NutriLens.ViewModels
                             // Se for um item contido na TBCA
                             if (foodItem.TbcaFoodItem != null)
                             {
-                                mealInfoBuilder.Append($"   * {foodItem.TbcaFoodItem.Alimento} ({foodItem.Portion} g) - {foodItem.KiloCalorieInfo}{Environment.NewLine}");
+                                mealInfoBuilder.Append($"   * {foodItem.TbcaFoodItem.Alimento} ({foodItem.Portion} g - {foodItem.KiloCalorieInfo}){Environment.NewLine}");
                             }
                             else
                             {
-                                mealInfoBuilder.Append($"  * {foodItem.Name} ({foodItem.Portion} g - {foodItem.KiloCalorieInfo}{Environment.NewLine}");
+                                mealInfoBuilder.Append($"  * {foodItem.Name} ({foodItem.Portion} g - {foodItem.KiloCalorieInfo}){Environment.NewLine}");
                             }
                         }
 
