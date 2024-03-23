@@ -1,11 +1,10 @@
-using NutriLens.Entities;
-using NutriLens.Services;
-using ExceptionLibrary;
-using NutriLens.Models;
 using CommunityToolkit.Mvvm.Input;
+using ExceptionLibrary;
+using NutriLens.Entities;
+using NutriLens.Models;
+using NutriLens.Services;
 using NutriLens.ViewInterfaces;
 using NutriLensClassLibrary.Models;
-using Com.Google.Android.Exoplayer2.Metadata.Scte35;
 
 namespace NutriLens.Views;
 
@@ -38,7 +37,7 @@ public partial class MobileCameraPageV2 : ContentPage
                 // Chama a função de upload com o caminho da imagem
                 await Task.Run(() => mongoImageId = DaoHelperClass.UploadImage(filePath));
 
-                await ViewServices.PopUpManager.PopInfoAsync($"Imagem '{Path.GetFileName(filePath)}' salva com sucesso!");
+                //await ViewServices.PopUpManager.PopInfoAsync($"Imagem '{Path.GetFileName(filePath)}' salva com sucesso!");
 
                 EntitiesHelperClass.CloseLoading();
 
@@ -47,6 +46,7 @@ public partial class MobileCameraPageV2 : ContentPage
                 string resultadoAnalise = string.Empty;
                 string identificados = string.Empty;
                 string tbcaTeste = string.Empty;
+                string tacoTeste = string.Empty;
 
                 TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
 
@@ -69,16 +69,17 @@ public partial class MobileCameraPageV2 : ContentPage
                     try
                     {
                         //Verifica se o texto de retorno do GPT veio em JSON ou não
-                        if (resultadoAnalise.Contains('['))
+                        if (resultadoAnalise.Contains("json"))
                         {
                             alimentosJson = AppDataHelperClass.GetRecognizedImageInfoModel(resultadoAnalise);
                             identificados = AppDataHelperClass.GetRecognizedImageInfoText(alimentosJson);
+                            tacoTeste = AppDataHelperClass.GetStringTacoItemsByImageInfo(alimentosJson, out foods);
                         }
                         else
                         {
                             alimentosTxt = AppDataHelperClass.GetRecognizedImageInfoTxtModel(resultadoAnalise);
                             identificados = AppDataHelperClass.GetRecognizedImageInfoText(alimentosTxt);
-                            //tbcaTeste = AppDataHelperClass.GetStringTbcaItemsByImageInfo(alimentosTxt);
+                            tacoTeste = AppDataHelperClass.GetStringTacoItemsByImageInfo(alimentosTxt);
                             foods = AppDataHelperClass.GetFoodItems(alimentosTxt);
                         }
                     }
@@ -90,7 +91,13 @@ public partial class MobileCameraPageV2 : ContentPage
                     }
                 }
 
-                int telaEdicao = await ViewServices.PopUpManager.PopPersonalizedAsync("Verifique os alimentos identificados", identificados, "OK", "Editar");
+                string tacoIdentified = string.Empty;
+
+                foreach(FoodItem foodItem in foods)
+                {
+                    tacoIdentified += $"{foodItem.NamePlusPortion}{Environment.NewLine}";
+                }
+                int telaEdicao = await ViewServices.PopUpManager.PopPersonalizedAsync("Verifique os alimentos identificados", tacoIdentified, "OK", "Editar");
 
                 if(telaEdicao == 2)
                 {
@@ -103,7 +110,7 @@ public partial class MobileCameraPageV2 : ContentPage
                 }
                 else
                 {
-                    await ViewServices.PopUpManager.PopPersonalizedAsync("Items TBCA Detectados", tbcaTeste, "OK");
+                    await ViewServices.PopUpManager.PopPersonalizedAsync("Items TACO Detectados", tacoTeste, "OK");
 
                     Meal newMeal = new()
                     {
@@ -130,7 +137,53 @@ public partial class MobileCameraPageV2 : ContentPage
         }
         catch(Exception ex)
         {
+            await EntitiesHelperClass.CloseLoading();
             await ViewServices.PopUpManager.PopErrorAsync("Houve algum erro para salvar a foto.\n\n" + ExceptionManager.ExceptionMessage(ex));
+        }
+    }
+
+    private async void BtnImportPicture_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var result = await MediaPicker.PickPhotoAsync();
+            {
+                if (result == null)
+                {
+                    return;
+                }
+
+                ImageSource imageSource = ImageSource.FromStream(() => result.OpenReadAsync().Result);
+
+                ImgTakenSnapShot.Source = null;
+
+                EntitiesHelperClass.DeleteTempPictures();
+
+                string tempPictureFilePath = NewTempPictureFilePath();
+
+                using (var stream = await result.OpenReadAsync())
+                {
+                    using (var fileStream = File.Create(tempPictureFilePath))
+                    {
+                        await stream.CopyToAsync(fileStream);
+                    }
+                }
+                // Construct a bitmap from the button image resource.
+                //Bitmap bmp1 = new Bitmap(tempPictureFilePath);
+
+                // Save the image as a GIF.
+                //bmp1.Save(result.OpenReadAsync().Result, System.Drawing.Imaging.ImageFormat.Png);
+
+                ImgTakenSnapShot.Source = tempPictureFilePath;
+
+                //ImgTakenSnapShot.Source = imageSource;
+                //this.imageEditor.IsVisible = true;
+                //this.openGallery.IsVisible = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            await ViewServices.PopUpManager.PopErrorAsync("Houve algum erro para importar a foto.\n\n" + ExceptionManager.ExceptionMessage(ex));
         }
     }
 
