@@ -2,11 +2,9 @@
 using NutriLens.Entities;
 using NutriLens.Models;
 using NutriLens.Services;
-using NutriLens.ViewInterfaces;
 using NutriLensClassLibrary.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Globalization;
 using System.Text;
 
 namespace NutriLens.ViewModels
