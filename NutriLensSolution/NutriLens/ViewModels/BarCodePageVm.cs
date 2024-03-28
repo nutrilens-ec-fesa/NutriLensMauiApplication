@@ -1,5 +1,6 @@
 ﻿using Camera.MAUI;
 using Camera.MAUI.ZXingHelper;
+using ExceptionLibrary;
 using NutriLens.Entities;
 using NutriLens.Models;
 using NutriLens.Services;
@@ -21,7 +22,26 @@ namespace NutriLens.ViewModels
 
         private DateTime? _lastBarCodeDetected;
 
+        private bool _barcodeCheckingOnGoing = false;
+
         public string BarCodeText { get; set; }
+
+        public double TotalCalories
+        {
+            get
+            {
+                return BarCodesRead.Select(x => x.TotalCaloriesConsumption).Sum();
+            }
+        }
+
+        public string TotalCaloriesInfo
+        {
+            get
+            {
+                return $"{TotalCalories} kcal";
+            }
+        }
+
         public ObservableCollection<BarcodeItemEntry> BarCodesRead { get; set; }
         public bool AutoStartPreview { get; set; } = false;
         private CameraInfo _camera = null;
@@ -59,8 +79,9 @@ namespace NutriLens.ViewModels
                     _lastBarCodeDetected = DateTime.Now;
 
                     _barCodeResults = value;
-                    if (_barCodeResults != null && _barCodeResults.Length > 0)
+                    if (!_barcodeCheckingOnGoing && _barCodeResults != null && _barCodeResults.Length > 0 && _barCodeResults[0].Text.Length >= 12 && _barCodeResults[0].Text.StartsWith('7'))
                     {
+                        _barcodeCheckingOnGoing = true;
                         BarCodeText = _barCodeResults[0].Text;
                         Beep();
                         CheckProduct(BarCodeText);
@@ -112,7 +133,31 @@ namespace NutriLens.ViewModels
                 if (foundBarCodeItem != null)
                 {
                     if (await ViewServices.PopUpManager.PopYesOrNoAsync("Produto já inserido", "Produto já foi previamente inserido, deseja inserir mais uma vez?"))
-                        await BarcodeProductPrompt(foundBarCodeItem);
+                    {
+                        BarcodeItemEntry newBarCodeItemEntry = new BarcodeItemEntry()
+                        {
+                            Barcode = foundBarCodeItem.Barcode,
+                            AddedSugar = foundBarCodeItem.AddedSugar,
+                            BasePortion = foundBarCodeItem.BasePortion,
+                            DietaryFiber = foundBarCodeItem.DietaryFiber,
+                            EnergeticValue = foundBarCodeItem.EnergeticValue,
+                            PortionDefinition = foundBarCodeItem.PortionDefinition,
+                            ProductName = foundBarCodeItem.ProductName,
+                            Proteins = foundBarCodeItem.Proteins,
+                            SaturatedFat = foundBarCodeItem.SaturatedFat,
+                            Sodium = foundBarCodeItem.Sodium,
+                            TotalCarbohydrates = foundBarCodeItem.TotalCarbohydrates,
+                            TotalFat = foundBarCodeItem.TotalFat,
+                            TransFat = foundBarCodeItem.TransFat,
+                            TotalSugar = foundBarCodeItem.TotalSugar,
+                            UnitsPerPortion = foundBarCodeItem.UnitsPerPortion
+                        };
+
+                        await BarcodeProductPrompt(newBarCodeItemEntry);
+                    }
+                    else
+                        _barcodeCheckingOnGoing = false;
+
 
                     return;
                 }
@@ -121,7 +166,20 @@ namespace NutriLens.ViewModels
 
                 BarcodeItemEntry barcodeItem = null;
 
-                await Task.Run(() => barcodeItem = DaoHelperClass.GetBarCodeItem(BarCodeText));
+                await Task.Run(async () =>
+                {
+                    try
+                    {
+                        barcodeItem = DaoHelperClass.GetBarCodeItem(BarCodeText);
+                    }
+                    catch (Exception ex)
+                    {
+                        await EntitiesHelperClass.CloseLoading();
+                        await ViewServices.PopUpManager.PopErrorAsync(ExceptionManager.ExceptionMessage(ex));
+                        barcodeItem = null;
+                        _barcodeCheckingOnGoing = false;
+                    }
+                });
 
                 await EntitiesHelperClass.CloseLoading();
 
@@ -151,11 +209,12 @@ namespace NutriLens.ViewModels
                 await ViewServices.PopUpManager.PopInfoAsync("Total de calorias: " + barcodeItem.TotalCaloriesConsumption);
                 BarCodesRead.Add(barcodeItem);
                 OnPropertyChanged(nameof(BarCodesRead));
+                OnPropertyChanged(nameof(TotalCaloriesInfo));
             }
             else
-            {
                 await ViewServices.PopUpManager.PopErrorAsync("Não foi possível identificar a quantidade estipulada. Tente novamente.");
-            }
+
+            _barcodeCheckingOnGoing = false;
         }
 
         public BarCodePageVm(INavigation navigation)
@@ -170,7 +229,7 @@ namespace NutriLens.ViewModels
                 TryInverted = true,
                 PossibleFormats = new[]
                 {
-                    BarcodeFormat.All_1D
+                    BarcodeFormat.EAN_13
                 }
             };
 

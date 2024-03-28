@@ -86,6 +86,19 @@ namespace NutriLens.Models
         [JsonIgnore, BsonIgnore]
         public double TotalCaloriesConsumption { get => (QuantityConsumption * EnergeticValue) / UnitsPerPortion; }
 
+        [JsonIgnore, BsonIgnore]
+        public string BarCodeEntryInfo
+        {
+            get
+            {
+                string barcodeEntryInfo;
+
+                barcodeEntryInfo = ProductName + Environment.NewLine;
+                barcodeEntryInfo += $"Qde: {QuantityConsumption} {PortionDefinition} - {TotalCaloriesConsumption} kcal";
+                return barcodeEntryInfo;
+            }
+        }
+
         public override string ToString()
         {
             return base.ToString() + Environment.NewLine + Environment.NewLine + $"{QuantityConsumption} {PortionDefinition} - {TotalCaloriesConsumption}";
