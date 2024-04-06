@@ -23,6 +23,14 @@ namespace NutriLensWebApp.Repositories
             }
         }
 
+        public List<string> GetAllImagesIds()
+        {
+            return AppMongoDbContext.MongoImage
+                    .Find(Builders<MongoImage>.Filter.Empty)
+                    .Project(x => x.Id)
+                    .ToList();
+        }
+
         public List<MongoImage> GetAllImagesList()
         {
             try
@@ -81,6 +89,19 @@ namespace NutriLensWebApp.Repositories
             catch(Exception ex)
             {
                 throw new DatabaseQueryException("houve algum problema para inserir a nova imagem", ex);
+            }
+        }
+
+        public void UpdateImage(MongoImage image)
+        {
+            try
+            {
+                FilterDefinition<MongoImage> filter = Builders<MongoImage>.Filter.Eq(x => x.Id, image.Id);
+                AppMongoDbContext.MongoImage.ReplaceOne(filter, image);
+            }
+            catch (Exception ex)
+            {
+                throw new DatabaseQueryException("Houve algum problema para atualizar a foto informada");
             }
         }
     }

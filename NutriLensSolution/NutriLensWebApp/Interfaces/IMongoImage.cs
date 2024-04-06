@@ -9,5 +9,7 @@ namespace NutriLensWebApp.Interfaces
         public List<MongoImage> GetImagesByUserIdentifier(string userId);
         public MongoImage GetById(string id);
         public void DeleteById(string id);
+        public List<string> GetAllImagesIds();
+        public void UpdateImage(MongoImage image);
     }
 }

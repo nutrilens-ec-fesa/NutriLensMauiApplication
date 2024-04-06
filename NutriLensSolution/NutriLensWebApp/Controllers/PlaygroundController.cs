@@ -21,5 +21,11 @@ namespace NutriLensWebApp.Controllers
         {
             return View();
         }
+
+        public IActionResult PictureAnalysis([FromServices] IMongoImage mongoImageRepo)
+        {
+            List<string> imagesIds = mongoImageRepo.GetAllImagesIds();
+            return View(imagesIds);
+        }
     }
 }

@@ -1,0 +1,66 @@
+﻿@model List<string>
+
+<div class="container">
+    <div class="row">
+        <div class="col-2">
+            <label> Total de fotos: @Model.Count</label>
+            <select id="imageIds" class="mr-3" name="imageIds" size="30">
+                @foreach (string imageId in Model)
+                {
+                    <option id="@imageId">@imageId</option>
+                }
+            </select>
+        </div>
+        <div class="col-6">
+            <img id="img" src="~/img/nutrilenslogo.jpg" />
+        </div>
+
+        <div class="col-4">
+            <div class="row">
+                <label>Classificação humana dos itens</label>
+            </div>
+            <div class="row">
+                <textarea class="mb-3" id="humanClassification" type="text"></textarea>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <label>Itens:</label>
+                </div>
+                <div class="col">
+                    <input id="itemsCount" type="number" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <label>Itens Ok:</label>
+                </div>
+                <div class="col">
+                    <input id="itemsOkCount" type="number" />
+                </div>
+            </div>
+            <div class="row">
+                <a class="btn btn-success" id="saveClassification">Salvar classificação</a>
+            </div>
+
+            <div class="row mt-3">
+                <label>Classificação computacional dos itens</label>
+            </div>
+            <div class="row">
+                <textarea class="textarea-extended mb-3" id="visionClassification" type="text"></textarea>
+                <a class="btn btn-warning" id="executeAnalysis">Executar análise</a>
+            </div>
+            <div class="row mt-3">
+                <a class="btn btn-danger" id="deleteImage">Deletar imagem</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.js">
+
+</script>
+
+<script src="~/js/pictureAnalysis.js">
+
+</script>
+

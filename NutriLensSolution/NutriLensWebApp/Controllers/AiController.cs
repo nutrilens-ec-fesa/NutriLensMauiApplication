@@ -72,7 +72,7 @@ namespace NutriLensWebApp.Controllers
             }
         }
 
-        [HttpPost, Route("v1/DetectFoodByMongoImageId/{mongoImageId}")]
+        [HttpPost, Route("v1/DetectFoodByMongoImageId/{mongoImageId}"), AllowAnonymous]
         public IActionResult DetectFoodByMongoImageId(string mongoImageId, 
             [FromServices] IOpenAiPrompt openAiPromptRepo,
             [FromServices] IMongoImage mongoImageRepo)
@@ -96,7 +96,11 @@ namespace NutriLensWebApp.Controllers
 
                 OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4VisionPreview, inputModel);
 
-                return Ok(response.GetResponseMessage());
+                mongoImage.VisionRawResult = response.GetResponseMessage();
+
+                mongoImageRepo.UpdateImage(mongoImage);
+
+                return Ok(mongoImage.VisionRawResult);
             }
             catch (Exception ex)
             {
