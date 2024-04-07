@@ -5,6 +5,11 @@ using NutriLens.Models;
 using NutriLens.Services;
 using NutriLens.ViewInterfaces;
 using NutriLensClassLibrary.Models;
+using GenerativeAI;
+using GenerativeAI.Classes;
+using static Android.App.VoiceInteractor;
+using GenerativeAI.Models;
+using GenerativeAI.Types;
 
 namespace NutriLens.Views;
 
@@ -44,25 +49,62 @@ public partial class MobileCameraPageV2 : ContentPage
                 EntitiesHelperClass.ShowLoading("Realizando análise dos alimentos...");
 
                 string resultadoAnalise = string.Empty;
+                string resultadoAnaliseGemini = string.Empty;
                 string identificados = string.Empty;
                 string tbcaTeste = string.Empty;
                 string tacoTeste = string.Empty;
+                string tacoGeminiTeste = string.Empty;
+
+                string identificadosGemini = string.Empty;
 
                 TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
+                TaskCompletionSource<bool> tcsGemini = new TaskCompletionSource<bool>();
 
                 List<RecognizedImageInfoTxtModel> alimentosTxt = new List<RecognizedImageInfoTxtModel>();
                 List<RecognizedImageInfoModel> alimentosJson = new List<RecognizedImageInfoModel>();
                 List<FoodItem> foods = new List<FoodItem>();
 
+                List<RecognizedImageInfoTxtModel> alimentosTxtGem = new List<RecognizedImageInfoTxtModel>();
+                List<RecognizedImageInfoModel> alimentosJsonGem = new List<RecognizedImageInfoModel>();
+                List<FoodItem> foodsGemini = new List<FoodItem>();
+
                 // Chama a função de upload com o caminho da imagem
                 await Task.Run(() =>
                 {
                     resultadoAnalise = DaoHelperClass.GetFoodVisionAnalisysByImageId(mongoImageId);
+
                     // Quando a análise estiver completa, sinalize o TaskCompletionSource
                     tcs.SetResult(true);
                 });
 
+                var imageBytes = await File.ReadAllBytesAsync(filePath);
+
+                var imagePart = new Part()
+                {
+                    InlineData = new GenerativeContentBlob()
+                    {
+                        MimeType = "image/png",
+                        Data = Convert.ToBase64String(imageBytes)
+                    }
+                };
+
+                var textPart = new Part()
+                {
+                    Text = "List of items in brazilian portuguese, and with an estimative of quantity in grams, format json: "
+                };
+
+                var parts = new[] { textPart, imagePart };
+
+                //var apiKey = Environment.GetEnvironmentVariable("geminiKey", EnvironmentVariableTarget.User);
+                var apiKey = "";
+                var visionModel = new GeminiProVision(apiKey);
+
+
+                var result = await visionModel.GenerateContentAsync(parts);
+                resultadoAnaliseGemini = result.Text();
+
                 await tcs.Task;
+
 
                 if (tcs.Task.IsCompleted)
                 {
@@ -87,43 +129,67 @@ public partial class MobileCameraPageV2 : ContentPage
                     {
                         await EntitiesHelperClass.CloseLoading();
                         await ViewServices.PopUpManager.PopErrorAsync($"Houve algum problema com a análise da foto dos alimentos. {Environment.NewLine} Retorno da API: {resultadoAnalise}. {Environment.NewLine}" + ExceptionManager.ExceptionMessage(ex));
+                        //return;
+                    }
+                }
+
+                if(resultadoAnaliseGemini.Length > 0)
+                {
+                    try
+                    {
+                        alimentosJsonGem = AppDataHelperClass.GetRecognizedImageInfoModel(resultadoAnaliseGemini);
+                        identificadosGemini = AppDataHelperClass.GetRecognizedImageInfoText(alimentosJsonGem);
+                        tacoGeminiTeste = AppDataHelperClass.GetStringTacoItemsByImageInfo(alimentosJsonGem, out foodsGemini);
+                    }
+                    catch (Exception ex)
+                    {
+                        await EntitiesHelperClass.CloseLoading();
+                        await ViewServices.PopUpManager.PopErrorAsync($"Houve algum problema com a análise da foto dos alimentos - Gemini. {Environment.NewLine} Retorno da API: {resultadoAnalise}. {Environment.NewLine}" + ExceptionManager.ExceptionMessage(ex));
                         return;
                     }
                 }
 
                 string tacoIdentified = string.Empty;
+                string tacoIdentifiedInGemini = string.Empty;
 
-                foreach(FoodItem foodItem in foods)
+                foreach (FoodItem foodItem in foods)
                 {
                     tacoIdentified += $"{foodItem.NamePlusPortion}{Environment.NewLine}";
                 }
-                int telaEdicao = await ViewServices.PopUpManager.PopPersonalizedAsync("Verifique os alimentos identificados", tacoIdentified, "OK", "Editar");
+
+
+                foreach (FoodItem foodItem in foodsGemini)
+                {
+                    tacoIdentifiedInGemini += $"{foodItem.NamePlusPortion}{Environment.NewLine}";
+                }
+                int telaEdicao = await ViewServices.PopUpManager.PopPersonalizedAsync("Verifique os alimentos identificados Gemini", tacoIdentifiedInGemini, "OK", "Editar");
 
                 if(telaEdicao == 2)
                 {
                     await EntitiesHelperClass.CloseLoading();
                     EntitiesHelperClass.DeleteTempPictures();
-                    AppDataHelperClass.foods = foods;
+                    AppDataHelperClass.foods = foods.Count > foodsGemini.Count ? foods : foodsGemini;
                     await Navigation.PopAsync();
                     await OpenManualInput();
                     
                 }
                 else
                 {
-                    await ViewServices.PopUpManager.PopPersonalizedAsync("Items TACO Detectados", tacoTeste, "OK");
+                    await ViewServices.PopUpManager.PopPersonalizedAsync("Items TACO Detectados - OpenAI", tacoTeste, "OK");
+                    await ViewServices.PopUpManager.PopPersonalizedAsync("Items TACO Detectados - Gemini", tacoGeminiTeste, "OK");
 
                     Meal newMeal = new()
                     {
                         DateTime = DateTime.Now,
                         Name = "Refeição",
-                        FoodItems = foods
+                        FoodItems = tacoTeste.Length > tacoGeminiTeste.Length ? foods : foodsGemini
                     };
 
                     AppDataHelperClass.AddMeal(newMeal);
 
                     await ViewServices.PopUpManager.PopInfoAsync("Refeição registrada com sucesso!");
 
-                    EntitiesHelperClass.CloseLoading();
+                    await EntitiesHelperClass.CloseLoading();
 
                     EntitiesHelperClass.DeleteTempPictures();
 

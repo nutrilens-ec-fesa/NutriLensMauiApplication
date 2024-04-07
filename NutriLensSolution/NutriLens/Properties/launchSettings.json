@@ -3,6 +3,12 @@
     "Windows Machine": {
       "commandName": "MsixPackage",
       "nativeDebugging": false
+    },
+    "Nutrilens_Johnny": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "geminiKey": "AIzaSyANYfi6o8FsjMLg-jzDxhYvpPjItOkYPSA"
+      }
     }
   }
 }
