@@ -90,7 +90,7 @@ public partial class MobileCameraPageV2 : ContentPage
 
                 var textPart = new Part()
                 {
-                    Text = "List of items in brazilian portuguese, and with an estimative of quantity in grams, format json: "
+                    Text = "List of items in brazilian portuguese, and with an estimative of quantity in grams, format json. A list with only two proprierties, Item and Quantidade "
                 };
 
                 var parts = new[] { textPart, imagePart };
