@@ -40,6 +40,12 @@ OpenAiEntity.SetApiKey(builder.Configuration.GetValue<string>("OpenAiKey"));
 
 #endregion
 
+#region Configuração GeminiAi
+
+GeminiAiEntity.SetApiKey(builder.Configuration.GetValue<string>("GeminiAiKey"));
+
+#endregion
+
 #region Swagger Config
 
 builder.Services.AddSwaggerGen(x =>
