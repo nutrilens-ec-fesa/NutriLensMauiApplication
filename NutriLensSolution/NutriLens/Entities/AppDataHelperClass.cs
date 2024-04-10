@@ -3,9 +3,11 @@ using NutriLens.Models;
 using NutriLens.Services;
 using NutriLensClassLibrary.Entities;
 using NutriLensClassLibrary.Models;
+using StringLibrary;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace NutriLens.Entities
@@ -474,7 +476,7 @@ namespace NutriLens.Entities
             switch (activity)
             {
                 case ("LightActivity"):
-                    if(genero == "Masculine")
+                    if (genero == "Masculine")
                         dailyKiloCaloriesBurn = basalDailyCalories * 1.55;
                     else
                         dailyKiloCaloriesBurn = basalDailyCalories * 1.56;
@@ -543,7 +545,7 @@ namespace NutriLens.Entities
 
             if (len > 0)
             {
-                string texto = resultadoAnaliseJson.Substring(ini, len).Replace("\\","\"");
+                string texto = resultadoAnaliseJson.Substring(ini, len).Replace("\\", "\"");
 
                 List<RecognizedImageInfoModel> alimentosReconhecidos = Newtonsoft.Json.JsonConvert.DeserializeObject<List<RecognizedImageInfoModel>>(texto);
                 return alimentosReconhecidos;
@@ -705,9 +707,9 @@ namespace NutriLens.Entities
                     .Where(x => x.Nome.ToUpper().Contains(wordsInRecognizedImage[0].ToUpper()))
                     .ToList();
 
-                 TacoItem tacoItemToAdd;
+                TacoItem tacoItemToAdd;
 
-                if(tacoMatches.Count > 1)
+                if (tacoMatches.Count > 1)
                 {
                     if (wordsInRecognizedImage.Length > 1)
                     {
@@ -780,6 +782,133 @@ namespace NutriLens.Entities
             return tacoStringItems;
 
 
+        }
+
+        public static string GetStringTacoItemsBySimpleFoodItems(List<SimpleFoodItem> simpleFoodItems, out List<FoodItem> foodItems)
+        {
+            string tacoStringItems = string.Empty;
+            List<TacoItem> detectados = new();
+            foodItems = new List<FoodItem>();
+
+            if (TacoFoodItems == null || TacoFoodItems.Count == 0)
+            {
+                List<TacoItem> tacoItems = DaoHelperClass.GetTacoItemsList();
+                SetTacoItems(tacoItems.OrderBy(x => x.Nome).ToList());
+            }
+
+            // Verifica se o nome do alimento identificado esta com nome composto tipo Arroz Grego, se sim, Busca por Arroz Grego e após busca apenas por Arroz
+            foreach (SimpleFoodItem simpleFoodItem in simpleFoodItems)
+            {
+                List<string> wordsInRecognizedImage = simpleFoodItem.Item.Split(' ').ToList();
+
+                List<TacoItem> tacoMatches = new List<TacoItem>();
+                
+                foreach(TacoItem tacoItem in TacoFoodItems)
+                {
+                    if(StringFunctions.RemoveDiacritics(tacoItem.Nome.ToUpper()).Contains(StringFunctions.RemoveDiacritics(wordsInRecognizedImage[0].ToUpper())))
+                        tacoMatches.Add(tacoItem);
+                }
+
+                tacoMatches = tacoMatches.Where(x => !x.Nome.Contains(" cru") && !x.Nome.Contains(" crua")).ToList();
+
+                //tacoMatches = TacoFoodItems
+                //    .Where(x => x.Nome.ToUpper().Contains(wordsInRecognizedImage[0].ToUpper()))
+                //    .ToList();
+
+                TacoItem tacoItemToAdd;
+
+                if (tacoMatches.Count > 1)
+                {
+                    if (wordsInRecognizedImage.Count == 1)
+                    {
+                        if (wordsInRecognizedImage[0] == "FEIJÃO")
+                        {
+                            wordsInRecognizedImage.Add("CARIOCA");
+                            wordsInRecognizedImage.Add("COZIDO");
+                        }
+                        else if (wordsInRecognizedImage[0] == "ARROZ")
+                        {
+                            wordsInRecognizedImage.Add("COZIDO");
+                        }
+                        else if (wordsInRecognizedImage[0] == "LINGUIÇA")
+                        {
+                            wordsInRecognizedImage.Add("PORCO");
+                        }
+                    }
+
+                    // int Taco Item ID // int WordMatches count
+                    Dictionary<int, int> tacoItemsMatchScore = new Dictionary<int, int>();
+
+                    foreach (TacoItem tacoItem in tacoMatches)
+                    {
+                        // Instancia todos com score 1, visto que já foram previamente filtrados
+                        tacoItemsMatchScore.Add(tacoItem.id, 1);
+                    }
+
+                    for (int i = 1; i < wordsInRecognizedImage.Count; i++)
+                    {
+                        List<TacoItem> tacoWordMatches = tacoMatches
+                            .Where(x => StringFunctions.RemoveDiacritics(x.Nome.ToUpper()).Contains(StringFunctions.RemoveDiacritics(wordsInRecognizedImage[i].ToUpper())))
+                            .ToList();
+
+                        foreach (TacoItem tacoItem in tacoWordMatches)
+                        {
+                            tacoItemsMatchScore[tacoItem.id]++;
+                        }
+                    }
+
+                    // Find the key (Taco Item ID) with the highest score
+                    var highestScoreKey = tacoItemsMatchScore
+                        .OrderByDescending(x => x.Value)
+                        .Select(x => x.Key)
+                        .FirstOrDefault(); // This gives you the ID of the taco item with the highest match score
+
+                    // Now, use this key to find the corresponding item in tacoMatches
+                    tacoItemToAdd = tacoMatches.Find(x => x.id == highestScoreKey);
+
+                    // tacoItemToAdd = tacoMatches.Find(x => x.id == tacoItemsMatchScore.OrderByDescending(x => x.Value).Take(1).Select(x => x.Value).First());
+                    // Adiciona o item com maior número de matches
+
+                }
+                else
+                    tacoItemToAdd = tacoMatches[0];
+
+                detectados.Add(tacoItemToAdd);
+
+                string tacoNome = tacoItemToAdd.Nome;
+                string gptPortion = simpleFoodItem.Quantity.ToString();
+                double kcal = double.Parse(gptPortion);
+                double kcalTbca = Convert.ToDouble(tacoItemToAdd.EnergiaKcal);
+                double kiloCalories = (kcal * kcalTbca) / 100;
+
+                foodItems.Add(new()
+                {
+                    Name = tacoNome,
+                    Portion = gptPortion,
+                    KiloCalories = kiloCalories,
+                    TacoFoodItem = tacoItemToAdd
+                });
+            }
+
+            StringBuilder stringBuilder = new StringBuilder();
+
+            foreach (TacoItem taco in detectados)
+            {
+                // Obtém todas as propriedades públicas da classe TbcaItem
+                PropertyInfo[] propriedades = typeof(TacoItem).GetProperties();
+
+                // Itera sobre cada propriedade e adiciona seu nome e valor à string
+                foreach (PropertyInfo propriedade in propriedades)
+                {
+                    object valor = propriedade.GetValue(taco, null);
+                    stringBuilder.AppendLine($"{propriedade.Name}: {valor}");
+                }
+
+                // Adiciona uma quebra de linha entre os itens da lista
+                stringBuilder.AppendLine();
+            }
+
+            return stringBuilder.ToString();
         }
 
         public static string GetStringTacoItemsByImageInfo(List<RecognizedImageInfoTxtModel> alimentos)
@@ -952,32 +1081,32 @@ namespace NutriLens.Entities
                 //}
                 //else
                 //{
-                    tacoNome = detectadosTaco[detectadosTaco.Count - 1].Nome.Trim();
-                    gptPortion = a.Quantidade.Replace('g', ' ');
-                    gptPortion = gptPortion.Replace("ramas", " ");
-                    gptPortion = gptPortion.Replace("ml", " ");
-                    gptPortion = gptPortion.Trim();
-                    double kcal = double.Parse(gptPortion);
-                    double kcalTbca = (double)detectadosTaco.First().EnergiaKcal;
-                    kiloCalories = (kcal * kcalTbca) / 100;
-                    itemTACO = detectadosTaco.Last();
+                tacoNome = detectadosTaco[detectadosTaco.Count - 1].Nome.Trim();
+                gptPortion = a.Quantidade.Replace('g', ' ');
+                gptPortion = gptPortion.Replace("ramas", " ");
+                gptPortion = gptPortion.Replace("ml", " ");
+                gptPortion = gptPortion.Trim();
+                double kcal = double.Parse(gptPortion);
+                double kcalTbca = (double)detectadosTaco.First().EnergiaKcal;
+                kiloCalories = (kcal * kcalTbca) / 100;
+                itemTACO = detectadosTaco.Last();
 
-                    FoodItem foodItem;
+                FoodItem foodItem;
 
-                    foodItem = new()
-                    {
-                        Name = tacoNome,
-                        Portion = gptPortion,
-                        KiloCalories = kiloCalories,
-                        TacoFoodItem = GetTacoFoodItem(itemTACO, gptPortion)
-                    };
-                    foods.Add(foodItem);
+                foodItem = new()
+                {
+                    Name = tacoNome,
+                    Portion = gptPortion,
+                    KiloCalories = kiloCalories,
+                    TacoFoodItem = GetTacoFoodItem(itemTACO, gptPortion)
+                };
+                foods.Add(foodItem);
                 //}
 
             }
 
             return foods;
-            
+
         }
 
         public static TbcaItem GetTbcaFoodItem(TbcaItem tbca, string portion)
@@ -1079,7 +1208,7 @@ namespace NutriLens.Entities
             return taco;
         }
 
-        public static List<FoodItem> foods = new List<FoodItem>();
+        public static List<FoodItem> DetectedFoodItems = new List<FoodItem>();
 
         /// <summary>
         /// Constroi a lista de itens TACO a partir de List<RecognizedImageInfoTxtModel>
