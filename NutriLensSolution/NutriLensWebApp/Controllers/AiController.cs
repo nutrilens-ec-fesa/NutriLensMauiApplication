@@ -1,9 +1,13 @@
 ﻿using ExceptionLibrary;
+using GenerativeAI.Models;
+using GenerativeAI.Types;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NutriLensClassLibrary.Models;
+using NutriLensWebApp.Entities;
 using NutriLensWebApp.Interfaces;
 using NutriLensWebApp.Models;
+using System.Text.RegularExpressions;
 using static NutriLensWebApp.Entities.OpenAiEntity;
 
 namespace NutriLensWebApp.Controllers
@@ -17,6 +21,8 @@ namespace NutriLensWebApp.Controllers
     [Route("[controller]")]
     public class AiController : ControllerBase
     {
+        #region GPT 4
+
         [HttpPost, Route("v1/DetectFoodByUrl")]
         public IActionResult DetectFoodByUrl([FromBody] string url, [FromServices] IOpenAiPrompt openAiPromptRepo)
         {
@@ -73,7 +79,7 @@ namespace NutriLensWebApp.Controllers
         }
 
         [HttpPost, Route("v1/DetectFoodByMongoImageId/{mongoImageId}"), AllowAnonymous]
-        public IActionResult DetectFoodByMongoImageId(string mongoImageId, 
+        public IActionResult DetectFoodByMongoImageId(string mongoImageId,
             [FromServices] IOpenAiPrompt openAiPromptRepo,
             [FromServices] IMongoImage mongoImageRepo)
         {
@@ -96,7 +102,7 @@ namespace NutriLensWebApp.Controllers
 
                 OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4VisionPreview, inputModel);
 
-                mongoImage.VisionRawResult = response.GetResponseMessage();
+                mongoImage.VisionRawResult = "[OpenAi] " + response.GetResponseMessage();
 
                 mongoImageRepo.UpdateImage(mongoImage);
 
@@ -145,6 +151,54 @@ namespace NutriLensWebApp.Controllers
                 return Created(string.Empty, string.Empty);
             }
             catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
+        #endregion
+
+        #region Gemini
+
+        [HttpPost, Route("v1/DetectFoodByMongoImageId/gemini/{mongoImageId}"), AllowAnonymous]
+        public async Task<IActionResult> DetectFoodByMongoImageIdGemini(string mongoImageId,
+            [FromServices] IOpenAiPrompt openAiPromptRepo,
+            [FromServices] IMongoImage mongoImageRepo)
+        {
+            try
+            {
+
+                OpenAiPrompt openAiPrompt = openAiPromptRepo.GetLast();
+
+                MongoImage mongoImage = mongoImageRepo.GetById(mongoImageId);
+
+                string prompt = openAiPrompt.SystemPrompt;
+
+                //string prompt = "List of items in brazilian portuguese, and with an estimative of quantity in grams, format json. A list with only two proprierties, Item and Quantidade ";
+
+                string result = await GeminiAiEntity.GeminiAiQuery(prompt, mongoImage.ImageBytes);
+
+                mongoImage.VisionRawResult = "[Gemini] " + result;
+
+                mongoImageRepo.UpdateImage(mongoImage);
+
+                return Ok(mongoImage.VisionRawResult);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+        #endregion
+
+        [HttpGet, Route("v1/GetFoodItemsByInput/{input}")]
+        public IActionResult GetFoodItemsByInput(string input)
+        {
+            try
+            {
+                return Ok(JsonToFoodItemsParser.Parse(input));
+            }
+            catch(Exception ex)
             {
                 return BadRequest(ExceptionManager.ExceptionMessage(ex));
             }
