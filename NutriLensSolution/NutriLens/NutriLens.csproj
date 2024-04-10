@@ -85,6 +85,7 @@
 	  <ProjectReference Include="..\NutriLensClassLibrary\NutriLensClassLibrary.csproj" />
 	  <ProjectReference Include="..\PermissionsLibrary\PermissionsLibrary.csproj" />
 	  <ProjectReference Include="..\PopupLibrary\PopupLibrary.csproj" />
+	  <ProjectReference Include="..\StringLibrary\StringLibrary.csproj" />
 	  <ProjectReference Include="..\WebLibrary\WebLibrary.csproj" />
 	</ItemGroup>
 
