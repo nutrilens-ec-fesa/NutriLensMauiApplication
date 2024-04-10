@@ -136,9 +136,9 @@ namespace NutriLens.ViewModels
             };
 
             AppDataHelperClass.AddMeal(newMeal);
-            if(AppDataHelperClass.foods != null)
+            if(AppDataHelperClass.DetectedFoodItems != null)
             {
-                AppDataHelperClass.foods.Clear();
+                AppDataHelperClass.DetectedFoodItems.Clear();
             }
             await ViewServices.PopUpManager.PopInfoAsync("Refeição registrada com sucesso!");
             await _navigation.PopAsync();
@@ -149,9 +149,9 @@ namespace NutriLens.ViewModels
         {
             try
             {
-                if (AppDataHelperClass.foods != null)
+                if (AppDataHelperClass.DetectedFoodItems != null)
                 {
-                    foreach (FoodItem food in AppDataHelperClass.foods)
+                    foreach (FoodItem food in AppDataHelperClass.DetectedFoodItems)
                     {
                         FoodItems.Add(food);
                     }
