@@ -102,11 +102,11 @@ namespace NutriLensWebApp.Controllers
 
                 OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4VisionPreview, inputModel);
 
-                mongoImage.VisionRawResult = "[OpenAi] " + response.GetResponseMessage();
+                mongoImage.GptRawResult = "[OpenAi] " + response.GetResponseMessage();
 
                 mongoImageRepo.UpdateImage(mongoImage);
 
-                return Ok(mongoImage.VisionRawResult);
+                return Ok(mongoImage.GptRawResult);
             }
             catch (Exception ex)
             {
@@ -121,6 +121,23 @@ namespace NutriLensWebApp.Controllers
             {
                 OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4VisionPreview, inputModel);
                 return Ok(response.GetResponseMessage());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
+        [HttpPost, Route("v1/GeminiVisionTest"), AllowAnonymous]
+        public async Task<IActionResult> GeminiVisionTest([FromBody] GeminiVisionInputModel inputModel)
+        {
+            try
+            {
+                string prompt = inputModel.Prompt;
+                byte[] imageBytes = Convert.FromBase64String(inputModel.Url.Substring(inputModel.Url.IndexOf(',') + 1));
+                string result = await GeminiAiEntity.GeminiAiQuery(prompt, imageBytes);
+
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -178,11 +195,11 @@ namespace NutriLensWebApp.Controllers
 
                 string result = await GeminiAiEntity.GeminiAiQuery(prompt, mongoImage.ImageBytes);
 
-                mongoImage.VisionRawResult = "[Gemini] " + result;
+                mongoImage.GeminiRawResult = "[Gemini] " + result;
 
                 mongoImageRepo.UpdateImage(mongoImage);
 
-                return Ok(mongoImage.VisionRawResult);
+                return Ok(mongoImage.GeminiRawResult);
             }
             catch (Exception ex)
             {

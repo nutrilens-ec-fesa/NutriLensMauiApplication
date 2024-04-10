@@ -103,15 +103,33 @@ namespace NutriLensWebApp.Controllers
             }
         }
 
-        [HttpPut, Route("v1/UpdateHumanClassification/{imageId}"), AllowAnonymous]
-        public async Task<IActionResult> UpdateHumanClassification(string imageId, [FromBody] HumanClassificationViewModel humanClassificationVm, [FromServices] IMongoImage mongoImageRepo)
+        [HttpPut, Route("v1/UpdateHumanClassification/gpt/{imageId}"), AllowAnonymous]
+        public async Task<IActionResult> UpdateGptHumanClassification(string imageId, [FromBody] HumanClassificationViewModel humanClassificationVm, [FromServices] IMongoImage mongoImageRepo)
         {
             try
             {
                 MongoImage mongoImage = mongoImageRepo.GetById(imageId);
                 mongoImage.HumanResult = humanClassificationVm.HumanClassification;
                 mongoImage.TotalItems = humanClassificationVm.ItemsCount;
-                mongoImage.TotalOkItems = humanClassificationVm.ItemsOkCount;
+                mongoImage.GptTotalOkItems = humanClassificationVm.ItemsOkCount;
+                mongoImageRepo.UpdateImage(mongoImage);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
+        [HttpPut, Route("v1/UpdateHumanClassification/gemini/{imageId}"), AllowAnonymous]
+        public async Task<IActionResult> UpdateGeminiHumanClassification(string imageId, [FromBody] HumanClassificationViewModel humanClassificationVm, [FromServices] IMongoImage mongoImageRepo)
+        {
+            try
+            {
+                MongoImage mongoImage = mongoImageRepo.GetById(imageId);
+                mongoImage.HumanResult = humanClassificationVm.HumanClassification;
+                mongoImage.TotalItems = humanClassificationVm.ItemsCount;
+                mongoImage.GeminiTotalOkItems = humanClassificationVm.ItemsOkCount;
                 mongoImageRepo.UpdateImage(mongoImage);
                 return Ok();
             }

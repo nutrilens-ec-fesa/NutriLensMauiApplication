@@ -13,47 +13,94 @@ document.getElementById('fileInput').addEventListener('change', function (event)
     }
 });
 
-document.getElementById('sendRequestButton').addEventListener('click', function (event) {
+try {
+    document.getElementById('sendGptRequestButton').addEventListener('click', function (event) {
 
-    let base64ImgString;
+        let base64ImgString;
 
-    convertImageToBase64('img', function (base64Img) {
-        base64ImgString = base64Img;
+        convertImageToBase64('img', function (base64Img) {
+            base64ImgString = base64Img;
+        });
+
+        var systemPromptVal = $('#systemPrompt').val();
+        var userPromptVal = $('#userPrompt').val();
+        var maxTokensVal = parseInt($('#maxTokens').val(), 10);
+
+        var openAiVisionInputModel = {
+            systemPrompt: systemPromptVal,
+            userPrompt: userPromptVal,
+            maxTokens: maxTokensVal,
+            url: base64ImgString,
+            base64: false
+        };
+
+        $('#resultParagraph').text('Enviando requisição...');
+        // Send the object as a JSON string in a POST request
+        $.ajax({
+            url: '/Ai/v1/Gpt4VisionTest', // Replace with your target URL
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(openAiVisionInputModel),
+            success: function (response) {
+                // Handle success
+                console.log('Data sent successfully');
+                console.log(response);
+
+                $('#resultParagraph').text(response);
+            },
+            error: function (xhr, status, error) {
+                // Handle error
+                console.error('Error sending data');
+                $('#resultParagraph').text('Houve alguma falha para enviar a solicitacao, tente novamente...');
+            }
+        });
     });
+}
+catch {
 
-    var systemPromptVal = $('#systemPrompt').val();
-    var userPromptVal = $('#userPrompt').val();
-    var maxTokensVal = parseInt($('#maxTokens').val(), 10);
+}
 
-    var openAiVisionInputModel = {
-        systemPrompt: systemPromptVal,
-        userPrompt: userPromptVal,
-        maxTokens: maxTokensVal,
-        url: base64ImgString,
-        base64: false
-    }; 
+try {
+    document.getElementById('sendGeminiRequestButton').addEventListener('click', function (event) {
 
-    $('#resultParagraph').text('Enviando requisição...');
-    // Send the object as a JSON string in a POST request
-    $.ajax({
-        url: '/Ai/v1/Gpt4VisionTest', // Replace with your target URL
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(openAiVisionInputModel),
-        success: function (response) {
-            // Handle success
-            console.log('Data sent successfully');
-            console.log(response);
+        let base64ImgString;
 
-            $('#resultParagraph').text(response);
-        },
-        error: function (xhr, status, error) {
-            // Handle error
-            console.error('Error sending data');
-            $('#resultParagraph').text('Houve alguma falha para enviar a solicitacao, tente novamente...');
-        }
+        convertImageToBase64('img', function (base64Img) {
+            base64ImgString = base64Img;
+        });
+
+        var userPromptVal = $('#userPrompt').val();
+
+        var geminiVisionInputModel = {
+            prompt: userPromptVal,
+            url: base64ImgString
+        };
+
+        $('#resultParagraph').text('Enviando requisição...');
+        // Send the object as a JSON string in a POST request
+        $.ajax({
+            url: '/Ai/v1/GeminiVisionTest', // Replace with your target URL
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(geminiVisionInputModel),
+            success: function (response) {
+                // Handle success
+                console.log('Data sent successfully');
+                console.log(response);
+
+                $('#resultParagraph').text(response);
+            },
+            error: function (xhr, status, error) {
+                // Handle error
+                console.error('Error sending data');
+                $('#resultParagraph').text('Houve alguma falha para enviar a solicitacao, tente novamente...');
+            }
+        });
     });
-});
+}
+catch {
+
+}
 
 document.getElementById('getLastNutriLensPrompt').addEventListener('click', function (event) {
     $.ajax({

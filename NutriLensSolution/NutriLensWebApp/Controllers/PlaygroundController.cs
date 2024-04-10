@@ -17,6 +17,11 @@ namespace NutriLensWebApp.Controllers
             return View();
         }
 
+        public IActionResult GeminiVisionTester()
+        {
+            return View();
+        }
+
         public IActionResult ViewAllPictures()
         {
             return View();

@@ -32,7 +32,7 @@
 
         // Execute the AJAX request
         $.ajax({
-            url: '/Image/v1/UpdateHumanClassification/' + selectedValue, // The URL to send the request to
+            url: '/Image/v1/UpdateHumanClassification/gpt/' + selectedValue, // The URL to send the request to
             type: 'PUT', // or 'POST', depending on your needs
             contentType: 'application/json',
             data: myData,
