@@ -190,9 +190,30 @@ namespace NutriLens.Entities
         /// <param name="imageId">Identificador da imagem na base de dados</param>
         /// <returns></returns>
         /// <exception cref="UnsuccessfullRequestException"></exception>
-        public static string GetFoodVisionAnalisysByImageId(string imageId)
+        public static string GetOpenAiFoodVisionAnalisysByImageId(string imageId)
         {
             PostRequest httpRequest = new(UriAndPaths.ApiUrl, "Ai/v1/DetectFoodByMongoImageId", imageId)
+            {
+                Token = AppDataHelperClass.NutriLensApiToken
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (!resp.IsSuccessStatusCode)
+                throw new UnsuccessfullRequestException(content);
+            else
+                return content.Replace("\"", string.Empty).Replace("\\n", Environment.NewLine);
+        }
+
+        /// <summary>
+        /// Realiza análise dos alimentos presentes em uma imagem
+        /// </summary>
+        /// <param name="imageId">Identificador da imagem na base de dados</param>
+        /// <returns></returns>
+        /// <exception cref="UnsuccessfullRequestException"></exception>
+        public static string GetGeminiAiFoodVisionAnalisysByImageId(string imageId)
+        {
+            PostRequest httpRequest = new(UriAndPaths.ApiUrl, "Ai/v1/DetectFoodByMongoImageId/gemini", imageId)
             {
                 Token = AppDataHelperClass.NutriLensApiToken
             };
