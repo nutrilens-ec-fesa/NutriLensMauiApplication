@@ -1,14 +1,31 @@
 ﻿$(document).ready(function () {
 
-    $('#executeAnalysis').click(function (event) {
-        var selectedValue = $('#imageIds option:selected').text();
+    $('#executeGptAnalysis').click(function (event) {
+        var selectedValue = $('#imageIds option:selected').val();
 
         // Execute the AJAX request
         $.ajax({
             url: '/Ai/v1/DetectFoodByMongoImageId/' + selectedValue, // The URL to send the request to
             type: 'POST', // or 'POST', depending on your needs
             success: function (response) {
-                $('#visionClassification').val(response);
+                $('#visionGptClassification').val(response);
+            },
+            error: function (xhr, status, error) {
+                // Handle error
+                console.log('Error:', error);
+            }
+        });
+    });
+
+    $('#executeGeminiAnalysis').click(function (event) {
+        var selectedValue = $('#imageIds option:selected').text();
+
+        // Execute the AJAX request
+        $.ajax({
+            url: '/Ai/v1/DetectFoodByMongoImageId/gemini/' + selectedValue, // The URL to send the request to
+            type: 'POST', // or 'POST', depending on your needs
+            success: function (response) {
+                $('#visionGeminiClassification').val(response);
             },
             error: function (xhr, status, error) {
                 // Handle error
@@ -81,10 +98,15 @@
                 else
                     $('#humanClassification').val(response.humanResult);
 
-                if (response.visionRawResult == null)
-                    $('#visionClassification').val('');
+                if (response.gptRawResult == null)
+                    $('#visionGptClassification').val('');
                 else
-                    $('#visionClassification').val(response.visionRawResult);
+                    $('#visionGptClassification').val(response.gptRawResult);
+
+                if (response.geminiRawResult == null)
+                    $('#visionGeminiClassification').val('');
+                else
+                    $('#visionGeminiClassification').val(response.geminiRawResult);
 
                 if (response.totalItems == null)
                     $('#itemsCount').val('');

@@ -112,8 +112,14 @@ document.getElementById('getLastNutriLensPrompt').addEventListener('click', func
             console.log('Data sent successfully');
             console.log(response);
 
-            $('#systemPrompt').text(response.systemPrompt);
-            $('#userPrompt').text(response.userPrompt);
+            var systemPrompt = $('#systemPrompt').val();
+
+            if (systemPrompt != undefined) {
+                $('#systemPrompt').val(response.systemPrompt);
+                $('#userPrompt').val(response.userPrompt);
+            } else {
+                $('#userPrompt').val(response.systemPrompt);
+            }
 
             alert('Prompt resgatado com sucesso!');
         },
