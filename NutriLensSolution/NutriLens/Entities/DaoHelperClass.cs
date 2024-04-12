@@ -418,10 +418,12 @@ namespace NutriLens.Entities
 
             HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
 
-            if (!resp.IsSuccessStatusCode)
-                throw new UnsuccessfullRequestException(content);
-            else
+            if (resp.IsSuccessStatusCode)
                 return HttpManager.GetContent<BarcodeItemEntry>(content);
+            else if (resp.StatusCode == HttpStatusCode.NotFound)
+                return null;
+            else
+                throw new UnsuccessfullRequestException(content);
         }
 
         /// <summary>
