@@ -886,7 +886,7 @@ namespace NutriLens.Entities
                     Name = tacoNome,
                     Portion = gptPortion,
                     KiloCalories = kiloCalories,
-                    TacoFoodItem = tacoItemToAdd
+                    TacoFoodItem = GetTacoFoodItem(tacoItemToAdd, gptPortion)
                 });
             }
 
@@ -1005,7 +1005,7 @@ namespace NutriLens.Entities
             List<FoodItem> foods = new List<FoodItem>();
             string tbcaNome = string.Empty;
             string tacoNome = string.Empty;
-            string gptPortion = string.Empty;
+            string identifiedPortion = string.Empty;
             double kiloCalories = 0;
             //TbcaItems = new ObservableCollection<TbcaItem>();
             //List<TbcaItem> detectados = new List<TbcaItem>();
@@ -1082,12 +1082,12 @@ namespace NutriLens.Entities
                 //else
                 //{
                 tacoNome = detectadosTaco[detectadosTaco.Count - 1].Nome.Trim();
-                gptPortion = a.Quantidade.Replace('g', ' ');
-                gptPortion = gptPortion.Replace("ramas", " ");
-                gptPortion = gptPortion.Replace("ml", " ");
-                gptPortion = gptPortion.Trim();
-                double kcal = double.Parse(gptPortion);
-                double kcalTbca = (double)detectadosTaco.First().EnergiaKcal;
+                identifiedPortion = a.Quantidade.Replace('g', ' ');
+                identifiedPortion = identifiedPortion.Replace("ramas", " ");
+                identifiedPortion = identifiedPortion.Replace("ml", " ");
+                identifiedPortion = identifiedPortion.Trim();
+                double kcal = double.Parse(identifiedPortion);
+                double kcalTbca = (double)detectadosTaco[0].EnergiaKcal;
                 kiloCalories = (kcal * kcalTbca) / 100;
                 itemTACO = detectadosTaco.Last();
 
@@ -1096,13 +1096,12 @@ namespace NutriLens.Entities
                 foodItem = new()
                 {
                     Name = tacoNome,
-                    Portion = gptPortion,
+                    Portion = identifiedPortion,
                     KiloCalories = kiloCalories,
-                    TacoFoodItem = GetTacoFoodItem(itemTACO, gptPortion)
+                    TacoFoodItem = GetTacoFoodItem(itemTACO, identifiedPortion)
                 };
-                foods.Add(foodItem);
-                //}
 
+                foods.Add(foodItem);
             }
 
             return foods;
@@ -1180,35 +1179,10 @@ namespace NutriLens.Entities
             taco.Niacina = (taco.GetValue(nameof(taco.Niacina)) * portionDouble / 100);
             taco.VitaminaC = (taco.GetValue(nameof(taco.VitaminaC)) * portionDouble / 100);
 
-            //taco.Umidade = (taco.Umidade * portionDouble / 100);
-            //taco.Proteina = (taco.Proteina * portionDouble / 100);
-            //taco.Lipideos = (taco.Lipideos * portionDouble / 100);
-            //taco.Colesterol = (taco.Colesterol * portionDouble / 100);
-            //taco.Carboidrato = (taco.Carboidrato * portionDouble) / 100;
-            //taco.FibraAlimentar = (taco.FibraAlimentar * portionDouble / 100);
-            //taco.Cinzas = (taco.Cinzas * portionDouble / 100);
-            //taco.Calcio = (taco.Calcio * portionDouble / 100);
-            //taco.Magnesio = (taco.Magnesio * portionDouble / 100);
-            //taco.Manganes = (taco.Manganes * portionDouble / 100);
-            //taco.Fosforo = (taco.Fosforo * portionDouble / 100);
-            //taco.Ferro = (taco.Ferro * portionDouble / 100);
-            //taco.Sodio = (taco.Sodio * portionDouble / 100);
-            //taco.Potassio = (taco.Potassio * portionDouble / 100);
-            //taco.Cobre = (taco.Cobre * portionDouble / 100);
-            //taco.Zinco = (taco.Zinco * portionDouble / 100);
-            //taco.Retinol = (taco.Retinol * portionDouble / 100);
-            //taco.RE = (taco.RE * portionDouble / 100);
-            //taco.RAE = (taco.RAE * portionDouble / 100);
-            //taco.Tiamina = (taco.Tiamina * portionDouble / 100);
-            //taco.Riboflavina = (taco.Riboflavina * portionDouble / 100);
-            //taco.Piridoxina = (taco.Piridoxina * portionDouble / 100);
-            //taco.Niacina = (taco.Niacina * portionDouble / 100);
-            //taco.VitaminaC = (taco.VitaminaC * portionDouble / 100);
-
             return taco;
         }
 
-        public static List<FoodItem> DetectedFoodItems = new List<FoodItem>();
+        public static List<FoodItem> DetectedFoodItems { get; set; } = new List<FoodItem>();
 
         /// <summary>
         /// Constroi a lista de itens TACO a partir de List<RecognizedImageInfoTxtModel>
