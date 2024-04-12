@@ -1,9 +1,9 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using NutriLens.Entities;
 using NutriLensClassLibrary.Models;
+using StringLibrary;
 using System.Text.Json.Serialization;
 
-namespace NutriLens.Models
+namespace NutriLensClassLibrary.Models
 {
     public class BarcodeItemEntry : BarcodeItem
     {
@@ -11,70 +11,70 @@ namespace NutriLens.Models
         public string UnitsPerPortionEntry
         {
             get => UnitsPerPortion.ToString("0.00");
-            set { UnitsPerPortion = EntitiesHelperClass.ParseDoubleValue(value); }
+            set { UnitsPerPortion = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string TotalCarbohydratesEntry
         {
             get => TotalCarbohydrates.ToString("0.00");
-            set { TotalCarbohydrates = EntitiesHelperClass.ParseDoubleValue(value); }
+            set { TotalCarbohydrates = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string TotalSugarEntry
         {
             get => TotalSugar.ToString("0.00");
-            set { TotalSugar = EntitiesHelperClass.ParseDoubleValue(value); }
+            set { TotalSugar = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string AddedSugarEntry
         {
             get => AddedSugar.ToString("0.00");
-            set { AddedSugar = EntitiesHelperClass.ParseDoubleValue(value); }
+            set { AddedSugar = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string ProteinsEntry
         {
             get => Proteins.ToString("0.00");
-            set { Proteins = EntitiesHelperClass.ParseDoubleValue(value); }
+            set { Proteins = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string TotalFatEntry
         {
             get => TotalFat.ToString("0.00");
-            set { TotalFat = EntitiesHelperClass.ParseDoubleValue(value); }
+            set { TotalFat = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string SaturatedFatEntry
         {
             get => SaturatedFat.ToString("0.00");
-            set { SaturatedFat = EntitiesHelperClass.ParseDoubleValue(value); }
+            set { SaturatedFat = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string TransFatEntry
         {
             get => TransFat.ToString("0.00");
-            set { TransFat = EntitiesHelperClass.ParseDoubleValue(value); }
+            set { TransFat = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string DietaryFiberEntry
         {
             get => DietaryFiber.ToString("0.00");
-            set { DietaryFiber = EntitiesHelperClass.ParseDoubleValue(value); }
+            set { DietaryFiber = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string SodiumEntry
         {
             get => Sodium.ToString("0.00");
-            set { Sodium = EntitiesHelperClass.ParseDoubleValue(value); }
+            set { Sodium = StringFunctions.ParseDoubleValue(value); }
         }
 
         /// <summary>

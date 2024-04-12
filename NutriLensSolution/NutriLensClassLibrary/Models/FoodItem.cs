@@ -1,8 +1,6 @@
 ﻿using MongoDB.Bson;
 using Newtonsoft.Json;
 using NutriLensClassLibrary.Entities;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
 namespace NutriLensClassLibrary.Models
 {
     /// <summary>
@@ -36,6 +34,7 @@ namespace NutriLensClassLibrary.Models
 
         public TacoItem TacoFoodItem { get; set; }
 
+        public BarcodeItemEntry BarcodeItemEntry { get; set; } 
 
         #endregion
 

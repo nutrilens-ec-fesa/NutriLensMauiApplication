@@ -1,24 +1,12 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using NutriLensClassLibrary.Models;
+﻿using NutriLensClassLibrary.Models;
 
-namespace NutriLens.Models
+namespace NutriLensClassLibrary.Models
 {
     /// <summary>
     /// Representa um modelo de refeição
     /// </summary>
     public class Meal
     {
-        /// <summary>
-        /// Id da refeição no Mongo
-        /// </summary>
-        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Propriedade que define o usuário que criou essa refeição
-        /// </summary>
-        public string UserIdentifier { get; set; }
-
         /// <summary>
         /// Data e hora da refeição
         /// </summary>
