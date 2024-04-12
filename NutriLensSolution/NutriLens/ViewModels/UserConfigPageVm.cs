@@ -8,6 +8,7 @@ using NutriLens.Models;
 using NutriLens.Services;
 using NutriLensClassLibrary.Models;
 using System.Collections.ObjectModel;
+using StringLibrary;
 
 namespace NutriLens.ViewModels
 {
@@ -148,7 +149,7 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private async Task SaveConfigs()
         {
-            if (EntitiesHelperClass.ParseDoubleValue(WeightEntry, out double weightValue))
+            if (StringFunctions.ParseDoubleValue(WeightEntry, out double weightValue))
                 UserInfo.Weight = weightValue;
             else
             {
@@ -156,7 +157,7 @@ namespace NutriLens.ViewModels
                 return;
             }
 
-            if (EntitiesHelperClass.ParseDoubleValue(HeightEntry, out double heightValue))
+            if (StringFunctions.ParseDoubleValue(HeightEntry, out double heightValue))
                 UserInfo.Height = heightValue;
             else
             {

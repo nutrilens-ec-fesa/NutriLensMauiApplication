@@ -38,18 +38,7 @@ namespace NutriLens.Entities
             if (_loadingPopup != null)
                 await _loadingPopup.CloseAsync();
         }
-        public static bool ParseDoubleValue(string value, out double result)
-        {
-            return double.TryParse(value.Replace(Constants.decimalToBeReplaced, Constants.cultureDecimalSeparator), out result);
-        }
-        public static double ParseDoubleValue(string value)
-        {
-            if (double.TryParse(value.Replace(Constants.decimalToBeReplaced, Constants.cultureDecimalSeparator), out double result))
-                return result;
-            else
-                return double.NaN;
-        }
-
+        
         /// <summary>
         /// Retorna um double do gasto energético total das atividades físicas da lista
         /// </summary>
