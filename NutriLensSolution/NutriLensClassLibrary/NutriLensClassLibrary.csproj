@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CryptographyLibrary\CryptographyLibrary.csproj" />
+    <ProjectReference Include="..\StringLibrary\StringLibrary.csproj" />
   </ItemGroup>
 
 </Project>

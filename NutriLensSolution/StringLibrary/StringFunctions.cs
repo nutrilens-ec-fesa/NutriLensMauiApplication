@@ -5,6 +5,9 @@ namespace StringLibrary
 {
     public static class StringFunctions
     {
+        public static readonly char cultureDecimalSeparator = Convert.ToChar(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator);
+        public static readonly char decimalToBeReplaced = cultureDecimalSeparator == ',' ? '.' : ',';
+
         /// <summary>
         /// Remove acentos e caracteres especiais
         /// </summary>
@@ -25,19 +28,6 @@ namespace StringLibrary
             }
 
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
-            //if (string.IsNullOrEmpty(text))
-            //    return text;
-
-            //StringBuilder sb = new StringBuilder();
-            //for (int i = 0; i < text.Length; i++)
-            //{
-            //    if (text[i] > 255)
-            //        sb.Append(text[i]);
-            //    else
-            //        sb.Append(s_Diacritics[text[i]]);
-            //}
-
-            //return sb.ToString();
         }
 
         /// <summary>
@@ -49,6 +39,19 @@ namespace StringLibrary
         public static bool CompareString(string a, string b)
         {
             return RemoveDiacritics(a) == RemoveDiacritics(b);
+        }
+
+        public static bool ParseDoubleValue(string value, out double result)
+        {
+            return double.TryParse(value.Replace(decimalToBeReplaced, cultureDecimalSeparator), out result);
+        }
+
+        public static double ParseDoubleValue(string value)
+        {
+            if (double.TryParse(value.Replace(decimalToBeReplaced, cultureDecimalSeparator), out double result))
+                return result;
+            else
+                return double.NaN;
         }
     }
 }
