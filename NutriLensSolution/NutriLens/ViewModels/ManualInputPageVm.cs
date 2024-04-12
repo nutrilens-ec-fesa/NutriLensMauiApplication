@@ -136,10 +136,7 @@ namespace NutriLens.ViewModels
             };
 
             AppDataHelperClass.AddMeal(newMeal);
-            if(AppDataHelperClass.DetectedFoodItems != null)
-            {
-                AppDataHelperClass.DetectedFoodItems.Clear();
-            }
+            AppDataHelperClass.DetectedFoodItems?.Clear();
             await ViewServices.PopUpManager.PopInfoAsync("Refeição registrada com sucesso!");
             await _navigation.PopAsync();
         }
