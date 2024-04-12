@@ -1,6 +1,7 @@
 using NutriLens.Models;
 using NutriLens.ViewInterfaces;
 using NutriLens.ViewModels;
+using NutriLensClassLibrary.Models;
 
 namespace NutriLens.Views;
 

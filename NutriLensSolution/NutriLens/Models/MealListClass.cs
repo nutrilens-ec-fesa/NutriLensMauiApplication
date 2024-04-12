@@ -1,5 +1,6 @@
 ﻿using NutriLens.Entities;
 using NutriLensClassLibrary.Entities;
+using NutriLensClassLibrary.Models;
 
 namespace NutriLens.Models
 {

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using NutriLens.Entities;
 using NutriLens.Models;
 using NutriLens.Services;
+using NutriLensClassLibrary.Models;
 
 namespace NutriLens.ViewModels
 {

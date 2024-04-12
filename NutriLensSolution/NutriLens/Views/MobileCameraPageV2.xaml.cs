@@ -1,16 +1,9 @@
 using CommunityToolkit.Mvvm.Input;
 using ExceptionLibrary;
 using NutriLens.Entities;
-using NutriLens.Models;
 using NutriLens.Services;
 using NutriLens.ViewInterfaces;
 using NutriLensClassLibrary.Models;
-using GenerativeAI;
-using GenerativeAI.Classes;
-using static Android.App.VoiceInteractor;
-using GenerativeAI.Models;
-using GenerativeAI.Types;
-using Microsoft.Maui.Controls.Compatibility;
 
 namespace NutriLens.Views;
 
