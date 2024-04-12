@@ -3,7 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cv="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
              x:Class="NutriLens.Views.MobileBarCodePage"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="Detecção - Código de barras">
+    <ContentPage.Behaviors>
+        <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
+        <mct:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
+    </ContentPage.Behaviors>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="5*"></RowDefinition>
@@ -47,11 +52,11 @@
                 <ColumnDefinition Width="2*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Label Grid.Row="0" Grid.Column="0" BackgroundColor="Magenta" FontSize="Medium" Text="Total de calorias: " Margin="30,10,0,10" HorizontalOptions="Start"></Label>
-            <Label Grid.Row="0" Grid.Column="1" BackgroundColor="Pink" Text="{Binding TotalCaloriesInfo}" FontSize="Large" Margin="0,10,10,10" HorizontalOptions="EndAndExpand"></Label>
+            <Label Grid.Row="0" Grid.Column="0" FontSize="Medium" Text="Total de calorias: " Margin="30,10,0,10" HorizontalOptions="Start"></Label>
+            <Label Grid.Row="0" Grid.Column="1" Text="{Binding TotalCaloriesInfo}" FontSize="Large" Margin="0,10,10,10" HorizontalOptions="EndAndExpand"></Label>
         </Grid>
         <StackLayout Grid.Row="3" VerticalOptions="Center">
-            <Button Text="Finalizar captura" Margin="10" Command="{Binding StartCamera}"></Button>
+            <Button Text="Registrar refeição" Margin="10" Command="{Binding RegisterBarCodeItemsCommand}"></Button>
         </StackLayout>
     </Grid>
 </ContentPage>

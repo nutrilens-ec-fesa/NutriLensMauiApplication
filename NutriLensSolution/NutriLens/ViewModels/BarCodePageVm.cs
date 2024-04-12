@@ -1,5 +1,6 @@
 ﻿using Camera.MAUI;
 using Camera.MAUI.ZXingHelper;
+using CommunityToolkit.Mvvm.Input;
 using ExceptionLibrary;
 using NutriLens.Entities;
 using NutriLens.Models;
@@ -14,7 +15,7 @@ using ZXing;
 
 namespace NutriLens.ViewModels
 {
-    internal class BarCodePageVm : INotifyPropertyChanged
+    public partial class BarCodePageVm : INotifyPropertyChanged
     {
         private INavigation _navigation;
 
@@ -189,7 +190,7 @@ namespace NutriLens.ViewModels
                     {
                         await _navigation.PushAsync(ViewServices.ResolvePage<IAddBarcodeProductPage>(barcode));
 
-                        await CheckProduct(barcode);
+                        // await CheckProduct(barcode);
                     }
                 }
                 else
@@ -264,6 +265,43 @@ namespace NutriLens.ViewModels
                     StartCamera.Execute(this);
                 });
             });
+        }
+
+        [RelayCommand]
+        public void Appearing()
+        {
+            StartCamera.Execute(this);
+        }
+
+        [RelayCommand]
+        public async void RegisterBarCodeItems()
+        {
+            List<FoodItem> barcodeFoodItems = new List<FoodItem>();
+
+            foreach(BarcodeItemEntry barcode in BarCodesRead)
+            {
+                FoodItem barcodeFoodItem = new FoodItem
+                {
+                    KiloCalories = barcode.TotalCaloriesConsumption,
+                    BarcodeItemEntry = barcode,
+                    Name = barcode.ProductName,
+                    Portion = (barcode.BasePortion * barcode.QuantityConsumption).ToString("0.00")
+                };
+
+                barcodeFoodItems.Add(barcodeFoodItem);
+            }
+
+            Meal newMeal = new Meal()
+            {
+                DateTime = DateTime.Now,
+                Name = "Refeição via código de barras",
+                FoodItems = barcodeFoodItems
+            };
+
+            AppDataHelperClass.AddMeal(newMeal);
+            
+            await ViewServices.PopUpManager.PopInfoAsync("Refeição registrada com sucesso!");
+            await _navigation.PopAsync();
         }
     }
 }
