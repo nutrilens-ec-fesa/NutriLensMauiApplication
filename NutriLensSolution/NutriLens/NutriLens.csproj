@@ -52,7 +52,9 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\AppIcon\icon_nutrilens_1.svg" />
+	  <None Remove="Resources\Images\delete_icon.png" />
 	  <None Remove="Resources\Images\document_link.png" />
+	  <None Remove="Resources\Images\edit_icon.png" />
 	  <None Remove="Resources\Images\nutrilenslogo.jpg" />
 	  <None Remove="Resources\Raw\beep.mp3" />
 	</ItemGroup>
