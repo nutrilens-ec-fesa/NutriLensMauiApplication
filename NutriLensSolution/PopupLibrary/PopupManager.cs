@@ -142,6 +142,15 @@ public interface IPopUpManager
     /// <returns>Texto digitado pelo usuário</returns>
     public Task<string> PopFreeInputAsync(string title, string message, int maxLength, string placeHolder);
     /// <summary>
+    /// Mostra um pop-up com título e mensagem passados por parâmetro e disponibiliza uma entrada de texto livre. Utiliza Popup nativo 
+    /// </summary>
+    /// <param name="title">Título do pop-up</param>
+    /// <param name="message">Mensagem do corpo do pop-up</param>
+    /// <param name="maxLength">Limite de caracteres da entrada de texto</param>
+    /// <param name="placeHolder">Place holder para entrada de texto</param>
+    /// <returns>Texto digitado pelo usuário</returns>
+    public Task<string> PopFreeInputAsync(string title, string message, int maxLength, string placeHolder, string initialValue);
+    /// <summary>
     /// Mostra um pop-up com título e mensagem passados por parâmetro e disponibiliza uma entrada de texto numérica. Utiliza Popup nativo 
     /// </summary>
     /// <param name="title">Título do pop-up</param>
@@ -557,6 +566,23 @@ public class PopUpManager : IPopUpManager
             await Application.Current.Dispatcher.DispatchAsync(async () =>
             {
                 inputText = await ActualPage.DisplayPromptAsync(title, message, _ok, _cancel, placeHolder, maxLength);
+            });
+        }
+        else
+            inputText = await ActualPage.DisplayPromptAsync(title, message, _ok, _cancel, placeHolder, maxLength);
+
+        return inputText;
+    }
+
+    public async Task<string> PopFreeInputAsync(string title, string message, int maxLength, string placeHolder, string initialValue)
+    {
+        string inputText = string.Empty;
+
+        if (DispatcherEnabled)
+        {
+            await Application.Current.Dispatcher.DispatchAsync(async () =>
+            {
+                inputText = await ActualPage.DisplayPromptAsync(title, message, _ok, _cancel, placeHolder, maxLength, null, initialValue);
             });
         }
         else
