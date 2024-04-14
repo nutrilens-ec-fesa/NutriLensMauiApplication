@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using Newtonsoft.Json;
 using NutriLensWebApp.Models;
 using WebLibrary;
 using WebLibrary.HttpRequests;
@@ -12,6 +13,7 @@ namespace NutriLensWebApp.Entities
         private static readonly string _routeApiChatCompletions = "https://api.openai.com/v1/chat/completions";
         private static readonly string _gpt3dot5Turbo = "gpt-3.5-turbo";
         private static readonly string _gpt4VisionPreview = "gpt-4-vision-preview";
+        private static readonly string _gpt4Turbo = "gpt-4-turbo";
 
         public static void SetApiKey(string apiKey)
         {
@@ -21,7 +23,8 @@ namespace NutriLensWebApp.Entities
         public enum OpenAiModel
         {
             Gpt3dot5Turbo = 1,
-            Gpt4VisionPreview = 2
+            Gpt4VisionPreview = 2,
+            Gpt4Turbo = 3
         }
 
         public class Message
@@ -149,6 +152,8 @@ namespace NutriLensWebApp.Entities
                     return _gpt3dot5Turbo;
                 case OpenAiModel.Gpt4VisionPreview:
                     return _gpt4VisionPreview;
+                case OpenAiModel.Gpt4Turbo:
+                    return _gpt4Turbo;
                 default:
                     throw new NotImplementedException();
             }
