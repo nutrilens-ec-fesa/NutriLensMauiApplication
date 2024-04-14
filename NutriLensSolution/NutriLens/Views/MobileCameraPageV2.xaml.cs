@@ -113,7 +113,7 @@ public partial class MobileCameraPageV2 : ContentPage
 
             while (true)
             {
-                foodItems = await GetAiAnalysis(mongoImageId);
+                foodItems = await EntitiesHelperClass.GetAiAnalysisByMongoImageId(mongoImageId);
 
                 if (foodItems == null)
                 {
@@ -134,100 +134,6 @@ public partial class MobileCameraPageV2 : ContentPage
             await EntitiesHelperClass.CloseLoading();
             await ViewServices.PopUpManager.PopErrorAsync("Houve algum erro para salvar/analisar a foto.\n\n" + ExceptionManager.ExceptionMessage(ex));
         }
-    }
-
-    private async Task<List<FoodItem>> GetAiAnalysis(string mongoImageId)
-    {
-        EntitiesHelperClass.ShowLoading("Realizando análise dos alimentos...");
-
-        string gptResult = string.Empty;
-        string geminiResult = string.Empty;
-
-        #region Analise usando modelos
-
-        TaskCompletionSource<bool> tcsGpt = new TaskCompletionSource<bool>();
-
-        Task.Run(() =>
-        {
-            try
-            {
-                gptResult = DaoHelperClass.GetOpenAiFoodVisionAnalisysByImageId(mongoImageId);
-                tcsGpt.SetResult(true);
-            }
-            catch (Exception ex)
-            {
-                tcsGpt.SetResult(false);
-            }
-
-        });
-
-        TaskCompletionSource<bool> tcsGemini = new TaskCompletionSource<bool>();
-
-        Task.Run(() =>
-        {
-            try
-            {
-                geminiResult = DaoHelperClass.GetGeminiAiFoodVisionAnalisysByImageId(mongoImageId);
-                tcsGemini.SetResult(true);
-            }
-            catch (Exception ex)
-            {
-                tcsGemini.SetResult(false);
-            }
-        });
-
-        // Aguarda as consultas terminarem
-        do
-        {
-            await Task.Delay(1000);
-
-            Console.WriteLine("GPT: " + tcsGpt.Task.IsCompleted);
-            Console.WriteLine("Gemini: " + tcsGemini.Task.IsCompleted);
-
-        } while (!tcsGpt.Task.IsCompleted || !tcsGemini.Task.IsCompleted);
-
-        #endregion
-
-        List<SimpleFoodItem> gptSimpleFoodItems = JsonToFoodItemsParser.Parse(gptResult);
-        List<SimpleFoodItem> geminiSimpleFoodItems = JsonToFoodItemsParser.Parse(geminiResult);
-
-        List<FoodItem> gptFoodItems = null;
-        List<FoodItem> geminiFoodItems = null;
-
-        try
-        {
-            AppDataHelperClass.GetStringTacoItemsBySimpleFoodItems(gptSimpleFoodItems, out gptFoodItems);
-        }
-        catch (Exception ex)
-        {
-            //await EntitiesHelperClass.CloseLoading();
-            //await ViewServices.PopUpManager.PopErrorAsync($"Houve algum problema com a análise da foto dos alimentos. {Environment.NewLine} Retorno da API: {gptResult}. {Environment.NewLine}" + ExceptionManager.ExceptionMessage(ex));
-            //return;
-        }
-
-        try
-        {
-            AppDataHelperClass.GetStringTacoItemsBySimpleFoodItems(geminiSimpleFoodItems, out geminiFoodItems);
-        }
-        catch (Exception ex)
-        {
-
-        }
-
-        await EntitiesHelperClass.CloseLoading();
-
-        bool gptOk = gptFoodItems != null && gptFoodItems.Count > 0;
-        bool geminiOk = geminiFoodItems != null && geminiFoodItems.Count > 0;
-
-        Console.WriteLine("ChatGPT: " + (gptOk ? "OK" : "Falha"));
-        Console.WriteLine("Gemini: " + (geminiOk ? "OK" : "Falha"));
-
-        if (gptOk)
-            return gptFoodItems;
-        else if (geminiOk)
-            return geminiFoodItems;
-        else
-            return null;
     }
 
     private string NewPictureFilePath()
