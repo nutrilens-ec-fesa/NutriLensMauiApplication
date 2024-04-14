@@ -9,6 +9,7 @@ using WebLibrary;
 using System.Net;
 using ZXing.QrCode.Internal;
 using Newtonsoft.Json;
+using GenerativeAI.Types;
 
 namespace NutriLens.Entities
 {
@@ -206,6 +207,74 @@ namespace NutriLens.Entities
         }
 
         /// <summary>
+        /// Obtém o último prompt da OpenAi registrado
+        /// </summary>
+        /// <returns></returns>
+        public static OpenAiPrompt GetOpenAiPrompt()
+        {
+            GetRequest httpRequest = new(UriAndPaths.ApiUrl, "Ai/v1/GetActualGpt4VisionPrompt")
+            {
+                Token = AppDataHelperClass.NutriLensApiToken
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (!resp.IsSuccessStatusCode)
+                throw new UnsuccessfullRequestException(content);
+            else
+                return JsonConvert.DeserializeObject<OpenAiPrompt>(content);
+        }
+
+        /// <summary>
+        /// Posta na base de dados o novo prompt para detecção de alimentos
+        /// </summary>
+        /// <param name="openAiPrompt"></param>
+        /// <exception cref="UnsuccessfullRequestException"></exception>
+        public static void PostNewOpenAiPrompt(OpenAiPrompt openAiPrompt)
+        {
+            PostRequest httpRequest = new(UriAndPaths.ApiUrl, "Ai/v1/InsertNewGpt4VisionPrompt")
+            {
+                Body = openAiPrompt,
+                Token = AppDataHelperClass.NutriLensApiToken
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (!resp.IsSuccessStatusCode)
+                throw new UnsuccessfullRequestException(content);
+            else
+                return;
+        }
+
+        /// <summary>
+        /// A partir de uma string descrevendo os alimentos, retorna um json composto por
+        /// Item e Quantidade de cada um dos itens mencionados
+        /// </summary>
+        /// <param name="mealDescription">string de descrição dos itens da refeição</param>
+        /// <returns></returns>
+        /// <exception cref="UnsuccessfullRequestException"></exception>
+        public static string GetOpenAiFoodItemsJsonByMealDescription(string mealDescription)
+        {
+            PostRequest httpRequest = new(UriAndPaths.ApiUrl, "Ai/v1/GetFoodItemsJsonByMealDescription")
+            {
+                Token = AppDataHelperClass.NutriLensApiToken,
+                Body = new StringObject { Value = mealDescription }
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (!resp.IsSuccessStatusCode)
+                throw new UnsuccessfullRequestException(content);
+            else
+                return content.Replace("\"", string.Empty).Replace("\\n", Environment.NewLine);
+        }
+
+        #endregion
+
+        #region Gemini
+
+
+        /// <summary>
         /// Realiza análise dos alimentos presentes em uma imagem
         /// </summary>
         /// <param name="imageId">Identificador da imagem na base de dados</param>
@@ -227,14 +296,18 @@ namespace NutriLens.Entities
         }
 
         /// <summary>
-        /// Obtém o último prompt da OpenAi registrado
+        /// A partir de uma string descrevendo os alimentos, retorna um json composto por
+        /// Item e Quantidade de cada um dos itens mencionados
         /// </summary>
+        /// <param name="mealDescription">string de descrição dos itens da refeição</param>
         /// <returns></returns>
-        public static OpenAiPrompt GetOpenAiPrompt()
+        /// <exception cref="UnsuccessfullRequestException"></exception>
+        public static string GetGeminiFoodItemsJsonByMealDescription(string mealDescription)
         {
-            GetRequest httpRequest = new(UriAndPaths.ApiUrl, "Ai/v1/GetActualGpt4VisionPrompt")
+            PostRequest httpRequest = new(UriAndPaths.ApiUrl, "Ai/v1/GetFoodItemsJsonByMealDescription/gemini")
             {
-                Token = AppDataHelperClass.NutriLensApiToken
+                Token = AppDataHelperClass.NutriLensApiToken,
+                Body = new StringObject { Value = mealDescription }
             };
 
             HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
@@ -242,23 +315,7 @@ namespace NutriLens.Entities
             if (!resp.IsSuccessStatusCode)
                 throw new UnsuccessfullRequestException(content);
             else
-                return JsonConvert.DeserializeObject<OpenAiPrompt>(content);
-        }
-
-        public static void PostNewOpenAiPrompt(OpenAiPrompt openAiPrompt)
-        {
-            PostRequest httpRequest = new(UriAndPaths.ApiUrl, "Ai/v1/InsertNewGpt4VisionPrompt")
-            {
-                Body = openAiPrompt,
-                Token = AppDataHelperClass.NutriLensApiToken
-            };
-
-            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
-
-            if (!resp.IsSuccessStatusCode)
-                throw new UnsuccessfullRequestException(content);
-            else
-                return;
+                return content.Replace("\"", string.Empty).Replace("\\n", Environment.NewLine);
         }
 
         #endregion
@@ -305,7 +362,7 @@ namespace NutriLens.Entities
             };
 
             HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
-            
+
             if (!resp.IsSuccessStatusCode)
                 throw new UnsuccessfullRequestException(content);
 
