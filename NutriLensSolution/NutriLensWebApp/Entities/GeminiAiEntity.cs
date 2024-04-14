@@ -39,6 +39,34 @@ namespace NutriLensWebApp.Entities
 
             EnhancedGenerateContentResponse result = await visionModel.GenerateContentAsync(parts);
             return result.Text();
-        } 
+        }
+
+        public static async Task<string> GeminiAiQuery(string prompt)
+        {
+            //// Implementação do Gemini
+            //Part imagePart = new Part()
+            //{
+            //    InlineData = new GenerativeContentBlob()
+            //    {
+            //        MimeType = "text",
+            //        Data = prompt
+            //    }
+            //};
+
+            Part textPart = new Part()
+            {
+                Text = prompt
+            };
+
+            Part[] parts = new[] { textPart };
+
+            string apiKey = _apiKey;
+
+            GeminiProModel model = new GeminiProModel(apiKey);
+
+            EnhancedGenerateContentResponse result = await model.GenerateContentAsync(parts);
+
+            return result.Text();
+        }
     }
 }
