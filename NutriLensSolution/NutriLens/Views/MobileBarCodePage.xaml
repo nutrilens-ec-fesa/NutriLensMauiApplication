@@ -4,6 +4,9 @@
              xmlns:cv="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
              x:Class="NutriLens.Views.MobileBarCodePage"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:c="clr-namespace:NutriLens.Entities.Converters"
+             xmlns:vm="clr-namespace:NutriLens.ViewModels"
+             x:Name="BarCodePage"
              Title="Detecção - Código de barras">
     <ContentPage.Behaviors>
         <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
@@ -21,8 +24,8 @@
                            Cameras="{Binding Cameras, Mode=OneWayToSource}"
                            Camera="{Binding Camera}"
                            AutoStartPreview="{Binding AutoStartPreview}"
-                           WidthRequest="300"
-                           HeightRequest="300"
+                           WidthRequest="270"
+                           HeightRequest="270"
                            BarCodeOptions="{Binding BarCodeOptions}"
                            BarCodeResults="{Binding BarCodeResults, Mode=OneWayToSource}"
                            BarCodeDetectionEnabled="True"
@@ -32,12 +35,24 @@
                            TakeAutoSnapShot="{Binding TakeSnapshot}"></cv:CameraView>
         </StackLayout>
         <StackLayout Grid.Row="1" BackgroundColor="AliceBlue">
-            <ListView ItemsSource="{Binding BarCodesRead}" HasUnevenRows="True" Margin="0,0,0,0">
+            <ListView ItemsSource="{Binding BarCodesRead}" HasUnevenRows="True" Margin="10,0,10,0" SelectionMode="None" CachingStrategy="RetainElement">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View>
-                                <Label Padding="15" TextColor="Black" FontSize="Subtitle" Text="{Binding BarCodeEntryInfo}" />
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="6*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Padding="15" TextColor="Black" FontSize="Subtitle" Text="{Binding BarCodeEntryInfo}" />
+                                    <ImageButton Grid.Column="1" Source="delete_icon.png" Command="{Binding Path=BindingContext.DeleteItemCommand, Source={x:Reference BarCodePage}}" CommandParameter="{Binding .}" HeightRequest="50" />
+                                    <ImageButton Grid.Column="2" Source="edit_icon.png" Margin="3" Command="{Binding Path=BindingContext.EditItemCommand, Source={x:Reference BarCodePage}}" CommandParameter="{Binding .}" HeightRequest="50" />
+                                </Grid>
                             </ViewCell.View>
                         </ViewCell>
                     </DataTemplate>

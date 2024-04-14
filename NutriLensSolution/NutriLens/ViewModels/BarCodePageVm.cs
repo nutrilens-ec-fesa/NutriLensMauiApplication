@@ -2,6 +2,7 @@
 using Camera.MAUI.ZXingHelper;
 using CommunityToolkit.Mvvm.Input;
 using ExceptionLibrary;
+using Newtonsoft.Json;
 using NutriLens.Entities;
 using NutriLens.Models;
 using NutriLens.Services;
@@ -133,29 +134,8 @@ namespace NutriLens.ViewModels
 
                 if (foundBarCodeItem != null)
                 {
-                    if (await ViewServices.PopUpManager.PopYesOrNoAsync("Produto já inserido", "Produto já foi previamente inserido, deseja inserir mais uma vez?"))
-                    {
-                        BarcodeItemEntry newBarCodeItemEntry = new BarcodeItemEntry()
-                        {
-                            Barcode = foundBarCodeItem.Barcode,
-                            AddedSugar = foundBarCodeItem.AddedSugar,
-                            BasePortion = foundBarCodeItem.BasePortion,
-                            DietaryFiber = foundBarCodeItem.DietaryFiber,
-                            EnergeticValue = foundBarCodeItem.EnergeticValue,
-                            PortionDefinition = foundBarCodeItem.PortionDefinition,
-                            ProductName = foundBarCodeItem.ProductName,
-                            Proteins = foundBarCodeItem.Proteins,
-                            SaturatedFat = foundBarCodeItem.SaturatedFat,
-                            Sodium = foundBarCodeItem.Sodium,
-                            TotalCarbohydrates = foundBarCodeItem.TotalCarbohydrates,
-                            TotalFat = foundBarCodeItem.TotalFat,
-                            TransFat = foundBarCodeItem.TransFat,
-                            TotalSugar = foundBarCodeItem.TotalSugar,
-                            UnitsPerPortion = foundBarCodeItem.UnitsPerPortion
-                        };
-
-                        await BarcodeProductPrompt(newBarCodeItemEntry);
-                    }
+                    if (await ViewServices.PopUpManager.PopYesOrNoAsync("Produto já inserido", "Produto já foi previamente inserido, deseja atualizar a quantidade?"))
+                        await BarcodeProductPrompt(foundBarCodeItem, true);
                     else
                         _barcodeCheckingOnGoing = false;
 
@@ -200,17 +180,23 @@ namespace NutriLens.ViewModels
             });
         }
 
-        public async Task BarcodeProductPrompt(BarcodeItemEntry barcodeItem)
+        public async Task BarcodeProductPrompt(BarcodeItemEntry barcodeItem, bool editing = false)
         {
-            string consumptionQuantity = await ViewServices.PopUpManager.PopFreeInputAsync(barcodeItem.ProductName, $"Quantos(as) '{barcodeItem.PortionDefinition}' você irá consumir?");
+            string consumptionQuantity;
+            
+            if(!editing)
+                consumptionQuantity = await ViewServices.PopUpManager.PopFreeInputAsync(barcodeItem.ProductName, $"Quantos(as) '{barcodeItem.PortionDefinition}' você irá consumir?", 1000, "Preencha a quantidade...", string.Empty);
+            else
+                consumptionQuantity = await ViewServices.PopUpManager.PopFreeInputAsync(barcodeItem.ProductName, $"Quantos(as) '{barcodeItem.PortionDefinition}' você irá consumir?", 1000, "Preencha a quantidade...", barcodeItem.QuantityConsumption.ToString());
 
             if (double.TryParse(consumptionQuantity, out var quantity))
             {
                 barcodeItem.QuantityConsumption = quantity;
-                await ViewServices.PopUpManager.PopInfoAsync("Total de calorias: " + barcodeItem.TotalCaloriesConsumption);
-                BarCodesRead.Add(barcodeItem);
-                OnPropertyChanged(nameof(BarCodesRead));
-                OnPropertyChanged(nameof(TotalCaloriesInfo));
+                
+                if(!editing)
+                    BarCodesRead.Add(barcodeItem);
+
+                UpdateBarCodesReadList(); 
             }
             else
                 await ViewServices.PopUpManager.PopErrorAsync("Não foi possível identificar a quantidade estipulada. Tente novamente.");
@@ -302,6 +288,43 @@ namespace NutriLens.ViewModels
             
             await ViewServices.PopUpManager.PopInfoAsync("Refeição registrada com sucesso!");
             await _navigation.PopAsync();
+        }
+
+        [RelayCommand]
+        public async void DeleteItem(BarcodeItemEntry barcodeItem)
+        {
+            if (await ViewServices.PopUpManager.PopYesOrNoAsync("Deletar item", $"Deseja realmente deletar \"{barcodeItem.ProductName}\" da refeição?"))
+            {
+                BarCodesRead.Remove(barcodeItem);
+                UpdateBarCodesReadList();
+            }
+        }
+
+        [RelayCommand]
+        public async Task EditItem(BarcodeItemEntry barcodeItem)
+        {
+            await BarcodeProductPrompt(barcodeItem, true);
+        }
+
+        /// <summary>
+        /// Método criado como forma de correção de atualização nativa da ObservableCollection,
+        /// pois a atualização removendo, editando e adicionando itens, gera alguns problemas
+        /// de renderização (falsos duplicados, itens não renderizados, etc). Esse método
+        /// basicamente remove todos os itens e os adiciona novamente, dessa forma a interface
+        /// funciona da forma como deveria.
+        /// </summary>
+        private void UpdateBarCodesReadList()
+        {
+            List<BarcodeItemEntry> updatedItems = BarCodesRead.ToList();
+
+            BarCodesRead.Clear();
+
+            foreach (BarcodeItemEntry item in updatedItems)
+            {
+                BarCodesRead.Add(item);
+            }
+
+            OnPropertyChanged(nameof(TotalCaloriesInfo));
         }
     }
 }
