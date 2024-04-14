@@ -7,7 +7,9 @@ using NutriLensClassLibrary.Models;
 using NutriLensWebApp.Entities;
 using NutriLensWebApp.Interfaces;
 using NutriLensWebApp.Models;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
+using WebLibrary;
 using static NutriLensWebApp.Entities.OpenAiEntity;
 
 namespace NutriLensWebApp.Controllers
@@ -42,7 +44,7 @@ namespace NutriLensWebApp.Controllers
                     Url = url
                 };
 
-                OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4VisionPreview, inputModel);
+                OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4Turbo, inputModel);
 
                 return Ok(response.GetResponseMessage());
             }
@@ -68,7 +70,7 @@ namespace NutriLensWebApp.Controllers
                     Url = $"data:image/jpeg;base64,{base64Image}"
                 };
 
-                OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4VisionPreview, inputModel);
+                OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4Turbo, inputModel);
 
                 return Ok(response.GetResponseMessage());
             }
@@ -100,7 +102,7 @@ namespace NutriLensWebApp.Controllers
                     Url = $"data:image/jpeg;base64,{mongoImageBase64}"
                 };
 
-                OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4VisionPreview, inputModel);
+                OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4Turbo, inputModel);
 
                 mongoImage.GptRawResult = "[OpenAi] " + response.GetResponseMessage();
 
@@ -119,7 +121,7 @@ namespace NutriLensWebApp.Controllers
         {
             try
             {
-                OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4VisionPreview, inputModel);
+                OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4Turbo, inputModel);
                 return Ok(response.GetResponseMessage());
             }
             catch (Exception ex)
@@ -128,22 +130,6 @@ namespace NutriLensWebApp.Controllers
             }
         }
 
-        [HttpPost, Route("v1/GeminiVisionTest"), AllowAnonymous]
-        public async Task<IActionResult> GeminiVisionTest([FromBody] GeminiVisionInputModel inputModel)
-        {
-            try
-            {
-                string prompt = inputModel.Prompt;
-                byte[] imageBytes = Convert.FromBase64String(inputModel.Url.Substring(inputModel.Url.IndexOf(',') + 1));
-                string result = await GeminiAiEntity.GeminiAiQuery(prompt, imageBytes);
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ExceptionManager.ExceptionMessage(ex));
-            }
-        }
 
         [HttpGet, Route("v1/GetActualGpt4VisionPrompt"), AllowAnonymous]
         public IActionResult GetActualGpt4VisionPrompt([FromServices] IOpenAiPrompt openAiPromptRepo)
@@ -166,6 +152,31 @@ namespace NutriLensWebApp.Controllers
             {
                 openAiPromptRepo.InsertNew(openAiPrompt);
                 return Created(string.Empty, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
+        [HttpPost, Route("v1/GetFoodItemsJsonByMealDescription")]
+        public IActionResult GetFoodItemsJsonByMealDescription([FromBody] StringObject mealDescription)
+        {
+            try
+            {
+                OpenAiInputModel inputModel = new()
+                {
+                    UserPrompt = mealDescription.Value,
+                    SystemPrompt = "Você obtém uma descrição de uma refeição, e, para cada item mencionado, " +
+                    "você monta um objeto composto por Item e Quantidade e devolve uma lista desses objetos. " +
+                    "O usuário pode ou não falar a quantidade em gramas de cada um dos itens, caso ele não mencione, " +
+                    "considere a medida em gramas típica para o item em uma refeição.",
+                    MaxTokens = 300
+                };
+
+                OpenAiResponse response = OpenAiQuery(OpenAiModel.Gpt4Turbo, inputModel);
+
+                return Ok(response.GetResponseMessage());
             }
             catch (Exception ex)
             {
@@ -206,6 +217,45 @@ namespace NutriLensWebApp.Controllers
                 return BadRequest(ExceptionManager.ExceptionMessage(ex));
             }
         }
+
+        [HttpPost, Route("v1/GeminiVisionTest"), AllowAnonymous]
+        public async Task<IActionResult> GeminiVisionTest([FromBody] GeminiVisionInputModel inputModel)
+        {
+            try
+            {
+                string prompt = inputModel.Prompt;
+                byte[] imageBytes = Convert.FromBase64String(inputModel.Url.Substring(inputModel.Url.IndexOf(',') + 1));
+                string result = await GeminiAiEntity.GeminiAiQuery(prompt, imageBytes);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
+        [HttpPost, Route("v1/GetFoodItemsJsonByMealDescription/gemini")]
+        public async Task<IActionResult> GetFoodItemsJsonByMealDescriptionGemini([FromBody] StringObject mealDescription)
+        {
+            try
+            {
+
+                string prompt = $"Considere a descrição de refeição: '{mealDescription.Value}'. Para cada item mencionado, " +
+                "você monta um objeto composto por Item e Quantidade e devolve uma lista desses objetos, em json. " +
+                "O usuário pode ou não falar a quantidade em gramas de cada um dos itens, caso ele não mencione, " +
+                "considere a medida em gramas típica para o item em uma refeição.";
+
+                string result = await GeminiAiEntity.GeminiAiQuery(prompt);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
         #endregion
 
         [HttpGet, Route("v1/GetFoodItemsByInput/{input}")]
@@ -215,7 +265,7 @@ namespace NutriLensWebApp.Controllers
             {
                 return Ok(JsonToFoodItemsParser.Parse(input));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ExceptionManager.ExceptionMessage(ex));
             }
