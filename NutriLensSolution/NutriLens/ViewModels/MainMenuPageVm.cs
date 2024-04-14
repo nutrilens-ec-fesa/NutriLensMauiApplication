@@ -103,7 +103,29 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private async Task VoiceInput()
         {
-            await ViewServices.PopUpManager.PopInDevelopment(MethodBase.GetCurrentMethod());
+            await TextToSpeech.SpeakAsync("Claro! Informe todos os itens do seu prato e a quantidade em gramas de cada um deles.");
+            string command = await VoiceCommandsHelperClass.GetVoiceCommand();
+
+            if(await ViewServices.PopUpManager.PopYesOrNoAsync("Detecção por voz", "Fala detectada: " + command + Environment.NewLine + "Deseja continuar?"))
+            {
+                List<FoodItem> foodItems;
+
+                while (true)
+                {
+                    foodItems = await EntitiesHelperClass.GetAiAnalysisByMealDescription(command);
+
+                    if (foodItems == null)
+                    {
+                        if (!await ViewServices.PopUpManager.PopYesOrNoAsync("Falha na identificação dos alimentos", "Deseja tentar novamente?"))
+                            return;
+                    }
+                    else
+                        break;
+                }
+
+                AppDataHelperClass.DetectedFoodItems = foodItems;
+                await OpenManualInput();
+            }
         }
 
         [RelayCommand]
