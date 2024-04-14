@@ -29,6 +29,24 @@ public partial class AddTacoFoodItemPopup : Popup
         tacoPicker.ItemsSource = AppDataHelperClass.TacoFoodItems;
     }
 
+    public AddTacoFoodItemPopup(FoodItem foodItem)
+    {
+        InitializeComponent();
+
+        TacoItems = new ObservableCollection<TacoItem>();
+
+        if (AppDataHelperClass.TacoFoodItems == null || AppDataHelperClass.TacoFoodItems.Count == 0)
+        {
+            List<TacoItem> tacoItems = DaoHelperClass.GetTacoItemsList();
+            AppDataHelperClass.SetTacoItems(tacoItems.OrderBy(x => x.Nome).ToList());
+        }
+
+        tacoPicker.ItemsSource = AppDataHelperClass.TacoFoodItems;
+        tacoPicker.SelectedItem = AppDataHelperClass.TacoFoodItems.Find(x => x.Nome == foodItem.Name);
+        SelectedItem = foodItem.TacoFoodItem;
+        inputPortion.Text = foodItem.Portion;
+    }
+
     private async void BtnConfirmItem_Clicked(object sender, EventArgs e)
     {
         Confirmed = true;

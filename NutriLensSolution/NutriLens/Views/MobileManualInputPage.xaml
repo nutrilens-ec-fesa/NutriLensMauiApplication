@@ -3,11 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NutriLens.Views.MobileManualInputPage"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:c="clr-namespace:NutriLens.Entities.Converters"
+             xmlns:local="clr-namespace:NutriLens.ViewModels"
+             x:Name="ManualInputPage"
              Title="Inserção manual">
     <ContentPage.Behaviors>
         <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
         <mct:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
     </ContentPage.Behaviors>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <c:ItemTappedEventArgsConverter x:Key="itemTappedEventArgsConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -24,14 +33,43 @@
             <Button Text="Adicionar novo item" Command="{Binding AddNewItemFromTacoCommand}"></Button>
         </StackLayout>
         <StackLayout Grid.Row="2" Padding="10">
-            <ListView ItemsSource="{Binding FoodItems}" HasUnevenRows="True">
+            <ListView x:Name="listViewName" ItemsSource="{Binding FoodItems}" HasUnevenRows="True" SelectionMode="None" CachingStrategy="RetainElement" Margin="0">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View>
-                                <StackLayout Padding="10">
-                                    <Label TextColor="Black" Text="{Binding NamePlusPortionPlusKcalInfo}" LineBreakMode="WordWrap" />
-                                </StackLayout>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="6*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Grid.Column="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="3*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Row="0" Grid.Column="0" FontAttributes="Bold" Text="Item: "></Label>
+                                        <Label Grid.Row="0" Grid.Column="1" Margin="5,0,0,0" Text="{Binding Name}" LineBreakMode="WordWrap"></Label>
+                                        <Label Grid.Row="1" Grid.Column="0" FontAttributes="Bold" Text="Porção: "></Label>
+                                        <Label Grid.Row="1" Grid.Column="1" Margin="5,0,0,0" Text="{Binding PortionInfo}"></Label>
+                                        <Label Grid.Row="2" Grid.Column="0" FontAttributes="Bold" Text="Calorias:"></Label>
+                                        <Label Grid.Row="2" Grid.Column="1" Margin="5,0,0,0" Text="{Binding KiloCalorieInfo}"></Label>
+                                    </Grid>
+                                    <ImageButton Grid.Column="1" Source="delete_icon.png" Command="{Binding Path=BindingContext.DeleteItemCommand, Source={x:Reference ManualInputPage}}" CommandParameter="{Binding .}" HeightRequest="50">
+                                    </ImageButton>
+                                    <ImageButton Grid.Column="2" Source="edit_icon.png" Margin="3" Command="{Binding Path=BindingContext.EditItemCommand, Source={x:Reference ManualInputPage}}" CommandParameter="{Binding .}" HeightRequest="50">
+
+                                    </ImageButton>
+                                </Grid>
                             </ViewCell.View>
                         </ViewCell>
                     </DataTemplate>

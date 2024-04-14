@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NutriLens.Entities;
-using NutriLens.Models;
 using NutriLens.Services;
 using NutriLens.Views.Popups;
 using NutriLensClassLibrary.Models;
@@ -98,24 +97,15 @@ namespace NutriLens.ViewModels
                     {
                         Name = addFoodItemPopup.SelectedItem.Nome,
                         Portion = addFoodItemPopup.InputPortion,
-                        KiloCalories = addFoodItemPopup.InputCalories
+                        KiloCalories = addFoodItemPopup.InputCalories, 
                     };
                 }
                 else
                     return;
 
-                // Se não informou as calorias
-                //if (addFoodItemPopup.InputCalories == -1)
-                //{
-                //    string gptJson = DaoHelperClass.GetNutritionalInfo(foodItem);
-                //    GptNutritionalInfo gptNutritionalInfo = JsonConvert.DeserializeObject<GptNutritionalInfo>(gptJson);
-                //    foodItem.KiloCalories = gptNutritionalInfo.CaloriesValue;
-                //}
-
                 FoodItems.Add(foodItem);
 
-                OnPropertyChanged(nameof(FoodItemsQuantity));
-                OnPropertyChanged(nameof(KiloCalories));
+                UpdateFoodItemsList();
             }
         }
 
@@ -167,6 +157,59 @@ namespace NutriLens.ViewModels
         private void Disappearing()
         {
 
+        }
+
+        [RelayCommand]
+        private async Task EditItem(FoodItem item)
+        {
+            AddTacoFoodItemPopup addFoodItemPopup = new AddTacoFoodItemPopup(item);
+            await Application.Current.MainPage.ShowPopupAsync(addFoodItemPopup);
+
+            if (addFoodItemPopup.Confirmed)
+            {
+                if (addFoodItemPopup.SelectedItem != null)
+                {
+                    item.Name = addFoodItemPopup.SelectedItem.Nome;
+                    item.Portion = addFoodItemPopup.InputPortion;
+                    item.KiloCalories = addFoodItemPopup.InputCalories;
+
+                    UpdateFoodItemsList();
+                }
+                else
+                    return;
+            }
+        }
+
+        [RelayCommand]
+        private async void DeleteItem(FoodItem item)
+        {
+            if(await ViewServices.PopUpManager.PopYesOrNoAsync("Deletar item", $"Deseja realmente deletar \"{item.Name}\" da refeição?"))
+            {
+                FoodItems.Remove(item);
+                UpdateFoodItemsList();
+            }
+        }
+
+        /// <summary>
+        /// Método criado como forma de correção de atualização nativa da ObservableCollection,
+        /// pois a atualização removendo, editando e adicionando itens, gera alguns problemas
+        /// de renderização (falsos duplicados, itens não renderizados, etc). Esse método
+        /// basicamente remove todos os itens e os adiciona novamente, dessa forma a interface
+        /// funciona da forma como deveria.
+        /// </summary>
+        private void UpdateFoodItemsList()
+        {
+            List<FoodItem> updatedFooditems = FoodItems.ToList();
+
+            FoodItems.Clear();
+
+            foreach (FoodItem foodItem in updatedFooditems)
+            {
+                FoodItems.Add(foodItem);
+            }
+
+            OnPropertyChanged(nameof(FoodItemsQuantity));
+            OnPropertyChanged(nameof(KiloCalories));
         }
     }
 }
