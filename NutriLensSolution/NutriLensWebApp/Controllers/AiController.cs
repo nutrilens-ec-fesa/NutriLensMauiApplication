@@ -258,6 +258,159 @@ namespace NutriLensWebApp.Controllers
 
         #endregion
 
+        #region Both
+
+        [HttpPost, Route("v2/DetectFoodByMongoImageId/{mongoImageId}"), AllowAnonymous]
+        public async Task<IActionResult> DetectFoodByMongoImageIdV2(string mongoImageId,
+            [FromServices] IOpenAiPrompt openAiPromptRepo,
+            [FromServices] IMongoImage mongoImageRepo)
+        {
+            try
+            {
+                OpenAiPrompt openAiPrompt = openAiPromptRepo.GetLast();
+                MongoImage mongoImage = mongoImageRepo.GetById(mongoImageId);
+                string mongoImageBase64 = Convert.ToBase64String(mongoImage.ImageBytes);
+
+                OpenAiResponse gptResponse = null;
+                string geminiResponse = string.Empty;
+
+                TaskCompletionSource<bool> tcsGpt = new TaskCompletionSource<bool>();
+
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        OpenAiVisionInputModel inputModel = new()
+                        {
+                            UserPrompt = openAiPrompt.UserPrompt,
+                            SystemPrompt = openAiPrompt.SystemPrompt,
+                            MaxTokens = 300,
+                            Base64 = false,
+                            Url = $"data:image/jpeg;base64,{mongoImageBase64}"
+                        };
+
+                        gptResponse = OpenAiQuery(OpenAiModel.Gpt4Turbo, inputModel);
+                        tcsGpt.SetResult(true);
+                    }
+                    catch (Exception ex)
+                    {
+                        tcsGpt.SetResult(false);
+                    }
+
+                });
+
+                TaskCompletionSource<bool> tcsGemini = new TaskCompletionSource<bool>();
+
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        string prompt = openAiPrompt.SystemPrompt;
+                        geminiResponse = await GeminiAiEntity.GeminiAiQuery(prompt, mongoImage.ImageBytes);
+                        tcsGemini.SetResult(true);
+                    }
+                    catch (Exception ex)
+                    {
+                        tcsGemini.SetResult(false);
+                    }
+                });
+
+                // Aguarda as consultas terminarem
+                do
+                {
+                    await Task.Delay(1000);
+
+                    Console.WriteLine("GPT: " + tcsGpt.Task.IsCompleted);
+                    Console.WriteLine("Gemini: " + tcsGemini.Task.IsCompleted);
+
+                } while (!tcsGpt.Task.IsCompleted || !tcsGemini.Task.IsCompleted);
+
+                mongoImage.GptRawResult = "[OpenAi] " + gptResponse.GetResponseMessage();
+                mongoImage.GeminiRawResult = "[Gemini] " + geminiResponse;
+
+                mongoImageRepo.UpdateImage(mongoImage);
+
+                return Ok(new AiResult(mongoImage.GptRawResult, mongoImage.GeminiRawResult));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
+        [HttpPost, Route("v2/GetFoodItemsJsonByMealDescription")]
+        public async Task<IActionResult> GetFoodItemsJsonByMealDescriptionV2([FromBody] StringObject mealDescription)
+        {
+            try
+            {
+                OpenAiResponse gptResponse = null;
+                string geminiResponse = null;
+
+                TaskCompletionSource<bool> tcsGpt = new TaskCompletionSource<bool>();
+
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        OpenAiInputModel inputModel = new()
+                        {
+                            UserPrompt = mealDescription.Value,
+                            SystemPrompt = "Você obtém uma descrição de uma refeição, e, para cada item mencionado, " +
+                            "você monta um objeto composto por Item e Quantidade e devolve uma lista desses objetos. " +
+                            "O usuário pode ou não falar a quantidade em gramas de cada um dos itens, caso ele não mencione, " +
+                            "considere a medida em gramas típica para o item em uma refeição.",
+                            MaxTokens = 300
+                        };
+                        gptResponse = OpenAiQuery(OpenAiModel.Gpt4Turbo, inputModel);
+                        tcsGpt.SetResult(true);
+                    }
+                    catch (Exception ex)
+                    {
+                        tcsGpt.SetResult(false);
+                    }
+
+                });
+
+                TaskCompletionSource<bool> tcsGemini = new TaskCompletionSource<bool>();
+
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        string prompt = $"Considere a descrição de refeição: '{mealDescription.Value}'. Para cada item mencionado, " +
+                        "você monta um objeto composto por Item e Quantidade e devolve uma lista desses objetos, em json. " +
+                        "O usuário pode ou não falar a quantidade em gramas de cada um dos itens, caso ele não mencione, " +
+                        "considere a medida em gramas típica para o item em uma refeição.";
+
+                        geminiResponse = await GeminiAiEntity.GeminiAiQuery(prompt);
+                        tcsGemini.SetResult(true);
+                    }
+                    catch (Exception ex)
+                    {
+                        tcsGemini.SetResult(false);
+                    }
+                });
+
+                // Aguarda as consultas terminarem
+                do
+                {
+                    await Task.Delay(1000);
+
+                    Console.WriteLine("GPT: " + tcsGpt.Task.IsCompleted);
+                    Console.WriteLine("Gemini: " + tcsGemini.Task.IsCompleted);
+
+                } while (!tcsGpt.Task.IsCompleted || !tcsGemini.Task.IsCompleted);
+
+                return Ok(new AiResult(gptResponse.GetResponseMessage(), geminiResponse));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
+        #endregion
+
         [HttpGet, Route("v1/GetFoodItemsByInput/{input}")]
         public IActionResult GetFoodItemsByInput(string input)
         {

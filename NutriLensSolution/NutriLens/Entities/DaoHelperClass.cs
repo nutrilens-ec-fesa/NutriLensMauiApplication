@@ -320,6 +320,54 @@ namespace NutriLens.Entities
 
         #endregion
 
+        #region Both
+
+        /// <summary>
+        /// Realiza análise dos alimentos presentes em uma imagem, utilizando GPT e Gemini
+        /// </summary>
+        /// <param name="imageId">Identificador da imagem na base de dados</param>
+        /// <returns></returns>
+        /// <exception cref="UnsuccessfullRequestException"></exception>
+        public static AiResult GetFoodVisionAnalisysByImageId(string imageId)
+        {
+            PostRequest httpRequest = new(UriAndPaths.ApiUrl, "Ai/v2/DetectFoodByMongoImageId", imageId)
+            {
+                Token = AppDataHelperClass.NutriLensApiToken
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (!resp.IsSuccessStatusCode)
+                throw new UnsuccessfullRequestException(content);
+            else
+                return HttpManager.GetContent<AiResult>(content);
+        }
+
+        /// <summary>
+        /// A partir de uma string descrevendo os alimentos, retorna um json composto por
+        /// Item e Quantidade de cada um dos itens mencionados, utilizando GPT e Gemini
+        /// </summary>
+        /// <param name="mealDescription">string de descrição dos itens da refeição</param>
+        /// <returns></returns>
+        /// <exception cref="UnsuccessfullRequestException"></exception>
+        public static AiResult GetFoodItemsJsonByMealDescription(string mealDescription)
+        {
+            PostRequest httpRequest = new(UriAndPaths.ApiUrl, "Ai/v2/GetFoodItemsJsonByMealDescription")
+            {
+                Token = AppDataHelperClass.NutriLensApiToken,
+                Body = new StringObject { Value = mealDescription }
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (!resp.IsSuccessStatusCode)
+                throw new UnsuccessfullRequestException(content);
+            else
+                return HttpManager.GetContent<AiResult>(content);
+        }
+
+        #endregion
+
         #region Image
 
         /// <summary>

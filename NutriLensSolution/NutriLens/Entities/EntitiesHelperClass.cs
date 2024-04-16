@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui.Views;
+using NutriLens.Services;
 using NutriLens.Views.Popups;
 using NutriLensClassLibrary.Entities;
 using NutriLensClassLibrary.Models;
@@ -67,58 +68,17 @@ namespace NutriLens.Entities
 
         public static async Task<List<FoodItem>> GetAiAnalysisByMongoImageId(string mongoImageId)
         {
-            EntitiesHelperClass.ShowLoading("Realizando análise dos alimentos...");
+            ShowLoading("Realizando análise dos alimentos...");
 
-            string gptResult = string.Empty;
-            string geminiResult = string.Empty;
+            AiResult aiResult = null; 
 
-            #region Analise usando modelos
+            await Task.Run(() => aiResult = DaoHelperClass.GetFoodVisionAnalisysByImageId(mongoImageId));
 
-            TaskCompletionSource<bool> tcsGpt = new TaskCompletionSource<bool>();
+            await ViewServices.PopUpManager.PopInfoAsync(aiResult.GptResult);
+            await ViewServices.PopUpManager.PopInfoAsync(aiResult.GeminiResult);
 
-            Task.Run(() =>
-            {
-                try
-                {
-                    gptResult = DaoHelperClass.GetOpenAiFoodVisionAnalisysByImageId(mongoImageId);
-                    tcsGpt.SetResult(true);
-                }
-                catch (Exception ex)
-                {
-                    tcsGpt.SetResult(false);
-                }
-
-            });
-
-            TaskCompletionSource<bool> tcsGemini = new TaskCompletionSource<bool>();
-
-            Task.Run(() =>
-            {
-                try
-                {
-                    geminiResult = DaoHelperClass.GetGeminiAiFoodVisionAnalisysByImageId(mongoImageId);
-                    tcsGemini.SetResult(true);
-                }
-                catch (Exception ex)
-                {
-                    tcsGemini.SetResult(false);
-                }
-            });
-
-            // Aguarda as consultas terminarem
-            do
-            {
-                await Task.Delay(1000);
-
-                Console.WriteLine("GPT: " + tcsGpt.Task.IsCompleted);
-                Console.WriteLine("Gemini: " + tcsGemini.Task.IsCompleted);
-
-            } while (!tcsGpt.Task.IsCompleted || !tcsGemini.Task.IsCompleted);
-
-            #endregion
-
-            List<SimpleFoodItem> gptSimpleFoodItems = JsonToFoodItemsParser.Parse(gptResult);
-            List<SimpleFoodItem> geminiSimpleFoodItems = JsonToFoodItemsParser.Parse(geminiResult);
+            List<SimpleFoodItem> gptSimpleFoodItems = JsonToFoodItemsParser.Parse(aiResult.GptResult);
+            List<SimpleFoodItem> geminiSimpleFoodItems = JsonToFoodItemsParser.Parse(aiResult.GeminiResult);
 
             List<FoodItem> gptFoodItems = null;
             List<FoodItem> geminiFoodItems = null;
@@ -129,9 +89,7 @@ namespace NutriLens.Entities
             }
             catch (Exception ex)
             {
-                //await EntitiesHelperClass.CloseLoading();
-                //await ViewServices.PopUpManager.PopErrorAsync($"Houve algum problema com a análise da foto dos alimentos. {Environment.NewLine} Retorno da API: {gptResult}. {Environment.NewLine}" + ExceptionManager.ExceptionMessage(ex));
-                //return;
+
             }
 
             try
@@ -143,7 +101,7 @@ namespace NutriLens.Entities
 
             }
 
-            await EntitiesHelperClass.CloseLoading();
+            await CloseLoading();
 
             bool gptOk = gptFoodItems != null && gptFoodItems.Count > 0;
             bool geminiOk = geminiFoodItems != null && geminiFoodItems.Count > 0;
@@ -161,58 +119,14 @@ namespace NutriLens.Entities
 
         public static async Task<List<FoodItem>> GetAiAnalysisByMealDescription(string mealDescription)
         {
-            EntitiesHelperClass.ShowLoading("Identificando os alimentos...");
+            ShowLoading("Identificando os alimentos...");
 
-            string gptResult = string.Empty;
-            string geminiResult = string.Empty;
+            AiResult aiResult = null;
 
-            #region Analise usando modelos
+            await Task.Run(() => aiResult = DaoHelperClass.GetFoodItemsJsonByMealDescription(mealDescription));
 
-            TaskCompletionSource<bool> tcsGpt = new TaskCompletionSource<bool>();
-
-            Task.Run(() =>
-            {
-                try
-                {
-                    gptResult = DaoHelperClass.GetOpenAiFoodItemsJsonByMealDescription(mealDescription);
-                    tcsGpt.SetResult(true);
-                }
-                catch (Exception ex)
-                {
-                    tcsGpt.SetResult(false);
-                }
-
-            });
-
-            TaskCompletionSource<bool> tcsGemini = new TaskCompletionSource<bool>();
-
-            Task.Run(() =>
-            {
-                try
-                {
-                    geminiResult = DaoHelperClass.GetGeminiFoodItemsJsonByMealDescription(mealDescription);
-                    tcsGemini.SetResult(true);
-                }
-                catch (Exception ex)
-                {
-                    tcsGemini.SetResult(false);
-                }
-            });
-
-            // Aguarda as consultas terminarem
-            do
-            {
-                await Task.Delay(1000);
-
-                Console.WriteLine("GPT: " + tcsGpt.Task.IsCompleted);
-                Console.WriteLine("Gemini: " + tcsGemini.Task.IsCompleted);
-
-            } while (!tcsGpt.Task.IsCompleted || !tcsGemini.Task.IsCompleted);
-
-            #endregion
-
-            List<SimpleFoodItem> gptSimpleFoodItems = JsonToFoodItemsParser.Parse(gptResult);
-            List<SimpleFoodItem> geminiSimpleFoodItems = JsonToFoodItemsParser.Parse(geminiResult);
+            List<SimpleFoodItem> gptSimpleFoodItems = JsonToFoodItemsParser.Parse(aiResult.GptResult);
+            List<SimpleFoodItem> geminiSimpleFoodItems = JsonToFoodItemsParser.Parse(aiResult.GeminiResult);
 
             List<FoodItem> gptFoodItems = null;
             List<FoodItem> geminiFoodItems = null;
@@ -223,9 +137,7 @@ namespace NutriLens.Entities
             }
             catch (Exception ex)
             {
-                //await EntitiesHelperClass.CloseLoading();
-                //await ViewServices.PopUpManager.PopErrorAsync($"Houve algum problema com a análise da foto dos alimentos. {Environment.NewLine} Retorno da API: {gptResult}. {Environment.NewLine}" + ExceptionManager.ExceptionMessage(ex));
-                //return;
+
             }
 
             try
@@ -237,7 +149,7 @@ namespace NutriLens.Entities
 
             }
 
-            await EntitiesHelperClass.CloseLoading();
+            await CloseLoading();
 
             bool gptOk = gptFoodItems != null && gptFoodItems.Count > 0;
             bool geminiOk = geminiFoodItems != null && geminiFoodItems.Count > 0;
