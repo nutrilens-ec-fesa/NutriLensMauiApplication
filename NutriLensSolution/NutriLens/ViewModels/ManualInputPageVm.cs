@@ -26,6 +26,7 @@ namespace NutriLens.ViewModels
 
         public int FoodItemsQuantity => FoodItems.Count;
         public double KiloCalories => FoodItems.Sum(x => x.KiloCalories);
+        public double KiloCaloriesRound => Math.Round(KiloCalories, 2);
         public string EnergeticUnit => AppConfigHelperClass.EnergeticUnit.ToString();
 
         public ManualInputPageVm(INavigation navigation)
@@ -77,7 +78,7 @@ namespace NutriLens.ViewModels
                 FoodItems.Add(foodItem);
 
                 OnPropertyChanged(nameof(FoodItemsQuantity));
-                OnPropertyChanged(nameof(KiloCalories));
+                OnPropertyChanged(nameof(KiloCaloriesRound));
             }
         }
 
@@ -143,7 +144,7 @@ namespace NutriLens.ViewModels
                         FoodItems.Add(food);
                     }
                     OnPropertyChanged(nameof(FoodItemsQuantity));
-                    OnPropertyChanged(nameof(KiloCalories));
+                    OnPropertyChanged(nameof(KiloCaloriesRound));
                 }
             }catch(Exception ex)
             {
@@ -209,7 +210,7 @@ namespace NutriLens.ViewModels
             }
 
             OnPropertyChanged(nameof(FoodItemsQuantity));
-            OnPropertyChanged(nameof(KiloCalories));
+            OnPropertyChanged(nameof(KiloCaloriesRound));
         }
     }
 }

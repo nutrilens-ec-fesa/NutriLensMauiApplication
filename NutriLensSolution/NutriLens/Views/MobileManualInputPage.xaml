@@ -79,7 +79,7 @@
         <StackLayout Grid.Row="3" Orientation="Horizontal" Margin="20,0,20,20">
             <Label FontSize="Medium" Text="Total de calorias: "></Label>
             <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand">
-                <Label FontSize="Large" Text="{Binding KiloCalories}"></Label>
+                <Label FontSize="Large" Text="{Binding KiloCaloriesRound}"></Label>
                 <Label FontSize="Large" Text=" "></Label>
                 <Label FontSize="Large" Text="{Binding EnergeticUnit}"></Label>
             </StackLayout>
