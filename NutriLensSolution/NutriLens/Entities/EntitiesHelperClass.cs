@@ -85,7 +85,8 @@ namespace NutriLens.Entities
 
             try
             {
-                AppDataHelperClass.GetStringTacoItemsBySimpleFoodItems(gptSimpleFoodItems, out gptFoodItems);
+                if(gptSimpleFoodItems != null)
+                    AppDataHelperClass.GetStringTacoItemsBySimpleFoodItems(gptSimpleFoodItems, out gptFoodItems);
             }
             catch (Exception ex)
             {
@@ -94,7 +95,8 @@ namespace NutriLens.Entities
 
             try
             {
-                AppDataHelperClass.GetStringTacoItemsBySimpleFoodItems(geminiSimpleFoodItems, out geminiFoodItems);
+                if (geminiSimpleFoodItems != null)
+                    AppDataHelperClass.GetStringTacoItemsBySimpleFoodItems(geminiSimpleFoodItems, out geminiFoodItems);
             }
             catch (Exception ex)
             {

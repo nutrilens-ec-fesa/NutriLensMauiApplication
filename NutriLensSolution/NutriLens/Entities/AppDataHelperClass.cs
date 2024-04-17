@@ -870,8 +870,10 @@ namespace NutriLens.Entities
                     // Adiciona o item com maior número de matches
 
                 }
-                else
+                else if (tacoMatches.Count == 1)
                     tacoItemToAdd = tacoMatches[0];
+                else
+                    continue;
 
                 detectados.Add(tacoItemToAdd);
 
