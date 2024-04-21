@@ -10,14 +10,4 @@ public partial class MobileManualInputPage : ContentPage, IManualInputPage
 		InitializeComponent();
 		BindingContext = new ManualInputPageVm(Navigation);
 	}
-
-	public void DeleteItem(object sender, EventArgs e)
-	{
-		string a = "riufheruog";
-	}
-
-    private void ImageButton_Clicked()
-    {
-
-    }
 }
