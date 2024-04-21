@@ -70,6 +70,51 @@ namespace NutriLens.ViewModels
             }
         }
 
+        public string TodayMealCarbohydrates
+        {
+            get
+            {
+                _mealList = new MealListClass(AppDataHelperClass.GetTodayMeals());
+                return $"Carboidrato: {_mealList.TotalCarbohydratesConsumption()} g";
+            }
+        }
+
+        public string TodayMealProteins
+        {
+            get
+            {
+                _mealList = new MealListClass(AppDataHelperClass.GetTodayMeals());
+                return $"Proteína: {_mealList.TotalProteinsConsumption()} g";
+            }
+        }
+
+        public string TodayMealFat
+        {
+            get
+            {
+                _mealList = new MealListClass(AppDataHelperClass.GetTodayMeals());
+                return $"Gordura: {_mealList.TotalFatConsumption()} g";
+            }
+        }
+
+        public string TodayMealFibers
+        {
+            get
+            {
+                _mealList = new MealListClass(AppDataHelperClass.GetTodayMeals());
+                return $"Fibra: {_mealList.TotalFibersConsumption()} g";
+            }
+        }
+
+        public string TodayMealSodium
+        {
+            get
+            {
+                _mealList = new MealListClass(AppDataHelperClass.GetTodayMeals());
+                return $"Sódio: {_mealList.TotalSodiumConsumption()} mg";
+            }
+        }
+
         public MainMenuPageVM(INavigation navigation)
         {
             _navigation = navigation;
