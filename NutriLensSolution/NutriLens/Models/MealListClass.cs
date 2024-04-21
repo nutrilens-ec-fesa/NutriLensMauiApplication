@@ -1,19 +1,22 @@
 ﻿using NutriLens.Entities;
 using NutriLensClassLibrary.Entities;
 using NutriLensClassLibrary.Models;
+using System.ComponentModel;
+using System.Text;
 
 namespace NutriLens.Models
 {
     /// <summary>
     /// Representa um modelo contendo uma lista de refeições
     /// </summary>
-    public class MealListClass
+    public class MealListClass : INotifyPropertyChanged
     {
         /// <summary>
         /// Lista de refeições
         /// </summary>
         public List<Meal> MealList { get; set; }
-        
+
+
         /// <summary>
         /// Caso todas as refeições sejam da mesma data, retorna uma string com o consumo energético
         /// </summary>
@@ -42,6 +45,18 @@ namespace NutriLens.Models
             }
         }
 
+        private string _mealPlusItemsInfo;
+
+        public string MealPlusItemsInfo
+        {
+            get => _mealPlusItemsInfo;
+            set
+            {
+                _mealPlusItemsInfo = value;
+                OnPropertyChanged(nameof(MealPlusItemsInfo));
+            }
+        }
+
         /// <summary>
         /// Construtor da classe
         /// </summary>
@@ -49,6 +64,16 @@ namespace NutriLens.Models
         public MealListClass(List<Meal> mealList)
         {
             MealList = mealList;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         /// <summary>
