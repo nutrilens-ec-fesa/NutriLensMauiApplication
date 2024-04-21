@@ -28,6 +28,41 @@ namespace NutriLensWebApp.Controllers
 
                 return Ok(tacoItemsList);
             }
+            catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
+        [HttpGet, Route("v1/GetTacoDictionary")]
+        public IActionResult GetTacoDictionary([FromServices] ITacoItemRepository tacoItemRepo)
+        {
+            List<TacoItem> tacoItems = tacoItemRepo.GetList();
+
+            Dictionary<string, int> tacoDictionary = new Dictionary<string, int>();
+
+            foreach (TacoItem tacoItem in tacoItems)
+            {
+                foreach (string word in tacoItem.Nome.Split(' '))
+                {
+                    if (tacoDictionary.TryGetValue(word, out _))
+                        tacoDictionary[word]++;
+                    else
+                        tacoDictionary.Add(word, 1);
+                }
+            }
+
+            return Ok(tacoDictionary.OrderByDescending(x => x.Value).ToList());
+        }
+
+        [HttpPost, Route("v1/GetTacoMatchBySimpleFooditem")]
+        public IActionResult GetTacoMatchBySimpleFooditem([FromBody] SimpleFoodItem simpleFoodItem, [FromServices] ITacoItemRepository tacoItemRepo)
+        {
+            try
+            {
+                TacoFoodItemParseHelperClass.TacoFoodItems = tacoItemRepo.GetList();
+                return Ok(TacoFoodItemParseHelperClass.Parse(simpleFoodItem));
+            }
             catch(Exception ex)
             {
                 return BadRequest(ExceptionManager.ExceptionMessage(ex));
