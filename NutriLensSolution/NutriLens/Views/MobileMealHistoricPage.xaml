@@ -5,12 +5,8 @@
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:c="clr-namespace:NutriLens.Entities.Converters"
+             x:Name="MealHistoricPage"
              Title="{Binding HistoricPageName}">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <c:ItemTappedEventArgsConverter x:Key="itemTappedEventArgsConverter" />
-        </ResourceDictionary>
-    </ContentPage.Resources>
     <ContentPage.Behaviors>
         <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
         <mct:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
@@ -20,15 +16,51 @@
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <StackLayout Grid.Row="0" Padding="0,20,0,20">
-            <ListView ItemsSource="{Binding MealsListString}" HasUnevenRows="True">
-                <ListView.Behaviors>
-                <toolkit:EventToCommandBehavior EventName="ItemTapped" Command="{Binding MealTappedCommand}" EventArgsConverter="{StaticResource itemTappedEventArgsConverter}"></toolkit:EventToCommandBehavior>
-                </ListView.Behaviors>
+            <ListView ItemsSource="{Binding Meals}" HasUnevenRows="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View>
-                                <Label Padding="20,5,0,0" FontSize="Small" TextColor="Black" Text="{Binding}" />
+                                <Grid Margin="10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                                        <ColumnDefinition Width="4*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Rectangle Grid.Column="0" BackgroundColor="Transparent"></Rectangle>
+                                    <Rectangle Grid.Column="1" BackgroundColor="Transparent"></Rectangle>
+                                    <Rectangle Grid.Column="2" BackgroundColor="Transparent"></Rectangle>
+                                    <Rectangle Grid.Column="3" BackgroundColor="Transparent"></Rectangle>
+                                    
+                                    <Label Grid.Row="0" Grid.Column="0" Text="Data:" FontAttributes="Bold"></Label>
+                                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding DateInfo}"></Label>
+                                    <Label Grid.Row="1" Grid.Column="0" Text="Hora:" FontAttributes="Bold"></Label>
+                                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding TimeInfo}"></Label>
+                                    <Label Grid.Row="2" Grid.Column="0" Text="Kcal:" FontAttributes="Bold"></Label>
+                                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding TotalKcalInfo}"></Label>
+                                    <Label Grid.Row="3" Grid.Column="0" Text="Gramas:" FontAttributes="Bold"></Label>
+                                    <Label Grid.Row="3" Grid.Column="1" Text="{Binding TotalMassInfo}"></Label>
+                                    <Label Grid.Row="4" Grid.Column="0" Text="Qde. Itens:" FontAttributes="Bold"></Label>
+                                    <Label Grid.Row="4" Grid.Column="1" Text="{Binding FoodItemsCountInfo}"></Label>
+                                    <Label Grid.Row="5"></Label>
+                                    <Label Grid.Row="5"></Label>
+                                    <Label Grid.Row="6" Grid.Column="0" Text="Itens:" FontAttributes="Bold"></Label>
+                                    <Label Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="4" Text="{Binding FoodItemsInfo}"></Label>
+                                    <ImageButton Grid.Row="0" Grid.RowSpan="5" Grid.Column="2" Source="delete_icon.png" Command="{Binding Path=BindingContext.DeleteItemCommand, Source={x:Reference MealHistoricPage}}" CommandParameter="{Binding .}" HeightRequest="50" />
+                                    <ImageButton Grid.Row="0" Grid.RowSpan="5" Grid.Column="3" Source="edit_icon.png" Margin="4" Command="{Binding Path=BindingContext.EditItemCommand, Source={x:Reference MealHistoricPage}}" CommandParameter="{Binding .}" HeightRequest="50" />
+                                </Grid>
                             </ViewCell.View>
                         </ViewCell>
                     </DataTemplate>

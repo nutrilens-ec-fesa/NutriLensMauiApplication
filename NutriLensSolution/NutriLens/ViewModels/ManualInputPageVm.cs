@@ -119,17 +119,30 @@ namespace NutriLens.ViewModels
                 return;
             }
 
-            Meal newMeal = new()
+            // Se for uma nova refeição
+            if (AppDataHelperClass.MealToEdit == null)
             {
-                DateTime = DateTime.Now,
-                Name = "Refeição",
-                FoodItems = FoodItems.ToList()
-            };
+                Meal newMeal = new()
+                {
+                    DateTime = DateTime.Now,
+                    Name = "Refeição",
+                    FoodItems = FoodItems.ToList()
+                };
 
-            AppDataHelperClass.AddMeal(newMeal);
-            AppDataHelperClass.DetectedFoodItems?.Clear();
-            await ViewServices.PopUpManager.PopInfoAsync("Refeição registrada com sucesso!");
-            await _navigation.PopAsync();
+                AppDataHelperClass.AddMeal(newMeal);
+                AppDataHelperClass.DetectedFoodItems?.Clear();
+                await ViewServices.PopUpManager.PopInfoAsync("Refeição registrada com sucesso!");
+                await _navigation.PopAsync();
+            }
+            // Edição de uma refeição
+            else
+            {
+                AppDataHelperClass.MealToEdit.FoodItems = FoodItems.ToList();
+                AppDataHelperClass.SaveChangesOnMeals();
+                AppDataHelperClass.MealToEdit = null;
+                await ViewServices.PopUpManager.PopInfoAsync("Refeição editada com sucesso!");
+                await _navigation.PopAsync();
+            }
         }
 
         [RelayCommand]
@@ -137,8 +150,10 @@ namespace NutriLens.ViewModels
         {
             try
             {
-                if (AppDataHelperClass.DetectedFoodItems != null)
+                if (AppDataHelperClass.DetectedFoodItems != null && AppDataHelperClass.DetectedFoodItems.Count > 0)
                 {
+                    AppDataHelperClass.MealToEdit = null;
+
                     foreach (FoodItem food in AppDataHelperClass.DetectedFoodItems)
                     {
                         FoodItems.Add(food);
@@ -146,6 +161,24 @@ namespace NutriLens.ViewModels
                     OnPropertyChanged(nameof(FoodItemsQuantity));
                     OnPropertyChanged(nameof(KiloCaloriesRound));
                 }
+                else if (AppDataHelperClass.MealToEdit != null)
+                {
+                    AppDataHelperClass.DetectedFoodItems = null;
+
+                    foreach (FoodItem food in AppDataHelperClass.MealToEdit.FoodItems)
+                    {
+                        FoodItems.Add(food);
+                    }
+
+                    OnPropertyChanged(nameof(FoodItemsQuantity));
+                    OnPropertyChanged(nameof(KiloCaloriesRound));
+                }
+                else
+                {
+                    AppDataHelperClass.DetectedFoodItems = null;
+                    AppDataHelperClass.MealToEdit = null;
+                }
+
             }catch(Exception ex)
             {
                 ViewServices.PopUpManager.PopErrorAsync("Erro ao carregar os dados");

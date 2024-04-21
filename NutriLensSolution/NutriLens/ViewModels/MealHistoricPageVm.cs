@@ -2,6 +2,7 @@
 using NutriLens.Entities;
 using NutriLens.Models;
 using NutriLens.Services;
+using NutriLens.ViewInterfaces;
 using NutriLensClassLibrary.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -22,7 +23,8 @@ namespace NutriLens.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private ObservableCollection<MealListClass> MealsList { get; set; }
+        public ObservableCollection<Meal> Meals { get; set; }
+        public ObservableCollection<MealListClass> MealsList { get; set; }
         public ObservableCollection<string> MealsListString { get; set; }
         public MealHistoricPageVm(INavigation navigation, MealHistoryFilter mealHistoryFilter)
         {
@@ -36,8 +38,7 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private void Appearing()
         {
-            List<Meal> meals;
-            meals = AppDataHelperClass.GetAllMeals();
+            List<Meal> meals = AppDataHelperClass.GetAllMeals();
 
             if (meals.Count == 0)
             {
@@ -45,6 +46,8 @@ namespace NutriLens.ViewModels
                 _navigation.PopAsync();
                 return;
             }
+
+            Meals = new ObservableCollection<Meal>();
 
             DateTime lastDateTime = DateTime.MinValue;
 
@@ -119,6 +122,7 @@ namespace NutriLens.ViewModels
                 case MealHistoryFilter.All:
                     foreach (Meal meal in meals.OrderByDescending(x => x.DateTime))
                     {
+                        Meals.Add(meal);
                         MealsList.Add(new MealListClass(new List<Meal>()));
                         MealsList[^1].MealList.Add(meal);
                     }
@@ -153,10 +157,13 @@ namespace NutriLens.ViewModels
                             }
                         }
 
+                        meal.MealPlusItemsInfo = mealInfoBuilder.ToString();
                         MealsListString.Add(mealInfoBuilder.ToString());
                         break;
                 }
 
+                OnPropertyChanged(nameof(Meals));
+                OnPropertyChanged(nameof(MealsList));
                 OnPropertyChanged(nameof(MealsListString));
             }
         }
@@ -178,6 +185,49 @@ namespace NutriLens.ViewModels
         private async void MealTapped(object obj)
         {
             // TODO: Tomar ação para quando o item for clicado
+        }
+
+        [RelayCommand]
+        private async Task EditItem(Meal item)
+        {
+            AppDataHelperClass.MealToEdit = item;
+
+            if (item.FoodItems[0].BarcodeItemEntry != null)
+                await _navigation.PushAsync(ViewServices.ResolvePage<IBarCodePage>());
+            else
+                await _navigation.PushAsync(ViewServices.ResolvePage<IManualInputPage>());
+        }
+
+        [RelayCommand]
+        private async void DeleteItem(Meal item)
+        {
+            if (await ViewServices.PopUpManager.PopYesOrNoAsync("Deletar item", $"Deseja realmente deletar essa refeição?"))
+            {
+                AppDataHelperClass.RemoveMeal(item);
+                Meals.Remove(item);
+                UpdateMealsList();
+
+                await ViewServices.PopUpManager.PopInfoAsync("Refeição deletada com sucesso!");
+            }
+        }
+
+        /// <summary>
+        /// Método criado como forma de correção de atualização nativa da ObservableCollection,
+        /// pois a atualização removendo, editando e adicionando itens, gera alguns problemas
+        /// de renderização (falsos duplicados, itens não renderizados, etc). Esse método
+        /// basicamente remove todos os itens e os adiciona novamente, dessa forma a interface
+        /// funciona da forma como deveria.
+        /// </summary>
+        private void UpdateMealsList()
+        {
+            List<Meal> updatedMeals = Meals.ToList();
+
+            Meals.Clear();
+
+            foreach (Meal meal in updatedMeals)
+            {
+                Meals.Add(meal);
+            }
         }
 
         //public static int GetWeekOfYear(DateTime date1)

@@ -257,6 +257,16 @@ namespace NutriLens.ViewModels
         public void Appearing()
         {
             StartCamera.Execute(this);
+
+            if(AppDataHelperClass.MealToEdit != null)
+            {
+                foreach (FoodItem food in AppDataHelperClass.MealToEdit.FoodItems)
+                {
+                    BarCodesRead.Add(food.BarcodeItemEntry);
+                }
+
+                UpdateBarCodesReadList();
+            }
         }
 
         [RelayCommand]
@@ -277,16 +287,30 @@ namespace NutriLens.ViewModels
                 barcodeFoodItems.Add(barcodeFoodItem);
             }
 
-            Meal newMeal = new Meal()
+            // Se for uma nova refeição
+            if (AppDataHelperClass.MealToEdit == null)
             {
-                DateTime = DateTime.Now,
-                Name = "Refeição via código de barras",
-                FoodItems = barcodeFoodItems
-            };
+                Meal newMeal = new Meal()
+                {
+                    DateTime = DateTime.Now,
+                    Name = "Refeição via código de barras",
+                    FoodItems = barcodeFoodItems
+                };
 
-            AppDataHelperClass.AddMeal(newMeal);
-            
-            await ViewServices.PopUpManager.PopInfoAsync("Refeição registrada com sucesso!");
+                AppDataHelperClass.AddMeal(newMeal);
+
+                await ViewServices.PopUpManager.PopInfoAsync("Refeição registrada com sucesso!");
+            }
+            // Edição de refeição
+            else
+            {
+                AppDataHelperClass.MealToEdit.FoodItems = barcodeFoodItems;
+                AppDataHelperClass.SaveChangesOnMeals();
+                AppDataHelperClass.MealToEdit = null;
+
+                await ViewServices.PopUpManager.PopInfoAsync("Refeição editada com sucesso!");
+            }
+
             await _navigation.PopAsync();
         }
 
