@@ -125,5 +125,100 @@ namespace NutriLens.Models
                 _ => default
             };
         }
+
+        public double TotalCarbohydratesConsumption()
+        {
+            double totalCarbohydrates;
+
+            try
+            {
+                totalCarbohydrates = Math.Round(MealList
+                    .SelectMany(meal => meal.FoodItems)
+                    .Where(x => x.TacoFoodItem != null && x.TacoFoodItem.Carboidrato != null && double.TryParse(x.TacoFoodItem.Carboidrato.ToString(), out _))
+                    .Sum(foodItem => (double)foodItem.TacoFoodItem.Carboidrato), 2);
+            }
+            catch
+            {
+                totalCarbohydrates = 0;
+            }
+
+            return totalCarbohydrates;
+        }
+
+        public double TotalProteinsConsumption()
+        {
+            double totalProteins;
+
+            try
+            {
+                totalProteins = Math.Round(MealList
+                    .SelectMany(meal => meal.FoodItems)
+                    .Where(x => x.TacoFoodItem != null && x.TacoFoodItem.Proteina != null && double.TryParse(x.TacoFoodItem.Proteina.ToString(), out _))
+                    .Sum(foodItem => (double)foodItem.TacoFoodItem.Proteina), 2);
+            }
+            catch
+            {
+                totalProteins = 0;
+            }
+
+            return totalProteins;
+        }
+
+        public double TotalFatConsumption()
+        {
+            double totalFat;
+
+            try
+            {
+                totalFat = Math.Round(MealList
+                    .SelectMany(meal => meal.FoodItems)
+                    .Where(x => x.TacoFoodItem != null && x.TacoFoodItem.Lipideos != null && double.TryParse(x.TacoFoodItem.Lipideos.ToString(), out _))
+                    .Sum(foodItem => (double)foodItem.TacoFoodItem.Lipideos), 2);
+            }
+            catch
+            {
+                totalFat = 0;
+            }
+
+            return totalFat;
+        }
+
+        public double TotalFibersConsumption()
+        {
+            double totalFibers;
+
+            try
+            {
+                totalFibers = Math.Round(MealList
+                    .SelectMany(meal => meal.FoodItems)
+                    .Where(x => x.TacoFoodItem != null && x.TacoFoodItem.FibraAlimentar != null && double.TryParse(x.TacoFoodItem.FibraAlimentar.ToString(), out _))
+                    .Sum(foodItem => (double)foodItem.TacoFoodItem.FibraAlimentar), 2);
+            }
+            catch
+            {
+                totalFibers = 0;
+            }
+
+            return totalFibers;
+        }
+
+        public double TotalSodiumConsumption()
+        {
+            double totalSodium;
+
+            try
+            {
+                totalSodium = Math.Round(MealList
+                    .SelectMany(meal => meal.FoodItems)
+                    .Where(x => x.TacoFoodItem != null && x.TacoFoodItem.Sodio != null && double.TryParse(x.TacoFoodItem.Sodio.ToString(), out _))
+                    .Sum(foodItem => (double)foodItem.TacoFoodItem.Sodio), 2);
+            }
+            catch
+            {
+                totalSodium = 0;
+            }
+
+            return totalSodium;
+        }
     }
 }
