@@ -11,7 +11,7 @@ namespace NutriLensClassLibrary.Models
     public static class TacoFoodItemParseHelperClass
     {
         private static string[] excludedWords = new[] { "de", "com", "sem", "em", "tipo", "inteiro", "à", "grande", "para", "da", "ao", "e", "do" };
-        
+
         public static List<TacoItem> TacoFoodItems { get; set; }
 
         public static FoodItem Parse(SimpleFoodItem simpleFoodItem)
@@ -35,11 +35,23 @@ namespace NutriLensClassLibrary.Models
                         continue;
                 }
 
+                if(simpleFoodItem.Item.ToUpper().Contains("BATATAS") && simpleFoodItem.Item.ToUpper().Contains("FRITAS"))
+                {
+                    simpleFoodItem.Item = simpleFoodItem.Item.Replace("BATATAS", "BATATA");
+                    simpleFoodItem.Item = simpleFoodItem.Item.Replace("FRITAS", "FRITA");
+                }
+
                 if (Regex.IsMatch(tacoItem.Nome, @"LING[ÜU]IÇA", RegexOptions.IgnoreCase) && !Regex.IsMatch(simpleFoodItem.Item, @"LING[ÜU]IÇA", RegexOptions.IgnoreCase))
                     continue;
 
                 if (Regex.IsMatch(tacoItem.Nome, @"CORAÇÃO", RegexOptions.IgnoreCase) && !Regex.IsMatch(simpleFoodItem.Item, @"CORAÇÃO", RegexOptions.IgnoreCase))
                     continue;
+
+                if (!Regex.IsMatch(tacoItem.Nome, @"BATATA", RegexOptions.IgnoreCase) && Regex.IsMatch(simpleFoodItem.Item, @"BATATA", RegexOptions.IgnoreCase))
+                    continue;
+
+                //if (!Regex.IsMatch(tacoItem.Nome, @"BATATA.*FRITA") && Regex.IsMatch(simpleFoodItem.Item, @"BATATA.*FRITA", RegexOptions.IgnoreCase))
+                //    continue;
 
                 bool gotWordFullMatch = false;
                 int totalSimilarity = 0;
@@ -51,6 +63,7 @@ namespace NutriLensClassLibrary.Models
 
                 if (similarity > 127)
                     totalSimilarity = similarity;
+
 
                 if (simpleFoodItem.Item.ToUpper().Contains("ARROZ BRANCO"))
                     simpleFoodItem.Item = simpleFoodItem.Item.Replace("BRANCO", "TIPO 1");
