@@ -28,6 +28,8 @@ namespace NutriLens.ViewModels
         public double KiloCalories => FoodItems.Sum(x => x.KiloCalories);
         public double KiloCaloriesRound => Math.Round(KiloCalories, 2);
         public string EnergeticUnit => AppConfigHelperClass.EnergeticUnit.ToString();
+        public bool HasPictureAnalysisSource { get => !string.IsNullOrEmpty(AppDataHelperClass.NewFoodPicturePath); }
+        public string PictureAnalysisSource { get => AppDataHelperClass.NewFoodPicturePath; }
 
         public ManualInputPageVm(INavigation navigation)
         {
@@ -39,7 +41,7 @@ namespace NutriLens.ViewModels
         {
             _navigation = navigation;
             FoodItems = new ObservableCollection<FoodItem>();
-            foreach(FoodItem food in foods)
+            foreach (FoodItem food in foods)
             {
                 FoodItems.Add(food);
             }
@@ -98,7 +100,7 @@ namespace NutriLens.ViewModels
                     {
                         Name = addFoodItemPopup.SelectedItem.Nome,
                         Portion = addFoodItemPopup.InputPortion,
-                        KiloCalories = addFoodItemPopup.InputCalories, 
+                        KiloCalories = addFoodItemPopup.InputCalories,
                     };
                 }
                 else
@@ -126,11 +128,13 @@ namespace NutriLens.ViewModels
                 {
                     DateTime = DateTime.Now,
                     Name = "Refeição",
-                    FoodItems = FoodItems.ToList()
+                    FoodItems = FoodItems.ToList(),
+                    MealPicturePath = AppDataHelperClass.NewFoodPicturePath
                 };
 
                 AppDataHelperClass.AddMeal(newMeal);
                 AppDataHelperClass.DetectedFoodItems?.Clear();
+                AppDataHelperClass.NewFoodPicturePath = string.Empty;
                 await ViewServices.PopUpManager.PopInfoAsync("Refeição registrada com sucesso!");
                 await _navigation.PopAsync();
             }
@@ -164,6 +168,7 @@ namespace NutriLens.ViewModels
                 else if (AppDataHelperClass.MealToEdit != null)
                 {
                     AppDataHelperClass.DetectedFoodItems = null;
+                    AppDataHelperClass.NewFoodPicturePath = AppDataHelperClass.MealToEdit.MealPicturePath;
 
                     foreach (FoodItem food in AppDataHelperClass.MealToEdit.FoodItems)
                     {
@@ -172,19 +177,23 @@ namespace NutriLens.ViewModels
 
                     OnPropertyChanged(nameof(FoodItemsQuantity));
                     OnPropertyChanged(nameof(KiloCaloriesRound));
+                    OnPropertyChanged(nameof(HasPictureAnalysisSource));
+                    OnPropertyChanged(nameof(PictureAnalysisSource));
                 }
                 else
                 {
                     AppDataHelperClass.DetectedFoodItems = null;
                     AppDataHelperClass.MealToEdit = null;
+                    AppDataHelperClass.NewFoodPicturePath = string.Empty;
                 }
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 ViewServices.PopUpManager.PopErrorAsync("Erro ao carregar os dados");
             }
-            
-            
+
+
         }
 
         [RelayCommand]
@@ -217,7 +226,7 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private async void DeleteItem(FoodItem item)
         {
-            if(await ViewServices.PopUpManager.PopYesOrNoAsync("Deletar item", $"Deseja realmente deletar \"{item.Name}\" da refeição?"))
+            if (await ViewServices.PopUpManager.PopYesOrNoAsync("Deletar item", $"Deseja realmente deletar \"{item.Name}\" da refeição?"))
             {
                 FoodItems.Remove(item);
                 UpdateFoodItemsList();

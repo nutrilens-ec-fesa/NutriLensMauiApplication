@@ -291,6 +291,11 @@ namespace NutriLens.ViewModels
             OnPropertyChanged(nameof(TodayProgressInfo));
             OnPropertyChanged(nameof(TodayMealCalories));
             OnPropertyChanged(nameof(TodayPhysicalActivitiesCalories));
+            OnPropertyChanged(nameof(TodayMealCarbohydrates));
+            OnPropertyChanged(nameof(TodayMealProteins));
+            OnPropertyChanged(nameof(TodayMealFat));
+            OnPropertyChanged(nameof(TodayMealFibers));
+            OnPropertyChanged(nameof(TodayMealSodium));
         }
 
         [RelayCommand]

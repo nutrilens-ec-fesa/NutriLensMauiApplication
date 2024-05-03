@@ -33,6 +33,7 @@
             <Button Text="Adicionar novo item" Command="{Binding AddNewItemFromTacoCommand}"></Button>
         </StackLayout>
         <StackLayout Grid.Row="2" Padding="10">
+            <Image IsVisible="{Binding HasPictureAnalysisSource}" Source="{Binding PictureAnalysisSource}" HeightRequest="180" Margin="0,0,0,10"></Image>
             <ListView x:Name="listViewName" ItemsSource="{Binding FoodItems}" HasUnevenRows="True" SelectionMode="None" CachingStrategy="RetainElement" Margin="0">
                 <ListView.ItemTemplate>
                     <DataTemplate>

@@ -23,6 +23,11 @@ namespace NutriLensClassLibrary.Models
         /// </summary>
         public List<FoodItem> FoodItems { get; set; }
 
+        /// <summary>
+        /// Caminho da foto associada a refeição
+        /// </summary>
+        public string MealPicturePath { get; set; }
+
         public string DateInfo { get => DateTime.ToShortDateString(); }
         public string TimeInfo { get => DateTime.ToShortTimeString(); }
         public string FoodItemsCountInfo { get => FoodItems.Count.ToString(); }
@@ -51,6 +56,7 @@ namespace NutriLensClassLibrary.Models
         {
             get => Math.Round(FoodItems.Select(x => double.Parse(x.Portion)).Sum(), 2).ToString() + " g";
         }
+        
         public override string ToString()
         {
             if(FoodItems.Count > 1)

@@ -652,6 +652,8 @@ namespace NutriLens.Entities
 
         public static List<FoodItem> DetectedFoodItems { get; set; } = new List<FoodItem>();
 
+        public static string NewFoodPicturePath { get; set; }
+
         public static Meal MealToEdit { get; set; }
     }
 }
