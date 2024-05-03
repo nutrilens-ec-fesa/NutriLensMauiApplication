@@ -75,6 +75,7 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Syncfusion.Maui.ProgressBar" Version="25.1.42" />
 		<PackageReference Include="System.Drawing.Common" Version="8.0.3" />
 	</ItemGroup>
 

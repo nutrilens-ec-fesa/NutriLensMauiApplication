@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NutriLens.Views.MobileMainMenu"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:control="clr-namespace:Syncfusion.Maui.ProgressBar;assembly=Syncfusion.Maui.ProgressBar"
              Title="NutriLens">
     <NavigationPage.HasBackButton>False</NavigationPage.HasBackButton>
     <ContentPage.Behaviors>
@@ -16,6 +17,33 @@
                 <Button x:Name="btnConfig" Text="Configurações" Command="{Binding OpenConfigCommand}" />
                 <Button x:Name="btnTermsOfUse" Text="Termos de Uso e Privacidade" Command="{Binding OpenTermsOfUseCommand}" />
                 <Label Text="Saldo calórico de hoje:" FontSize="Large" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+                <control:SfCircularProgressBar Progress="{Binding PartialResults}"
+                                               SegmentCount="3" StartAngle="180" EndAngle="360"
+                                               TrackFill="#33ffbe06" ProgressFill="#FFffbe06"
+                                               TrackThickness="0.08" ProgressThickness="0.08" ThicknessUnit="Factor" ProgressRadiusFactor="1"
+                                               AnimationEasing="{x:Static Easing.BounceIn}" AnimationDuration="4000">
+                    <control:SfCircularProgressBar.Content>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Label TextColor="#007cee"  
+                                   Text="{Binding PartialResults}"
+                                   HorizontalTextAlignment="Center" 
+                                   VerticalTextAlignment="End">
+                            </Label>
+                            <Label Grid.Row="1" 
+                                   TextColor="#007cee" 
+                                   Text="Kcal" 
+                                   VerticalOptions="Start" 
+                                   HorizontalTextAlignment="Center" 
+                                   VerticalTextAlignment="Start">
+                            </Label>
+                        </Grid>
+                    </control:SfCircularProgressBar.Content>
+
+                </control:SfCircularProgressBar>
                 <Label Text="{Binding TodayProgressInfo}" FontSize="Title" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0" HorizontalTextAlignment="Center" />
                 <Label Text="{Binding TodayMealCalories}" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" HorizontalTextAlignment="Center" TextColor="IndianRed" />
                 <Label Text="{Binding TodayPhysicalActivitiesCalories}" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center" TextColor="Green" />

@@ -9,6 +9,7 @@ namespace NutriLens
     {
         public App()
         {
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("");
             InitializeComponent();
             ViewServices.PopUpManager.UpdateLanguage(Languages.Portuguese);
             MainPage = new NavigationPage(ViewServices.ResolvePage<ILoginPage>());

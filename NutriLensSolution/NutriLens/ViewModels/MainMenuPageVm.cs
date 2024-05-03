@@ -37,6 +37,19 @@ namespace NutriLens.ViewModels
             }
         }
 
+        public string PartialResults
+        {
+            get
+            {
+                _mealList = new MealListClass(AppDataHelperClass.GetTodayMeals());
+                _physicalActivitiesList = AppDataHelperClass.GetTodayPhysicalActivities();
+                _caloricBalance = _mealList.TotalEnergeticConsumption() - EntitiesHelperClass.TotalEnergeticConsumption(_physicalActivitiesList);
+                double diaryObjective = AppDataHelperClass.GetEnergeticDiaryObjective();
+                double partialResults = (_caloricBalance / diaryObjective) * 100;
+                return partialResults.ToString("0");
+            }
+        }
+
         public string TodayProgressInfo
         {
             get

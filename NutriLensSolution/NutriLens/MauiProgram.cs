@@ -10,6 +10,7 @@ using NutriLens.Views;
 using PermissionsLibrary;
 using Plugin.Maui.Audio;
 using PopupLibrary;
+using Syncfusion.Maui.Core.Hosting;
 
 namespace NutriLens
 {
@@ -24,6 +25,7 @@ namespace NutriLens
                 .UseMauiCommunityToolkit()
                 .UseMauiCommunityToolkitMediaElement()
                 .UseMauiCameraView()
+                .ConfigureSyncfusionCore()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
