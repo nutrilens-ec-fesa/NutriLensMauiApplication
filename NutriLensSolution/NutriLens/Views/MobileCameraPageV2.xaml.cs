@@ -125,6 +125,7 @@ public partial class MobileCameraPageV2 : ContentPage
             }
 
             AppDataHelperClass.DetectedFoodItems = foodItems;
+            AppDataHelperClass.NewFoodPicturePath = filePath;
             EntitiesHelperClass.DeleteTempPictures();
             await Navigation.PopAsync();
             await OpenManualInput();
