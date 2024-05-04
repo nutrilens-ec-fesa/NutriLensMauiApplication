@@ -12,6 +12,7 @@ using NutriLens.Views.Popups;
 using NutriLensClassLibrary.Models;
 using System.Reflection;
 using ExceptionLibrary;
+using Android.Speech;
 
 namespace NutriLens.ViewModels
 {
@@ -47,6 +48,31 @@ namespace NutriLens.ViewModels
                 double diaryObjective = AppDataHelperClass.GetEnergeticDiaryObjective();
                 double partialResults = (_caloricBalance / diaryObjective) * 100;
                 return partialResults.ToString("0");
+            }
+        }
+
+        public List<DataModel> PartialResultsChart
+        {
+            get
+            {
+                _mealList = new MealListClass(AppDataHelperClass.GetTodayMeals());
+                _physicalActivitiesList = AppDataHelperClass.GetTodayPhysicalActivities();
+                _caloricBalance = _mealList.TotalEnergeticConsumption() - EntitiesHelperClass.TotalEnergeticConsumption(_physicalActivitiesList);
+                double diaryObjective = AppDataHelperClass.GetEnergeticDiaryObjective();
+                double partialResults = (_caloricBalance / diaryObjective) * 100;
+                
+                List<DataModel> donut = new List<DataModel>();
+                DataModel consumed = new DataModel();
+                consumed.Label = "Kcal consumidas";
+                consumed.Value = partialResults;
+                donut.Add(consumed);
+
+                DataModel empty = new DataModel();
+                empty.Label = "Kcal restantes";
+                empty.Value = 100 - partialResults;
+                donut.Add(empty);
+
+                return donut;
             }
         }
 
@@ -128,6 +154,46 @@ namespace NutriLens.ViewModels
             }
         }
 
+        public List<DataModel> PartialResultsMacroNutrients
+        {
+            get
+            {
+                double carboidratos = _mealList.TotalCarbohydratesConsumption();    //211,11g   %100 VD
+                double proteinas = _mealList.TotalProteinsConsumption();            //28,33g    %100 VD 
+                double gordura = _mealList.TotalFatConsumption();                   //500,0g    %100 VD
+                double fibra = _mealList.TotalFibersConsumption();                  //26,67g    %100 VD
+                double sodio = _mealList.TotalSodiumConsumption();                  //2,17g     %100 VD
+
+                List<DataModel> barChart = new List<DataModel>();
+                DataModel carb = new DataModel();
+                carb.Label = "Carboidratos";
+                carb.Value = (carboidratos / 211.11)*100;
+                barChart.Add(carb);
+
+                DataModel prot = new DataModel();
+                prot.Label = "Proteínas";
+                prot.Value = (proteinas / 28.33)*100;
+                barChart.Add(prot);
+
+                DataModel gord = new DataModel();
+                gord.Label = "Gorduras";
+                gord.Value = (gordura / 500) * 100;
+                barChart.Add(gord);
+
+                DataModel fib = new DataModel();
+                fib.Label = "Fibras";
+                fib.Value = (fibra / 26.67) * 100;
+                barChart.Add(fib);
+
+                DataModel sod = new DataModel();
+                sod.Label = "Sódio";
+                sod.Value = (sodio / 2170) * 100;
+                barChart.Add(sod);
+
+                return barChart;
+            }
+        }
+
         public MainMenuPageVM(INavigation navigation)
         {
             _navigation = navigation;
@@ -193,6 +259,8 @@ namespace NutriLens.ViewModels
             await Application.Current.MainPage.ShowPopupAsync(physicalActivityPopup);
             OnPropertyChanged(nameof(TodayProgressInfo));
             OnPropertyChanged(nameof(TodayPhysicalActivitiesCalories));
+            OnPropertyChanged(nameof(PartialResults));
+            OnPropertyChanged(nameof(PartialResultsChart));
         }
 
         [RelayCommand]

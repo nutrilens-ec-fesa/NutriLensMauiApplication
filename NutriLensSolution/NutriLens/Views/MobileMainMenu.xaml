@@ -3,80 +3,79 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NutriLens.Views.MobileMainMenu"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:control="clr-namespace:Syncfusion.Maui.ProgressBar;assembly=Syncfusion.Maui.ProgressBar"
+             xmlns:control="clr-namespace:Syncfusion.Maui.Charts;assembly=Syncfusion.Maui.Charts"
              Title="NutriLens">
     <NavigationPage.HasBackButton>False</NavigationPage.HasBackButton>
     <ContentPage.Behaviors>
         <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
         <mct:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
     </ContentPage.Behaviors>
-    <ContentPage.Content>
-        <ScrollView Margin="10">
-            <StackLayout Spacing="10">
-                <Button x:Name="btnTest" Text="Informações do aplicativo" Command="{Binding OpenFlyoutCommand}" />
-                <Button x:Name="btnConfig" Text="Configurações" Command="{Binding OpenConfigCommand}" />
-                <Button x:Name="btnTermsOfUse" Text="Termos de Uso e Privacidade" Command="{Binding OpenTermsOfUseCommand}" />
-                <Label Text="Saldo calórico de hoje:" FontSize="Large" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
-                <control:SfCircularProgressBar Progress="{Binding PartialResults}"
-                                               SegmentCount="3" StartAngle="180" EndAngle="360"
-                                               TrackFill="#33ffbe06" ProgressFill="#FFffbe06"
-                                               TrackThickness="0.08" ProgressThickness="0.08" ThicknessUnit="Factor" ProgressRadiusFactor="1"
-                                               AnimationEasing="{x:Static Easing.BounceIn}" AnimationDuration="4000">
-                    <control:SfCircularProgressBar.Content>
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <Label TextColor="#007cee"  
-                                   Text="{Binding PartialResults}"
-                                   HorizontalTextAlignment="Center" 
-                                   VerticalTextAlignment="End">
-                            </Label>
-                            <Label Grid.Row="1" 
-                                   TextColor="#007cee" 
-                                   Text="Kcal" 
-                                   VerticalOptions="Start" 
-                                   HorizontalTextAlignment="Center" 
-                                   VerticalTextAlignment="Start">
-                            </Label>
-                        </Grid>
-                    </control:SfCircularProgressBar.Content>
+    
+    <ScrollView Margin="10">
+        <StackLayout Margin="10" Spacing="10">
+            <control:SfCircularChart>
+                <control:SfCircularChart.Title>
+                    <Label Text="Saldo calórico de hoje:" HorizontalTextAlignment="Center" FontSize="Large" FontAttributes="Bold"/>
+                </control:SfCircularChart.Title>
+                <control:SfCircularChart.Legend>
+                    <control:ChartLegend></control:ChartLegend>
+                </control:SfCircularChart.Legend>
+                <control:DoughnutSeries StartAngle="120" EndAngle="420"
+                                        ItemsSource="{Binding PartialResultsChart}" ShowDataLabels="True"
+                                        EnableAnimation="True"
+                                        EnableTooltip="True"
+                                        ExplodeOnTouch="True"
+                                        InnerRadius="0.4"
+                                        XBindingPath="Label"
+                                        YBindingPath="Value">
 
-                </control:SfCircularProgressBar>
-                <Label Text="{Binding TodayProgressInfo}" FontSize="Title" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0" HorizontalTextAlignment="Center" />
-                <Label Text="{Binding TodayMealCalories}" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" HorizontalTextAlignment="Center" TextColor="IndianRed" />
-                <Label Text="{Binding TodayPhysicalActivitiesCalories}" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center" TextColor="Green" />
-                <Label></Label>
-                <Label Text="Outros nutrientes:" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
-                <Label></Label>
-                <Label Text="{Binding TodayMealCarbohydrates}" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
-                <Label Text="{Binding TodayMealProteins}" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
-                <Label Text="{Binding TodayMealFat}" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
-                <Label Text="{Binding TodayMealFibers}" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
-                <Label Text="{Binding TodayMealSodium}" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
-                <Label Text="Registrar refeição" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
-                <Button x:Name="btnCamera" Text="Por foto" Command="{Binding OpenCameraCommand}" />
-                <Button x:Name="btnBarCode" Text="Por código de barras" Command="{Binding OpenBarCodeCommand}" />
-                <Button x:Name="btnManual" Text="Por inserção manual" Command="{Binding OpenManualInputCommand}" />
-                <Button x:Name="btnVoice" Text="Por voz" Command="{Binding VoiceInputCommand}" />
-                <Label Text="Registrar atividade física" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
-                <Button x:Name="btnPhysicalActivity" Text="Informar nova atividade física" Command="{Binding RegisterPhysicalActivityCommand}" />
-                <Label Text="Consultar histórico" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
-                <Button x:Name="btnPerDayHistoric" Text="Por dia" Command="{Binding PerDayHistoricCommand}"/>
-                <Button x:Name="btnPerWeekHistoric" Text="Por semana" Command="{Binding PerWeekHistoricCommand}"/>
-                <Button x:Name="btnPerMonthHistoric" Text="Por mês" Command="{Binding PerMonthHistoricCommand}"/>
-                <Button x:Name="btnPerPeriod" Text="Por período" Command="{Binding PerPeriodHistoricCommand}"/>
-                <Button x:Name="btnListAll" Text="Listar todas as refeições" Command="{Binding ListAllCommand}"/>
-                <Label Text="Consultar fotos" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
-                <Button x:Name="btnOpenGallery" Text="Galeria" Command="{Binding OpenGalleryCommand}"/>
-                <Label Text="Configurações" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
-                <Button x:Name="btnEditBarCodeProducts" Text="Editar produtos (cód. barras)" Command="{Binding EditBarCodeProductsCommand}"/>
-                <Button x:Name="btnEditAiModelPrompt" Text="Editar prompt GPT-4" Command="{Binding EditAiModelPromptCommand}"/>
-                <Label Text="Opções" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
-                <Button x:Name="btnLogOut" BackgroundColor="IndianRed" Text="Sair" Command="{Binding LogOutCommand}"/>
-                <Button x:Name="btnQuit" BackgroundColor="IndianRed" Text="Fechar aplicativo" Command="{Binding CloseApplicationCommand}"/>
-            </StackLayout>
-        </ScrollView>
-    </ContentPage.Content>
+                </control:DoughnutSeries>
+            </control:SfCircularChart>
+            <Label Text="{Binding TodayProgressInfo}" FontSize="Medium" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0" HorizontalTextAlignment="Center" />
+            <Label></Label>
+
+            <Label Text="Outros nutrientes:" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
+            <Label></Label>
+            <control:SfCartesianChart  x:Name="chart" IsTransposed="True">
+
+                <control:SfCartesianChart.XAxes>
+                    <control:CategoryAxis />
+                </control:SfCartesianChart.XAxes>
+
+                <control:SfCartesianChart.YAxes>
+                    <control:NumericalAxis />
+                </control:SfCartesianChart.YAxes>
+
+                <control:ColumnSeries ItemsSource="{Binding PartialResultsMacroNutrients}"
+						XBindingPath="Label"
+						YBindingPath="Value"/>
+
+            </control:SfCartesianChart>
+            <Label></Label>
+            <Button x:Name="btnTest" Text="Informações do aplicativo" Command="{Binding OpenFlyoutCommand}" />
+            <Button x:Name="btnConfig" Text="Configurações" Command="{Binding OpenConfigCommand}" />
+            <Button x:Name="btnTermsOfUse" Text="Termos de Uso e Privacidade" Command="{Binding OpenTermsOfUseCommand}" />
+            <Label Text="Registrar refeição" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+            <Button x:Name="btnCamera" Text="Por foto" Command="{Binding OpenCameraCommand}" />
+            <Button x:Name="btnBarCode" Text="Por código de barras" Command="{Binding OpenBarCodeCommand}" />
+            <Button x:Name="btnManual" Text="Por inserção manual" Command="{Binding OpenManualInputCommand}" />
+            <Button x:Name="btnVoice" Text="Por voz" Command="{Binding VoiceInputCommand}" />
+            <Label Text="Registrar atividade física" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+            <Button x:Name="btnPhysicalActivity" Text="Informar nova atividade física" Command="{Binding RegisterPhysicalActivityCommand}" />
+            <Label Text="Consultar histórico" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+            <Button x:Name="btnPerDayHistoric" Text="Por dia" Command="{Binding PerDayHistoricCommand}"/>
+            <Button x:Name="btnPerWeekHistoric" Text="Por semana" Command="{Binding PerWeekHistoricCommand}"/>
+            <Button x:Name="btnPerMonthHistoric" Text="Por mês" Command="{Binding PerMonthHistoricCommand}"/>
+            <Button x:Name="btnPerPeriod" Text="Por período" Command="{Binding PerPeriodHistoricCommand}"/>
+            <Button x:Name="btnListAll" Text="Listar todas as refeições" Command="{Binding ListAllCommand}"/>
+            <Label Text="Consultar fotos" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+            <Button x:Name="btnOpenGallery" Text="Galeria" Command="{Binding OpenGalleryCommand}"/>
+            <Label Text="Configurações" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+            <Button x:Name="btnEditBarCodeProducts" Text="Editar produtos (cód. barras)" Command="{Binding EditBarCodeProductsCommand}"/>
+            <Button x:Name="btnEditAiModelPrompt" Text="Editar prompt GPT-4" Command="{Binding EditAiModelPromptCommand}"/>
+            <Label Text="Opções" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+            <Button x:Name="btnLogOut" BackgroundColor="IndianRed" Text="Sair" Command="{Binding LogOutCommand}"/>
+            <Button x:Name="btnQuit" BackgroundColor="IndianRed" Text="Fechar aplicativo" Command="{Binding CloseApplicationCommand}"/>
+        </StackLayout>
+    </ScrollView>
 </ContentPage>
