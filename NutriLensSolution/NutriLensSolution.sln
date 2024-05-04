@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NutriLensWebApp", "NutriLen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NutriLensClassLibrary", "NutriLensClassLibrary\NutriLensClassLibrary.csproj", "{200FF4ED-8FC6-4648-8715-20ABEF02F259}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StringLibrary", "StringLibrary\StringLibrary.csproj", "{2B058D75-4754-4B7F-910B-BF6D65F8DAB9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StringLibrary", "StringLibrary\StringLibrary.csproj", "{2B058D75-4754-4B7F-910B-BF6D65F8DAB9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DateTimeLibrary", "DateTimeLibrary\DateTimeLibrary.csproj", "{4180EDB3-6501-4FDB-B29D-558FD87E9B91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +85,10 @@ Global
 		{2B058D75-4754-4B7F-910B-BF6D65F8DAB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B058D75-4754-4B7F-910B-BF6D65F8DAB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B058D75-4754-4B7F-910B-BF6D65F8DAB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4180EDB3-6501-4FDB-B29D-558FD87E9B91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4180EDB3-6501-4FDB-B29D-558FD87E9B91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4180EDB3-6501-4FDB-B29D-558FD87E9B91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4180EDB3-6501-4FDB-B29D-558FD87E9B91}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
