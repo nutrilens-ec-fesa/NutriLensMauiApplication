@@ -266,47 +266,43 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private async Task PerDayHistoric()
         {
-            await _navigation.PushAsync(ViewServices.ResolvePage<IMealHistoricPage>(MealHistoryFilter.PerDay));
+            await _navigation.PushAsync(ViewServices.ResolvePage<IGroupedMealHistoricPage>(MealHistoryFilter.PerDay));
         }
 
         [RelayCommand]
         private async Task PerWeekHistoric()
         {
-            await ViewServices.PopUpManager.PopInDevelopment(MethodBase.GetCurrentMethod());
-            //await _navigation.PushAsync(ViewServices.ResolvePage<IMealHistoricPage>(MealHistoryFilter.PerWeek));
-            // Teste de consulta com o ChatGPT
-            //try
-            //{
-            //    string input = await ViewServices.PopUpManager.PopFreeInputAsync("Teste GPT", "Informe o alimento");
-
-            //    if (!string.IsNullOrEmpty(input))
-            //    {
-            //        FoodItem foodItem = new()
-            //        {
-            //            Name = input
-            //        };
-
-            //        string nutritionalInfo = DaoHelperClass.GetNutritionalInfo(foodItem);
-
-            //        await ViewServices.PopUpManager.PopInfoAsync(nutritionalInfo);
-            //    }
-            //}
-            //catch(Exception ex)
-            //{
-            //    await ViewServices.PopUpManager.PopErrorAsync(ex.Message);
-            //}
+            await _navigation.PushAsync(ViewServices.ResolvePage<IGroupedMealHistoricPage>(MealHistoryFilter.PerWeek));
         }
 
         [RelayCommand]
         private async Task PerMonthHistoric()
         {
-            await _navigation.PushAsync(ViewServices.ResolvePage<IMealHistoricPage>(MealHistoryFilter.PerMonth));
+            await _navigation.PushAsync(ViewServices.ResolvePage<IGroupedMealHistoricPage>(MealHistoryFilter.PerMonth));
         }
 
         [RelayCommand]
         private async Task PerPeriodHistoric()
         {
-            await ViewServices.PopUpManager.PopInDevelopment(MethodBase.GetCurrentMethod());
+            PeriodChoosePopup periodChoosePopup = new PeriodChoosePopup();
+            await Application.Current.MainPage.ShowPopupAsync(periodChoosePopup);
+
+            if (periodChoosePopup.Confirmed)
+            {
+                List<Meal> mealsInPeriod = AppDataHelperClass.GetMealsByDateRange(periodChoosePopup.StartSelectedDate, periodChoosePopup.EndSelectedDate);
+
+                if(mealsInPeriod.Count == 0)
+                {
+                    await ViewServices.PopUpManager.PopErrorAsync("Não foram encontradas refeições no perído informado!");
+                    return;
+                }
+                else
+                {
+                    MealListClass mealListClass = new MealListClass(mealsInPeriod, periodChoosePopup.StartSelectedDate, periodChoosePopup.EndSelectedDate);
+                    AppDataHelperClass.FilteredMealList = mealListClass;
+                    await _navigation.PushAsync(ViewServices.ResolvePage<IMealHistoricPage>());
+                }
+            }
         }
 
         [RelayCommand]
@@ -314,7 +310,8 @@ namespace NutriLens.ViewModels
         {
             try
             {
-                await _navigation.PushAsync(ViewServices.ResolvePage<IMealHistoricPage>(MealHistoryFilter.All));
+                AppDataHelperClass.FilteredMealList = null;
+                await _navigation.PushAsync(ViewServices.ResolvePage<IMealHistoricPage>());
             }
             catch(Exception ex)
             {
