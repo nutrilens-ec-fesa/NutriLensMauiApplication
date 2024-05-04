@@ -84,6 +84,7 @@
 	  <ProjectReference Include="..\AppConfigLibrary\AppConfigLibrary.csproj" />
 	  <ProjectReference Include="..\AppDataLibrary\AppDataLibrary.csproj" />
 	  <ProjectReference Include="..\CryptographyLibrary\CryptographyLibrary.csproj" />
+	  <ProjectReference Include="..\DateTimeLibrary\DateTimeLibrary.csproj" />
 	  <ProjectReference Include="..\DictionaryLibrary\DictionaryLibrary.csproj" />
 	  <ProjectReference Include="..\ExceptionLibrary\ExceptionLibrary.csproj" />
 	  <ProjectReference Include="..\NutriLensClassLibrary\NutriLensClassLibrary.csproj" />
