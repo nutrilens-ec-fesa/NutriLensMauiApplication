@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="NutriLens.Views.Popups.PeriodChoosePopup">
+    <Frame BackgroundColor="#2B2B2B" 
+       Padding="20"
+       HasShadow="True"
+       CornerRadius="10">
+        <Frame.Content>
+            <Grid BackgroundColor="#2B2B2B" RowSpacing="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="50"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="50"></RowDefinition>
+                    <RowDefinition Height="50"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Text="Início:" TextColor="White"></Label>
+                <DatePicker Grid.Row="1" Grid.Column="0" x:Name="startDate" BackgroundColor="Black" TextColor="White" HorizontalOptions="FillAndExpand" DateSelected="start_DateSelected" MinimumDate="{Binding StartMinDate}" MaximumDate="{Binding StartMaxDate}"></DatePicker>
+
+                <Label Grid.Row="2" Grid.Column="0" Text="Fim: " TextColor="White"></Label>
+                <DatePicker Grid.Row="3" Grid.Column="0" x:Name="endDate" BackgroundColor="Black" TextColor="White" HorizontalOptions="FillAndExpand" DateSelected="end_DateSelected" MinimumDate="{Binding EndMinDate}" MaximumDate="{Binding EndMaxDate}"></DatePicker>
+
+                <Button Grid.Row="4" x:Name="BtnConfirmPeriod" Text="Confirmar período" Clicked="BtnConfirmPeriod_Clicked"></Button>
+            </Grid>
+        </Frame.Content>
+    </Frame>
+</toolkit:Popup>

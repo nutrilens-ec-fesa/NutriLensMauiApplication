@@ -172,6 +172,9 @@
 	  <MauiXaml Update="Views\Popups\AddTacoFoodItemPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\Popups\PeriodChoosePopup.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\Popups\TermsOfUsePopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
