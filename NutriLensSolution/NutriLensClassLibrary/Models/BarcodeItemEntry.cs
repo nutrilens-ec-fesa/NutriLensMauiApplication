@@ -87,6 +87,33 @@ namespace NutriLensClassLibrary.Models
         public double TotalCaloriesConsumption { get => (QuantityConsumption * EnergeticValue) / UnitsPerPortion; }
 
         [JsonIgnore, BsonIgnore]
+        public double TotalCarbohydratesConsumption { get => (QuantityConsumption * TotalCarbohydrates) / UnitsPerPortion;  }
+
+        [JsonIgnore, BsonIgnore]
+        public double TotalSugarConsumption { get => (QuantityConsumption * TotalSugar) / UnitsPerPortion; }
+
+        [JsonIgnore, BsonIgnore]
+        public double AddedSugarConsumption { get => (QuantityConsumption * AddedSugar) / UnitsPerPortion; }
+
+        [JsonIgnore, BsonIgnore]
+        public double ProteinsConsumption { get => (QuantityConsumption * Proteins) / UnitsPerPortion; }
+
+        [JsonIgnore, BsonIgnore]
+        public double TotalFatConsumption { get => (QuantityConsumption * TotalFat) / UnitsPerPortion; }
+
+        [JsonIgnore, BsonIgnore]
+        public double SaturatedFatConsumption { get => (QuantityConsumption * SaturatedFat) / UnitsPerPortion; }
+
+        [JsonIgnore, BsonIgnore]
+        public double TransFatConsumption { get => (QuantityConsumption * TransFat) / UnitsPerPortion; }
+
+        [JsonIgnore, BsonIgnore]
+        public double DietaryFiberConsumption { get => (QuantityConsumption * DietaryFiber) / UnitsPerPortion; }
+
+        [JsonIgnore, BsonIgnore]
+        public double SodiumConsumption { get => (QuantityConsumption * Sodium) / UnitsPerPortion; }
+
+        [JsonIgnore, BsonIgnore]
         public string BarCodeEntryInfo
         {
             get

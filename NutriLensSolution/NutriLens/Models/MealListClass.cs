@@ -211,6 +211,11 @@ namespace NutriLens.Models
                     .SelectMany(meal => meal.FoodItems)
                     .Where(x => x.TacoFoodItem != null && x.TacoFoodItem.Carboidrato != null && double.TryParse(x.TacoFoodItem.Carboidrato.ToString(), out _))
                     .Sum(foodItem => (double)foodItem.TacoFoodItem.Carboidrato), 2);
+
+                totalCarbohydrates += Math.Round(MealList
+                    .SelectMany(meal => meal.FoodItems)
+                    .Where(x => x.BarcodeItemEntry != null)
+                    .Sum(foodItem => foodItem.BarcodeItemEntry.TotalCarbohydratesConsumption), 2);
             }
             catch
             {
@@ -230,6 +235,11 @@ namespace NutriLens.Models
                     .SelectMany(meal => meal.FoodItems)
                     .Where(x => x.TacoFoodItem != null && x.TacoFoodItem.Proteina != null && double.TryParse(x.TacoFoodItem.Proteina.ToString(), out _))
                     .Sum(foodItem => (double)foodItem.TacoFoodItem.Proteina), 2);
+
+                totalProteins += Math.Round(MealList
+                    .SelectMany(meal => meal.FoodItems)
+                    .Where(x => x.BarcodeItemEntry != null)
+                    .Sum(foodItem => foodItem.BarcodeItemEntry.ProteinsConsumption), 2);
             }
             catch
             {
@@ -249,6 +259,11 @@ namespace NutriLens.Models
                     .SelectMany(meal => meal.FoodItems)
                     .Where(x => x.TacoFoodItem != null && x.TacoFoodItem.Lipideos != null && double.TryParse(x.TacoFoodItem.Lipideos.ToString(), out _))
                     .Sum(foodItem => (double)foodItem.TacoFoodItem.Lipideos), 2);
+
+                totalFat += Math.Round(MealList
+                    .SelectMany(meal => meal.FoodItems)
+                    .Where(x => x.BarcodeItemEntry != null)
+                    .Sum(foodItem => foodItem.BarcodeItemEntry.TotalFatConsumption), 2);
             }
             catch
             {
@@ -268,6 +283,11 @@ namespace NutriLens.Models
                     .SelectMany(meal => meal.FoodItems)
                     .Where(x => x.TacoFoodItem != null && x.TacoFoodItem.FibraAlimentar != null && double.TryParse(x.TacoFoodItem.FibraAlimentar.ToString(), out _))
                     .Sum(foodItem => (double)foodItem.TacoFoodItem.FibraAlimentar), 2);
+
+                totalFibers += Math.Round(MealList
+                    .SelectMany(meal => meal.FoodItems)
+                    .Where(x => x.BarcodeItemEntry != null)
+                    .Sum(foodItem => foodItem.BarcodeItemEntry.DietaryFiberConsumption), 2);
             }
             catch
             {
@@ -287,6 +307,11 @@ namespace NutriLens.Models
                     .SelectMany(meal => meal.FoodItems)
                     .Where(x => x.TacoFoodItem != null && x.TacoFoodItem.Sodio != null && double.TryParse(x.TacoFoodItem.Sodio.ToString(), out _))
                     .Sum(foodItem => (double)foodItem.TacoFoodItem.Sodio), 2);
+
+                totalSodium += Math.Round(MealList
+                    .SelectMany(meal => meal.FoodItems)
+                    .Where(x => x.BarcodeItemEntry != null)
+                    .Sum(foodItem => foodItem.BarcodeItemEntry.SodiumConsumption), 2);
             }
             catch
             {

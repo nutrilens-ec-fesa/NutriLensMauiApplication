@@ -281,7 +281,7 @@ namespace NutriLens.ViewModels
                     KiloCalories = barcode.TotalCaloriesConsumption,
                     BarcodeItemEntry = barcode,
                     Name = barcode.ProductName,
-                    Portion = (barcode.BasePortion * barcode.QuantityConsumption).ToString("0.00")
+                    Portion = (barcode.BasePortion * barcode.QuantityConsumption).ToString("0.00"),
                 };
 
                 barcodeFoodItems.Add(barcodeFoodItem);
