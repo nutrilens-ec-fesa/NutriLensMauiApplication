@@ -6,9 +6,9 @@ namespace NutriLens.Views;
 
 public partial class MobileMealHistoricPage : ContentPage, IMealHistoricPage
 {
-	public MobileMealHistoricPage(MealHistoryFilter mealHistoryFilter)
+	public MobileMealHistoricPage()
 	{
 		InitializeComponent();
-		BindingContext = new MealHistoricPageVm(Navigation, mealHistoryFilter);
+		BindingContext = new MealHistoricPageVm(Navigation);
 	}
 }

@@ -13,7 +13,7 @@ namespace NutriLens.ViewModels
     internal partial class MealHistoricPageVm : INotifyPropertyChanged
     {
         private INavigation _navigation;
-        private MealHistoryFilter _mealHistoryFilter;
+
         public string HistoricPageName { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -26,19 +26,28 @@ namespace NutriLens.ViewModels
         public ObservableCollection<Meal> Meals { get; set; }
         public ObservableCollection<MealListClass> MealsList { get; set; }
         public ObservableCollection<string> MealsListString { get; set; }
-        public MealHistoricPageVm(INavigation navigation, MealHistoryFilter mealHistoryFilter)
+        public MealHistoricPageVm(INavigation navigation)
         {
             _navigation = navigation;
-            _mealHistoryFilter = mealHistoryFilter;
             MealsListString = new ObservableCollection<string>();
             MealsList = new ObservableCollection<MealListClass>();
-            HistoricPageName = GetFilterPageName();
         }
 
         [RelayCommand]
         private void Appearing()
         {
-            List<Meal> meals = AppDataHelperClass.GetAllMeals();
+            List<Meal> meals;
+
+            if (AppDataHelperClass.FilteredMealList != null)
+            {
+                HistoricPageName = AppDataHelperClass.FilteredMealList.MealListInfo;
+                meals = AppDataHelperClass.FilteredMealList.MealList;
+            }
+            else
+            {
+                HistoricPageName = "Todas as refeições";
+                meals = AppDataHelperClass.GetAllMeals();
+            }
 
             if (meals.Count == 0)
             {
@@ -49,136 +58,39 @@ namespace NutriLens.ViewModels
 
             Meals = new ObservableCollection<Meal>();
 
-            DateTime lastDateTime = DateTime.MinValue;
-
-            switch (_mealHistoryFilter)
+            foreach (Meal meal in meals.OrderByDescending(x => x.DateTime))
             {
-                case MealHistoryFilter.PerDay:
-
-                    lastDateTime = DateTime.MinValue;
-
-                    foreach (Meal meal in meals.OrderByDescending(x => x.DateTime))
-                    {
-                        if (meal.DateTime.ToShortDateString() != lastDateTime.ToShortDateString())
-                        {
-                            int i = 1;
-
-                            while (lastDateTime != DateTime.MinValue && lastDateTime.AddDays(-i) > meal.DateTime)
-                            {
-                                MealsList.Add(new MealListClass(new List<Meal>() { new Meal { DateTime = lastDateTime.AddDays(-i) } }));
-                                i++;
-                            }
-
-                            lastDateTime = meal.DateTime;
-                            MealsList.Add(new MealListClass(new List<Meal>()));
-                        }
-
-                        MealsList[^1].MealList.Add(meal);
-                    }
-
-                    break;
-                case MealHistoryFilter.PerWeek:
-                    foreach (Meal meal in meals.OrderByDescending(x => x.DateTime))
-                    {
-                        if (meal.DateTime.ToShortDateString() != lastDateTime.ToShortDateString())
-                        {
-                            int i = 1;
-
-                            while (lastDateTime != DateTime.MinValue && lastDateTime.AddDays(-i) > meal.DateTime)
-                            {
-                                MealsList.Add(new MealListClass(new List<Meal>() { new Meal { DateTime = lastDateTime.AddDays(-i) } }));
-                                i++;
-                            }
-
-                            lastDateTime = meal.DateTime;
-                            MealsList.Add(new MealListClass(new List<Meal>()));
-                        }
-
-                        MealsList[^1].MealList.Add(meal);
-                    }
-                    break;
-                case MealHistoryFilter.PerMonth:
-                    foreach (Meal meal in meals.OrderByDescending(x => x.DateTime))
-                    {
-                        if (meal.DateTime.Month != lastDateTime.Month || meal.DateTime.Year != lastDateTime.Year)
-                        {
-                            int i = 1;
-
-                            while (lastDateTime != DateTime.MinValue && lastDateTime.Year == meal.DateTime.Year && lastDateTime.Month - 1 > meal.DateTime.Month)
-                            {
-                                MealsList.Add(new MealListClass(new List<Meal>() { new Meal { DateTime = new DateTime(lastDateTime.Year, lastDateTime.Month - 1, 1) } }));
-                                i++;
-                            }
-
-                            lastDateTime = meal.DateTime;
-                            MealsList.Add(new MealListClass(new List<Meal>()));
-                        }
-
-                        MealsList[^1].MealList.Add(meal);
-                    }
-                    break;
-                case MealHistoryFilter.PerPeriod:
-                    break;
-                case MealHistoryFilter.All:
-                    foreach (Meal meal in meals.OrderByDescending(x => x.DateTime))
-                    {
-                        Meals.Add(meal);
-                        MealsList.Add(new MealListClass(new List<Meal>()));
-                        MealsList[^1].MealList.Add(meal);
-                    }
-                    break;
+                Meals.Add(meal);
+                MealsList.Add(new MealListClass(new List<Meal>()));
+                MealsList[^1].MealList.Add(meal);
             }
 
-            foreach (MealListClass meal in MealsList)
-            {
-                switch (_mealHistoryFilter)
-                {
-                    case MealHistoryFilter.PerDay:
-                        MealsListString.Add(meal.DailyInfo);
-                        break;
-                    case MealHistoryFilter.PerMonth:
-                        MealsListString.Add(meal.MonthlyInfo);
-                        break;
-                    case MealHistoryFilter.All:
-                        string mealInfo = meal.MealList[0].ToString() + Environment.NewLine + Environment.NewLine;
+            //foreach (MealListClass meal in MealsList)
+            //{
+            //    string mealInfo = meal.MealList[0].ToString() + Environment.NewLine + Environment.NewLine;
 
-                        StringBuilder mealInfoBuilder = new StringBuilder(mealInfo);
+            //    StringBuilder mealInfoBuilder = new StringBuilder(mealInfo);
 
-                        foreach (FoodItem foodItem in meal.MealList[0].FoodItems)
-                        {
-                            // Se for um item contido na TBCA
-                            if (foodItem.TbcaFoodItem != null)
-                            {
-                                mealInfoBuilder.Append($"   * {foodItem.TbcaFoodItem.Alimento} ({foodItem.Portion} g - {foodItem.KiloCalorieInfo}){Environment.NewLine}");
-                            }
-                            else
-                            {
-                                mealInfoBuilder.Append($"  * {foodItem.Name} ({foodItem.Portion} g - {foodItem.KiloCalorieInfo}){Environment.NewLine}");
-                            }
-                        }
+            //    foreach (FoodItem foodItem in meal.MealList[0].FoodItems)
+            //    {
+            //        // Se for um item contido na TBCA
+            //        if (foodItem.TbcaFoodItem != null)
+            //        {
+            //            mealInfoBuilder.Append($"   * {foodItem.TbcaFoodItem.Alimento} ({foodItem.Portion} g - {foodItem.KiloCalorieInfo}){Environment.NewLine}");
+            //        }
+            //        else
+            //        {
+            //            mealInfoBuilder.Append($"  * {foodItem.Name} ({foodItem.Portion} g - {foodItem.KiloCalorieInfo}){Environment.NewLine}");
+            //        }
+            //    }
 
-                        meal.MealPlusItemsInfo = mealInfoBuilder.ToString();
-                        MealsListString.Add(mealInfoBuilder.ToString());
-                        break;
-                }
+            //    meal.MealPlusItemsInfo = mealInfoBuilder.ToString();
+            //    MealsListString.Add(mealInfoBuilder.ToString());
+            //}
 
-                OnPropertyChanged(nameof(Meals));
-                OnPropertyChanged(nameof(MealsList));
-                OnPropertyChanged(nameof(MealsListString));
-            }
-        }
-
-        private string GetFilterPageName()
-        {
-            return _mealHistoryFilter switch
-            {
-                MealHistoryFilter.PerDay => "Histórico por dia",
-                MealHistoryFilter.PerWeek => "Histórico por semana",
-                MealHistoryFilter.PerMonth => "Histórico por mês",
-                MealHistoryFilter.PerPeriod => "Histórico por período",
-                MealHistoryFilter.All => "Todas as refeições",
-                _ => string.Empty,
-            };
+            OnPropertyChanged(nameof(HistoricPageName));
+            OnPropertyChanged(nameof(Meals));
+            OnPropertyChanged(nameof(MealsList));
         }
 
         [RelayCommand]
@@ -229,16 +141,5 @@ namespace NutriLens.ViewModels
                 Meals.Add(meal);
             }
         }
-
-        //public static int GetWeekOfYear(DateTime date1)
-        //{
-        //    //CultureInfo cultureInfo = CultureInfo.CurrentCulture;
-
-        //    //int week1 = cultureInfo.Calendar.GetWeekOfYear(date1, cultureInfo.DateTimeFormat.CalendarWeekRule, cultureInfo.DateTimeFormat.FirstDayOfWeek);
-        //    //int week2 = cultureInfo.Calendar.GetWeekOfYear(date2, cultureInfo.DateTimeFormat.CalendarWeekRule, cultureInfo.DateTimeFormat.FirstDayOfWeek);
-
-        //    //// Compare the week numbers
-        //    //return week1 == week2;
-        //}
     }
 }
