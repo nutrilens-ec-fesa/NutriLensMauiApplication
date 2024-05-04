@@ -24,4 +24,9 @@ public partial class MobileMainMenu : ContentPage, IMainMenuPage
 
         ViewServices.PopUpManager.UpdateDeviceDisplay(DeviceDisplay.Current);
     }
+
+    private void DoughnutSeries_BindingContextChanged(object sender, EventArgs e)
+    {
+
+    }
 }

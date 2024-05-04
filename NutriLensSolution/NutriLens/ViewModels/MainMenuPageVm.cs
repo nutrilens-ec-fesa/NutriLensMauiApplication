@@ -63,12 +63,12 @@ namespace NutriLens.ViewModels
                 
                 List<DataModel> donut = new List<DataModel>();
                 DataModel consumed = new DataModel();
-                consumed.Label = "Kcal consumidas";
+                consumed.Label = "Consumido: " + _caloricBalance.ToString("0.0") + " Kcal";
                 consumed.Value = partialResults;
                 donut.Add(consumed);
 
                 DataModel empty = new DataModel();
-                empty.Label = "Kcal restantes";
+                empty.Label = "Restam: " + (diaryObjective - _caloricBalance).ToString("0.0") + " Kcal";
                 empty.Value = 100 - partialResults;
                 donut.Add(empty);
 
@@ -158,36 +158,36 @@ namespace NutriLens.ViewModels
         {
             get
             {
-                double carboidratos = _mealList.TotalCarbohydratesConsumption();    //211,11g   %100 VD
-                double proteinas = _mealList.TotalProteinsConsumption();            //28,33g    %100 VD 
-                double gordura = _mealList.TotalFatConsumption();                   //500,0g    %100 VD
-                double fibra = _mealList.TotalFibersConsumption();                  //26,67g    %100 VD
-                double sodio = _mealList.TotalSodiumConsumption();                  //2,17g     %100 VD
+                double carboidratos = _mealList.TotalCarbohydratesConsumption();    //300g   %100 VD
+                double proteinas = _mealList.TotalProteinsConsumption();            //75g    %100 VD 
+                double gordura = _mealList.TotalFatConsumption();                   //55g    %100 VD Gorduras totais
+                double fibra = _mealList.TotalFibersConsumption();                  //25g    %100 VD
+                double sodio = _mealList.TotalSodiumConsumption();                  //2,4g     %100 VD
 
                 List<DataModel> barChart = new List<DataModel>();
                 DataModel carb = new DataModel();
-                carb.Label = "Carboidratos";
-                carb.Value = (carboidratos / 211.11)*100;
+                carb.Label = "Carboidratos:\n" + carboidratos.ToString("0.0") + "g" + " de 300g";
+                carb.Value = (carboidratos / 300)*100;
                 barChart.Add(carb);
 
                 DataModel prot = new DataModel();
-                prot.Label = "Proteínas";
-                prot.Value = (proteinas / 28.33)*100;
+                prot.Label = "Proteínas:\n " + proteinas.ToString("0.0") + "g" + " de 75g";
+                prot.Value = (proteinas / 75) * 100;
                 barChart.Add(prot);
 
                 DataModel gord = new DataModel();
-                gord.Label = "Gorduras";
-                gord.Value = (gordura / 500) * 100;
+                gord.Label = "Gorduras:\n " + gordura.ToString("0.0") + "g" + " de 55g";
+                gord.Value = (gordura / 55) * 100;
                 barChart.Add(gord);
 
                 DataModel fib = new DataModel();
-                fib.Label = "Fibras";
-                fib.Value = (fibra / 26.67) * 100;
+                fib.Label = "Fibras:\n " + fibra.ToString("0.0") + "g" + " de 25g";
+                fib.Value = (fibra / 25) * 100;
                 barChart.Add(fib);
 
                 DataModel sod = new DataModel();
-                sod.Label = "Sódio";
-                sod.Value = (sodio / 2170) * 100;
+                sod.Label = "Sódio:\n " + sodio.ToString("0.0") + "mg" + " de 2400mg";
+                sod.Value = (sodio / 2400) *100;
                 barChart.Add(sod);
 
                 return barChart;
@@ -261,6 +261,7 @@ namespace NutriLens.ViewModels
             OnPropertyChanged(nameof(TodayPhysicalActivitiesCalories));
             OnPropertyChanged(nameof(PartialResults));
             OnPropertyChanged(nameof(PartialResultsChart));
+            OnPropertyChanged(nameof(PartialResultsMacroNutrients));
         }
 
         [RelayCommand]
@@ -361,6 +362,8 @@ namespace NutriLens.ViewModels
             OnPropertyChanged(nameof(TodayMealFat));
             OnPropertyChanged(nameof(TodayMealFibers));
             OnPropertyChanged(nameof(TodayMealSodium));
+            OnPropertyChanged(nameof(PartialResultsChart));
+            OnPropertyChanged(nameof(PartialResultsMacroNutrients));
         }
 
         [RelayCommand]
