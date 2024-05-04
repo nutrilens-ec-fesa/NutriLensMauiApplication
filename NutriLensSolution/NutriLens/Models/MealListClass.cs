@@ -1,4 +1,5 @@
-﻿using NutriLens.Entities;
+﻿using DateTimeLibrary;
+using NutriLens.Entities;
 using NutriLensClassLibrary.Entities;
 using NutriLensClassLibrary.Models;
 using System.ComponentModel;
@@ -16,7 +17,30 @@ namespace NutriLens.Models
         /// </summary>
         public List<Meal> MealList { get; set; }
 
+        public MealHistoryFilter MealHistoryFilter { get; set; }
 
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+
+        public string MealListInfo
+        {
+            get
+            {
+                switch (MealHistoryFilter)
+                {
+                    case MealHistoryFilter.PerDay:
+                        return DailyInfo;
+                    case MealHistoryFilter.PerWeek:
+                        return WeeklyInfo;
+                    case MealHistoryFilter.PerMonth:
+                        return MonthlyInfo;
+                    case MealHistoryFilter.PerPeriod:
+                        return PeriodInfo;
+                    default:
+                        return string.Empty;
+                }
+            }
+        }
         /// <summary>
         /// Caso todas as refeições sejam da mesma data, retorna uma string com o consumo energético
         /// </summary>
@@ -25,9 +49,23 @@ namespace NutriLens.Models
             get
             {
                 if (MealList.DistinctBy(x => x.DateTime.ToShortDateString()).Count() == 1)
-                    return $"{MealList[0].DateTime.ToShortDateString()} - {TotalEnergeticConsumption()}";
+                    return $"{MealList[0].DateTime.ToShortDateString()} - {DateTimeFunctions.GetWeekDayNameByDateTime(MealList[0].DateTime)}";
                 else
                     return "undefined";
+            }
+        }
+
+        public string WeeklyInfo
+        {
+            get
+            {
+                if (MealList == null || MealList.Count == 0)
+                    return string.Empty;
+
+                DateTime lastDayOfWeek = DateTimeFunctions.GetLastDayOfWeekByDateTime(MealList[0].DateTime);
+                
+                return $"{lastDayOfWeek.AddDays(-6).ToShortDateString()} -> {lastDayOfWeek.ToShortDateString()}";
+
             }
         }
 
@@ -39,11 +77,21 @@ namespace NutriLens.Models
             get
             {
                 if (MealList.DistinctBy(x => x.DateTime.Month).Count() == 1)
-                    return $"{MealList[0].DateTime.Month}/{MealList[0].DateTime.Year} - {TotalEnergeticConsumption()}";
+                    return $"{DateTimeFunctions.GetMonthNameByDateTime(MealList[0].DateTime)}/{MealList[0].DateTime.Year}";
                 else
                     return "undefined";
             }
         }
+
+        public string PeriodInfo
+        {
+            get
+            {
+                return $"{StartDate.Date.ToShortDateString()} -> {EndDate.Date.ToShortDateString()}";
+            }
+        }
+
+        public string MealCount { get => MealList.Count(x => !string.IsNullOrEmpty(x.Name)).ToString(); }
 
         private string _mealPlusItemsInfo;
 
@@ -57,6 +105,8 @@ namespace NutriLens.Models
             }
         }
 
+        public string TotalEnergeticConsumptionString { get => TotalEnergeticConsumption(false); }
+
         /// <summary>
         /// Construtor da classe
         /// </summary>
@@ -64,6 +114,31 @@ namespace NutriLens.Models
         public MealListClass(List<Meal> mealList)
         {
             MealList = mealList;
+        }
+
+        public MealListClass(List<Meal> mealList, MealHistoryFilter mealHistoryFilter)
+        {
+            MealList = mealList;
+            MealHistoryFilter = mealHistoryFilter;
+        }
+
+        public MealListClass(List<Meal> mealList, MealHistoryFilter mealHistoryFilter, DateTime dateTime)
+        {
+            MealList = mealList;
+            MealHistoryFilter = mealHistoryFilter;
+
+            if (MealList.Count == 0)
+            {
+                MealList.Add(new Meal() { DateTime = dateTime });
+            }
+        }
+
+        public MealListClass(List<Meal> mealList, DateTime dateTimeStart, DateTime dateTimeEnd)
+        {
+            MealList = mealList;
+            MealHistoryFilter = MealHistoryFilter.PerPeriod;
+            StartDate = dateTimeStart;
+            EndDate = dateTimeEnd;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -91,8 +166,8 @@ namespace NutriLens.Models
             {
                 return AppConfigHelperClass.EnergeticUnit switch
                 {
-                    EnergeticUnit.kcal => $"{totalCalories} {Constants.kcalUnit}",
-                    EnergeticUnit.kJ => $"{totalCalories} {Constants.kJUnit}",
+                    EnergeticUnit.kcal => $"{Math.Round(totalCalories, 2)} {Constants.kcalUnit}",
+                    EnergeticUnit.kJ => $"{Math.Round(totalCalories, 2)} {Constants.kJUnit}",
                     _ => default
                 };
             }
