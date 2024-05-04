@@ -262,8 +262,18 @@ namespace NutriLens.Entities
         public static List<Meal> GetMealsByDateRange(DateTime startDate, DateTime endDate)
         {
             return MealList
-                .Where(x => x.DateTime >= startDate && x.DateTime <= endDate)
+                .Where(x => x.DateTime.Date >= startDate.Date && x.DateTime.Date <= endDate.Date)
                 .ToList();
+        }
+
+        public static DateTime GetFirstMealDateTime()
+        {
+            List<Meal> meals = GetAllMeals();
+
+            if (meals.Count == 0)
+                return DateTime.Now;
+            else
+                return meals.OrderBy(x => x.DateTime).ToList()[0].DateTime;
         }
 
         public static void RemoveMeal(Meal meal)
@@ -655,6 +665,8 @@ namespace NutriLens.Entities
         public static string NewFoodPicturePath { get; set; }
 
         public static Meal MealToEdit { get; set; }
+
+        public static MealListClass FilteredMealList { get; set; }
     }
 }
 
