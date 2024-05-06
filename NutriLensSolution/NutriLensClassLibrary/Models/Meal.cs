@@ -9,6 +9,11 @@ namespace NutriLensClassLibrary.Models
     public class Meal
     {
         /// <summary>
+        /// Id do usuário da refeição
+        /// </summary>
+        public string UserInfoId { get; set; }
+
+        /// <summary>
         /// Data e hora da refeição
         /// </summary>
         public DateTime DateTime { get; set; }

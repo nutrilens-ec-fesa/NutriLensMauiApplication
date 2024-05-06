@@ -59,7 +59,15 @@ namespace NutriLens.Entities
         private static List<TacoItem> _tacoFoodItems;
         private static List<PhysicalActivity> _physicalActivityList;
         private static string _nutriLensApiToken;
-        private static string[] excludedWords = new[] { "de", "com", "sem", "em", "tipo", "inteiro", "à", "grande", "para", "da", "ao", "e", "do" };
+
+        public static string NewFoodPicturePath { get; set; }
+
+        public static Meal MealToEdit { get; set; }
+
+        public static MealListClass FilteredMealList { get; set; }
+
+        public static List<FoodItem> DetectedFoodItems { get; set; } = new List<FoodItem>();
+
         /// <summary>
         /// Lista de refeições
         /// </summary>
@@ -69,16 +77,28 @@ namespace NutriLens.Entities
             {
                 if (_mealList == null)
                 {
+                    // Tenta obter as refeições vinculadas ao usuário
                     try
                     {
-                        _mealList = ViewServices.AppDataManager.GetItem<List<Meal>>(DataItems.MealList);
+                        _mealList = ViewServices.AppDataManager.GetItem<List<Meal>>(nameof(DataItems.MealList) + UserInfo.Id);
                         _mealList = _mealList
                             .Where(x => x.FoodItems != null && x.FoodItems.Count > 0)
                             .ToList();
                     }
                     catch (NotFoundException)
                     {
-                        _mealList = new List<Meal>();
+                        // Caso não encontre, ou realmente não há, ou as refeições estão no modelo antigo
+                        try
+                        {
+                            _mealList = ViewServices.AppDataManager.GetItem<List<Meal>>(DataItems.MealList);
+                            _mealList = _mealList
+                                .Where(x => x.FoodItems != null && x.FoodItems.Count > 0)
+                                .ToList();
+                        }
+                        catch (NotFoundException)
+                        {
+                            _mealList = new List<Meal>();
+                        }
                     }
                 }
 
@@ -217,8 +237,9 @@ namespace NutriLens.Entities
         /// <param name="meal"></param>
         public static void AddMeal(Meal meal)
         {
+            meal.UserInfoId = UserInfo.Id;
             MealList.Add(meal);
-            ViewServices.AppDataManager.SetItem(DataItems.MealList, MealList);
+            ViewServices.AppDataManager.SetItem(nameof(DataItems.MealList) + UserInfo.Id, MealList);
         }
 
         /// <summary>
@@ -266,6 +287,41 @@ namespace NutriLens.Entities
                 .ToList();
         }
 
+        /// <summary>
+        /// Verifica se já existe alguma lista de refeições específicas de usuário, e
+        /// caso não haja, e hajam refeições sem usuário associado, vincula todas as refeições
+        /// ao usuário atualmente logado
+        /// </summary>
+        public static void CheckUndefinedUserMeals()
+        {
+            // Obtém as chaves cadastradas
+            List<string> registeredKeys = ViewServices.AppDataManager.GetAllKeys();
+
+            // Verifica se há chaves cadastradas
+            if (registeredKeys.Count > 0)
+            {
+                // Obtém todas as chaves de refeições
+                List<string> mealsKeys = registeredKeys.Where(x => x.StartsWith(nameof(DataItems.MealList)))
+                    .ToList();
+
+                // Se houver apenas uma, e ela não conter a concatenação do UserInfoId, 
+                // é necessário obter as refeições e associar ao usuário
+                if (mealsKeys.Count == 1 && mealsKeys[0] == nameof(DataItems.MealList))
+                {
+                    List<Meal> meals = GetAllMeals();
+
+                    foreach (Meal meal in meals)
+                    {
+                        meal.UserInfoId = UserInfo.Id;
+                    }
+
+                    SaveChangesOnMeals();
+
+                    ViewServices.AppDataManager.DeleteItem(DataItems.MealList);
+                }
+            }
+        }
+
         public static DateTime GetFirstMealDateTime()
         {
             List<Meal> meals = GetAllMeals();
@@ -279,12 +335,12 @@ namespace NutriLens.Entities
         public static void RemoveMeal(Meal meal)
         {
             MealList.Remove(meal);
-            ViewServices.AppDataManager.SetItem(DataItems.MealList, MealList);
+            ViewServices.AppDataManager.SetItem(nameof(DataItems.MealList) + UserInfo.Id, MealList);
         }
 
         public static void SaveChangesOnMeals()
         {
-            ViewServices.AppDataManager.SetItem(DataItems.MealList, MealList);
+            ViewServices.AppDataManager.SetItem(nameof(DataItems.MealList) + UserInfo.Id, MealList);
         }
 
         #endregion
@@ -561,9 +617,25 @@ namespace NutriLens.Entities
             _nutriLensApiToken = token;
         }
 
-        public static ObservableCollection<TbcaItem> TbcaItems { get; set; }
+        /// <summary>
+        /// Limpa todas as variáveis, para que o novo login não acesse coisas do usuário anterior
+        /// </summary>
+        public static void CleanSessionInfo()
+        {
+            // Limpeza de variáveis privadas
+            _mealList = null;
+            _userInfo = null;
+            _tbcaFoodItems = null;
+            _tacoFoodItems = null;
+            _physicalActivityList = null;
+            _nutriLensApiToken = string.Empty;
 
-        public static ObservableCollection<TacoItem> TacoItems { get; set; }
+            // Limpeza de propriedades
+            NewFoodPicturePath = string.Empty;
+            MealToEdit = null;
+            FilteredMealList = null;
+            DetectedFoodItems = new List<FoodItem>();
+        }
 
         public static void GetStringTacoItemsBySimpleFoodItemsV2(List<SimpleFoodItem> simpleFoodItems, out List<FoodItem> foodItems)
         {
@@ -659,14 +731,6 @@ namespace NutriLens.Entities
 
             return taco;
         }
-
-        public static List<FoodItem> DetectedFoodItems { get; set; } = new List<FoodItem>();
-
-        public static string NewFoodPicturePath { get; set; }
-
-        public static Meal MealToEdit { get; set; }
-
-        public static MealListClass FilteredMealList { get; set; }
     }
 }
 

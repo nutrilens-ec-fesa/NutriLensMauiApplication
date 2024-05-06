@@ -378,6 +378,7 @@ namespace NutriLens.ViewModels
             if(await ViewServices.PopUpManager.PopYesOrNoAsync("Sair", "Deseja sair deste dispositivo?"))
             {
                 AppDataHelperClass.CleanUserInfo();
+                AppDataHelperClass.CleanSessionInfo();
                 _navigation.InsertPageBefore(ViewServices.ResolvePage<ILoginPage>(), _navigation.NavigationStack.Last());
                 await _navigation.PopAsync();
             }

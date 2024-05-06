@@ -61,6 +61,13 @@ namespace NutriLens.ViewModels
             await EntitiesHelperClass.CloseLoading();
 
             AppDataHelperClass.SetUserInfo(DaoHelperClass.GetUserInfoByAuthenticatedUser());
+
+            EntitiesHelperClass.ShowLoading("Verificando refeições");
+
+            await Task.Run(AppDataHelperClass.CheckUndefinedUserMeals);
+
+            await EntitiesHelperClass.CloseLoading();
+
             await _navigation.PushAsync(ViewServices.ResolvePage<IMainMenuPage>());
 
         }
@@ -112,6 +119,12 @@ namespace NutriLens.ViewModels
                     TermsOfUsePopup termsOfUsePopup = new TermsOfUsePopup();
                     await Application.Current.MainPage.ShowPopupAsync(termsOfUsePopup);
                 }
+
+                EntitiesHelperClass.ShowLoading("Verificando refeições");
+
+                await Task.Run(AppDataHelperClass.CheckUndefinedUserMeals);
+
+                await EntitiesHelperClass.CloseLoading();
 
                 // Chama a StartPage 
                 // Retira a LaunchPage da Stack, para não permitir que o usuário possa acessá-la via botão voltar           
