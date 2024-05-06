@@ -48,6 +48,12 @@ public interface IAppDataManager
     /// </summary>
     /// <param name="key">Enumerador cuja string é chave do item</param>
     public void DeleteItem(Enum key);
+
+    /// <summary>
+    /// Obtém todas as chaves cadastradas
+    /// </summary>
+    /// <returns></returns>
+    public List<string> GetAllKeys();
 }
 
 public class AppDataManager : IAppDataManager
@@ -148,5 +154,13 @@ public class AppDataManager : IAppDataManager
     public void DeleteItem(Enum key)
     {
         DeleteItem(key.ToString());
+    }
+
+    public List<string> GetAllKeys()
+    {
+        if (AppDataItems != null)
+            return AppDataItems.Keys.ToList();
+        else
+            return new List<string>();
     }
 }
