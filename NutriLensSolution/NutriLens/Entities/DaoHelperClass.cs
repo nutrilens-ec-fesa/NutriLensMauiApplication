@@ -1,15 +1,9 @@
 ﻿using ExceptionLibrary;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using NutriLens.Models;
-using NutriLens.Services;
-using NutriLensClassLibrary.Models;
-using WebLibrary.HttpRequests;
-using WebLibrary;
-using System.Net;
-using ZXing.QrCode.Internal;
 using Newtonsoft.Json;
-using GenerativeAI.Types;
+using NutriLensClassLibrary.Models;
+using System.Net;
+using WebLibrary;
+using WebLibrary.HttpRequests;
 
 namespace NutriLens.Entities
 {
