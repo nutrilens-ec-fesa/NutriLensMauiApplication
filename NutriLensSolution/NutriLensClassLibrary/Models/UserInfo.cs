@@ -4,6 +4,7 @@ namespace NutriLensClassLibrary.Models
 {
     public enum HabitualPhysicalActivity
     {
+        Uninformed,
         LightActivity,
         ModeratelyActive,
         VigorouslyActive
@@ -11,6 +12,7 @@ namespace NutriLensClassLibrary.Models
 
     public enum DailyKiloCaloriesObjective
     {
+        Uninformed,
         Reduce,
         Maintain,
         Fatten
@@ -75,7 +77,7 @@ namespace NutriLensClassLibrary.Models
         public double DailyKiloCaloriesBurn { get; set; }
 
         /// <summary>
-        /// Metã de ingestão de calorias diárias baseado no objetivo de ganho ou perca de peso
+        /// Meta de ingestão de calorias diárias baseado no objetivo de ganho ou perca de peso
         /// </summary>
         public double DailyKiloCaloriesGoal { get; set; }
 
