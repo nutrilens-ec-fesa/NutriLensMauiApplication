@@ -78,6 +78,7 @@ namespace NutriLens.ViewModels
             }
             catch (Exception ex)
             {
+                await EntitiesHelperClass.CloseLoading();
                 await ViewServices.PopUpManager.PopErrorAsync("Houve algum problema para inserir o novo usuário tente novamente mais tarde. " + ExceptionManager.ExceptionMessage(ex));
                 return;
             }
