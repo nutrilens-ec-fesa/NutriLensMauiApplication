@@ -3,12 +3,14 @@ using NutriLens.Entities;
 using NutriLens.Services;
 using NutriLensClassLibrary.Models;
 using ExceptionLibrary;
+using Kotlin.Jvm.Functions;
 
 namespace NutriLens.Views.Popups;
 
 public partial class TermsOfUsePopup : Popup
 {
     private bool _alreadyAccepted;
+    private bool _loginPopup;
 
     public bool TermsAccepted { get => switchTermsAcceptance.IsToggled; }
 
@@ -18,11 +20,12 @@ public partial class TermsOfUsePopup : Popup
         _alreadyAccepted = false;
     }
 
-    public TermsOfUsePopup(bool alreadyAccepted)
+    public TermsOfUsePopup(bool alreadyAccepted, bool loginPopup = false)
     {
         InitializeComponent();
         _alreadyAccepted = alreadyAccepted;
         switchTermsAcceptance.IsToggled = _alreadyAccepted;
+        _loginPopup = loginPopup;
     }
 
     private async void btnContinue_Clicked(object sender, EventArgs e)
@@ -83,11 +86,20 @@ public partial class TermsOfUsePopup : Popup
         {
             if (await ViewServices.PopUpManager.PopYesOrNoAsync("Atenção", "Deseja realmente cancelar? Lembrando que só é possível utilizar a aplicação ao aceitar os termos e continuar!"))
             {
-                EntitiesHelperClass.ShowLoading("Termos de uso não aceitos, fechando a aplicação...");
+                if (!_loginPopup)
+                {
+                    EntitiesHelperClass.ShowLoading("Termos de uso não aceitos, fechando a aplicação...");
 
-                await Task.Delay(3000);
+                    await Task.Delay(3000);
 
-                Application.Current.Quit();
+                    Application.Current.Quit();
+                }
+                else
+                {
+                    // Troca o switch para falso, visto que o usuário cancelou
+                    switchTermsAcceptance.IsToggled = false;
+                    await CloseAsync();
+                }
             }
         }
         else
