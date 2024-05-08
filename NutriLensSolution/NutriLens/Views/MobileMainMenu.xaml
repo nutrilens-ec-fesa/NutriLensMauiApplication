@@ -87,6 +87,7 @@
             <Label Text="Opções" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
             <Button x:Name="btnLogOut" BackgroundColor="IndianRed" Text="Sair" Command="{Binding LogOutCommand}"/>
             <Button x:Name="btnQuit" BackgroundColor="IndianRed" Text="Fechar aplicativo" Command="{Binding CloseApplicationCommand}"/>
+            <Label Text="{Binding AppVersion}" HorizontalOptions="Center" Margin="10"></Label>
         </StackLayout>
     </ScrollView>
 </ContentPage>

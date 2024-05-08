@@ -154,6 +154,8 @@ namespace NutriLens.ViewModels
             }
         }
 
+        public string AppVersion { get => "V " + AppInfo.Current.VersionString; }
+
         public List<DataModel> PartialResultsMacroNutrients
         {
             get
