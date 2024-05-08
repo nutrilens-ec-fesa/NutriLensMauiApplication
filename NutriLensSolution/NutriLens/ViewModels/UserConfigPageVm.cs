@@ -9,6 +9,7 @@ using NutriLens.Services;
 using NutriLensClassLibrary.Models;
 using System.Collections.ObjectModel;
 using StringLibrary;
+using System.ComponentModel;
 
 namespace NutriLens.ViewModels
 {
@@ -64,6 +65,43 @@ namespace NutriLens.ViewModels
 
         public string DailyKiloCaloriesGoal { get; set; }
 
+        public Color GenderColorValidation { get => GenderIndex == 0 ? ColorHelperClass.InvalidFieldColor : ColorHelperClass.ValidFieldColor; }
+
+        public Color BornColorValidation
+        {
+            get
+            {
+                return UserInfo.BornDate.Date >= DateTime.Now.Date ? ColorHelperClass.InvalidFieldColor : ColorHelperClass.ValidFieldColor;
+            }
+        }
+
+        public Color WeightColorValidation
+        {
+            get
+            {
+                if (StringFunctions.ParseDoubleValue(WeightEntry, out double weightValue) && weightValue > 0)
+                    return ColorHelperClass.ValidFieldColor;
+                else
+                    return ColorHelperClass.InvalidFieldColor;
+            }
+        }
+
+        public Color HeightColorValidation
+        {
+            get
+            {
+                if (StringFunctions.ParseDoubleValue(HeightEntry, out double heightValue) && heightValue > 0)
+                    return ColorHelperClass.ValidFieldColor;
+                else
+                    return ColorHelperClass.InvalidFieldColor;
+            }
+        }
+
+        public Color PhysicalActivityColorValidation { get => HabitualPhysicalActivityIndex == 0 ? ColorHelperClass.InvalidFieldColor : ColorHelperClass.ValidFieldColor; }
+        
+        public Color DailyKiloCaloriesObjectiveColorValidation { get => DailyKiloCaloriesObjectiveIndex == 0 ? ColorHelperClass.InvalidFieldColor : ColorHelperClass.ValidFieldColor; }
+
+        public Color KiloCaloriesDiaryObjectiveColorValidation { get => UserInfo.KiloCaloriesDiaryObjective <= 0 ? ColorHelperClass.InvalidFieldColor : ColorHelperClass.ValidFieldColor; }
         /// <summary>
         /// Picker de gêneros
         /// </summary>
@@ -83,7 +121,23 @@ namespace NutriLens.ViewModels
         {
             _navigation = navigation;
             UserInfo = AppDataHelperClass.UserInfo;
+
+            if (UserInfo.BornDate == DateTime.MinValue)
+                UserInfo.BornDate = DateTime.Now;
+
             GenderIndex = (int)UserInfo.Gender;
+            HabitualPhysicalActivityIndex = (int)UserInfo.HabitualPhysicalActivity;
+            DailyKiloCaloriesObjectiveIndex = (int)UserInfo.DailyKiloCaloriesObjective;
+
+            if (GenderIndex <= 0)
+                GenderIndex = 0;
+
+            if (HabitualPhysicalActivityIndex <= 0)
+                HabitualPhysicalActivityIndex = 0;
+
+            if (DailyKiloCaloriesObjectiveIndex <= 0)
+                DailyKiloCaloriesObjectiveIndex = 0;
+
             KcalEnabled = AppConfigHelperClass.EnergeticUnit == EnergeticUnit.kcal;
             KJEnabled = !KcalEnabled;
             WeightEntry = UserInfo.Weight.ToString("0.00");
@@ -99,51 +153,27 @@ namespace NutriLens.ViewModels
                 "Feminino"
             };
 
-            foreach (HabitualPhysicalActivity habitualPhysicalActivity in (HabitualPhysicalActivity[])Enum.GetValues(typeof(HabitualPhysicalActivity)))
+            HabitualPhysicalActivityOptions = new ObservableCollection<string>()
             {
-                string toAdd = string.Empty;
+                "Não informado",
+                "Sedentário(a) ou faz atividade física leve",
+                "Faz atividade física moderada",
+                "Faz atividade física intensa"
+            };
 
-                switch (habitualPhysicalActivity)
-                {
-                    case HabitualPhysicalActivity.LightActivity:
-                        toAdd = "Sedentário(a) ou faz atividade física leve";
-                        break;
-                    case HabitualPhysicalActivity.ModeratelyActive:
-                        toAdd = "Faz atividade física moderada";
-                        break;
-                    case HabitualPhysicalActivity.VigorouslyActive:
-                        toAdd = "Faz atividade física intensa";
-                        break;
-                }
-
-                HabitualPhysicalActivityOptions.Add(toAdd);
-            }
-
-            HabitualPhysicalActivityIndex = (int)UserInfo.HabitualPhysicalActivity;
-
-            foreach (DailyKiloCaloriesObjective dailyKiloCaloriesObjective in (DailyKiloCaloriesObjective[])Enum.GetValues(typeof(DailyKiloCaloriesObjective)))
+            DailyKiloCaloriesObjectiveOptions = new ObservableCollection<string>()
             {
-                string toAdd = string.Empty;
+                "Não informado",
+                "Reduzir o peso",
+                "Manter o peso",
+                "Aumentar o peso"
+            };
+        }
 
-                switch (dailyKiloCaloriesObjective)
-                {
-                    case DailyKiloCaloriesObjective.Reduce:
-                        toAdd = "Reduzir o peso";
-                        break;
-                    case DailyKiloCaloriesObjective.Maintain:
-                        toAdd = "Manter o peso";
-                        break;
-                    case DailyKiloCaloriesObjective.Fatten:
-                        toAdd = "Aumentar o peso";
-                        break;
-                }
-
-                DailyKiloCaloriesObjectiveOptions.Add(toAdd);
-            }
-
-            DailyKiloCaloriesObjectiveIndex = (int)UserInfo.DailyKiloCaloriesObjective;
-
-
+        [RelayCommand]
+        private void Appearing()
+        {
+            UpdateUi();
         }
 
         [RelayCommand]
@@ -165,6 +195,17 @@ namespace NutriLens.ViewModels
                 return;
             }
 
+            if (UserInfo.BornDate == DateTime.MinValue || UserInfo.BornDate.Date == DateTime.Now.Date)
+            {
+                await ViewServices.PopUpManager.PopErrorAsync("Data de nascimento não informada!");
+                return;
+            }
+            else if (UserInfo.BornDate >= DateTime.Now)
+            {
+                await ViewServices.PopUpManager.PopErrorAsync("Data de nascimento não pode ser maior que a data atual!");
+                return;
+            }
+
             UserInfo.Gender = (Gender)GenderIndex;
             UserInfo.HabitualPhysicalActivity = (HabitualPhysicalActivity)HabitualPhysicalActivityIndex;
             UserInfo.DailyKiloCaloriesObjective = (DailyKiloCaloriesObjective)DailyKiloCaloriesObjectiveIndex;
@@ -181,7 +222,7 @@ namespace NutriLens.ViewModels
             DailyKiloCaloriesBurn = dailyKiloCaloriesBurn.ToString("0.00");
 
             string objective = UserInfo.DailyKiloCaloriesObjective.ToString();
-            DailyKiloCaloriesGoal = AppDataHelperClass.GetDailyKiloCaloriesGoal(dailyKiloCaloriesBurn, objective).ToString("0.00");
+            DailyKiloCaloriesGoal = Math.Round(AppDataHelperClass.GetDailyKiloCaloriesGoal(dailyKiloCaloriesBurn, objective)).ToString() + " kcal";
 
             EntitiesHelperClass.ShowLoading("Atualizando usuário");
 
@@ -215,28 +256,54 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private async Task CaloricSuggestChanged()
         {
-            DateTime born = UserInfo.BornDate;
-            int age = AppDataHelperClass.GetAge(born);
-            UserInfo.Gender = (Gender)GenderIndex;
-            UserInfo.Weight = double.Parse(WeightEntry);
-            double weight = UserInfo.Weight;
-            string gender = UserInfo.Gender.ToString();
-            double basal = AppDataHelperClass.GetBasalDailyCalories(age, gender, weight);
-            BasalDailyCalories = basal.ToString("0.00");
-            OnPropertyChanged(nameof(BasalDailyCalories));
+            UpdateUi();
 
-            UserInfo.HabitualPhysicalActivity = (HabitualPhysicalActivity)HabitualPhysicalActivityIndex;
-            string activity = UserInfo.HabitualPhysicalActivity.ToString();
-            double dailyKiloCaloriesBurn = AppDataHelperClass.GetDailyKiloCaloriesBurn(basal, activity, gender);
-            DailyKiloCaloriesBurn = dailyKiloCaloriesBurn.ToString("0.00");
-            OnPropertyChanged(nameof(DailyKiloCaloriesBurn));
+            try
+            {
+                DateTime born = UserInfo.BornDate;
+                int age = AppDataHelperClass.GetAge(born);
+                UserInfo.Gender = (Gender)GenderIndex;
+                UserInfo.Weight = double.Parse(WeightEntry);
+                double weight = UserInfo.Weight;
+                string gender = UserInfo.Gender.ToString();
+                double basal = AppDataHelperClass.GetBasalDailyCalories(age, gender, weight);
+                BasalDailyCalories = basal.ToString("0.00");
+                OnPropertyChanged(nameof(BasalDailyCalories));
 
-            UserInfo.DailyKiloCaloriesObjective = (DailyKiloCaloriesObjective)DailyKiloCaloriesObjectiveIndex;
-            string objective = UserInfo.DailyKiloCaloriesObjective.ToString();
-            DailyKiloCaloriesGoal = AppDataHelperClass.GetDailyKiloCaloriesGoal(dailyKiloCaloriesBurn, objective ).ToString("0.00");
-            OnPropertyChanged(nameof(DailyKiloCaloriesGoal));
+                UserInfo.HabitualPhysicalActivity = (HabitualPhysicalActivity)HabitualPhysicalActivityIndex;
+                string activity = UserInfo.HabitualPhysicalActivity.ToString();
+                double dailyKiloCaloriesBurn = AppDataHelperClass.GetDailyKiloCaloriesBurn(basal, activity, gender);
+                DailyKiloCaloriesBurn = dailyKiloCaloriesBurn.ToString("0.00");
+                OnPropertyChanged(nameof(DailyKiloCaloriesBurn));
+
+                UserInfo.DailyKiloCaloriesObjective = (DailyKiloCaloriesObjective)DailyKiloCaloriesObjectiveIndex;
+                string objective = UserInfo.DailyKiloCaloriesObjective.ToString();
+                DailyKiloCaloriesGoal = Math.Round(AppDataHelperClass.GetDailyKiloCaloriesGoal(dailyKiloCaloriesBurn, objective)).ToString() + " kcal";
+                OnPropertyChanged(nameof(DailyKiloCaloriesGoal));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
+        private void UpdateUi()
+        {
+            OnPropertyChanged(nameof(UserInfo.BornDate));
+
+            OnPropertyChanged(nameof(HabitualPhysicalActivityIndex));
+            OnPropertyChanged(nameof(DailyKiloCaloriesObjectiveIndex));
+            OnPropertyChanged(nameof(GenderIndex));
+
+            OnPropertyChanged(nameof(WeightColorValidation));
+            OnPropertyChanged(nameof(HeightColorValidation));
+
+            OnPropertyChanged(nameof(GenderColorValidation));
+            OnPropertyChanged(nameof(PhysicalActivityColorValidation));
+            OnPropertyChanged(nameof(DailyKiloCaloriesObjectiveColorValidation));
+            OnPropertyChanged(nameof(BornColorValidation));
+            OnPropertyChanged(nameof(KiloCaloriesDiaryObjectiveColorValidation));
+        }
     }
 
 }

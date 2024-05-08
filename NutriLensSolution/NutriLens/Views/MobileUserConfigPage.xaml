@@ -5,6 +5,10 @@
              xmlns:xct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:c="clr-namespace:NutriLens.Entities.Converters"
              Title="Configurações">
+    <ContentPage.Behaviors>
+        <xct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
+        <xct:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
+    </ContentPage.Behaviors>
     <ContentPage.Resources>
         <ResourceDictionary>
             <c:SelectedIndexChangedEventArgsConverter x:Key="selectedIndexChangedEventArgsConverter" />
@@ -14,22 +18,39 @@
         <VerticalStackLayout Padding="10,20,10,20" Spacing="5">
             <!--<Label Margin="5,0,0,0" Text="Nome"/>
             <Entry Keyboard="Text" Placeholder="Digite seu nome..." Text="{Binding UserInfo.Name}" />-->
-            <Label Margin="5,0,0,0" Text="Sexo" FontAttributes="Bold"/>
-            <Picker ItemsSource="{Binding GenderOptions}" SelectedIndex="{Binding GenderIndex}" Background="Azure"/>
-            <Label Margin="5,0,0,0" Text="Data de nascimento" FontAttributes="Bold"/>
-            <DatePicker Date="{Binding UserInfo.BornDate}" Background="Azure"/>
-            <Label Margin="5,0,0,0" Text="Massa (kg)" FontAttributes="Bold"/>
-            <Entry Keyboard="Numeric" Placeholder="Digite seu peso..." Text="{Binding WeightEntry}" Background="Azure"/>
-            <Label Margin="5,0,0,0" Text="Altura (m)" FontAttributes="Bold"/>
-            <Entry Keyboard="Numeric" Placeholder="Digite sua altura..." Text="{Binding HeightEntry}" Background="Azure"/>
-            <Label Margin="5,0,0,0" Text="Nível de atividade física" FontAttributes="Bold"/>
-            <Picker ItemsSource="{Binding HabitualPhysicalActivityOptions}" SelectedIndex="{Binding HabitualPhysicalActivityIndex}" Background="Azure">
+            <Label Margin="5,0,0,0" Text="Sexo:" FontAttributes="Bold"/>
+            <Picker ItemsSource="{Binding GenderOptions}" SelectedIndex="{Binding GenderIndex}" BackgroundColor="Azure" TextColor="{Binding GenderColorValidation}">
                 <Picker.Behaviors>
                     <xct:EventToCommandBehavior EventName="SelectedIndexChanged" Command="{Binding CaloricSuggestChangedCommand}" EventArgsConverter="{StaticResource selectedIndexChangedEventArgsConverter}"></xct:EventToCommandBehavior>
                 </Picker.Behaviors>
             </Picker>
-            <Label Margin="5,0,0,0" Text="Unidade de energia" FontAttributes="Bold"/>
-            <Grid>
+            <Label Margin="5,0,0,0" Text="Data de nascimento:" FontAttributes="Bold"/>
+            <DatePicker Date="{Binding UserInfo.BornDate}" BackgroundColor="Azure" TextColor="{Binding BornColorValidation}">
+                <DatePicker.Behaviors>
+                    <xct:EventToCommandBehavior EventName="DateSelected" Command="{Binding CaloricSuggestChangedCommand}"></xct:EventToCommandBehavior>
+                </DatePicker.Behaviors>
+            </DatePicker>
+
+            <Label Margin="5,0,0,0" Text="Massa (kg):" FontAttributes="Bold"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite seu peso..." Text="{Binding WeightEntry}" BackgroundColor="Azure" TextColor="{Binding WeightColorValidation}">
+                <Entry.Behaviors>
+                    <xct:EventToCommandBehavior EventName="TextChanged" Command="{Binding CaloricSuggestChangedCommand}"></xct:EventToCommandBehavior>
+                </Entry.Behaviors>
+            </Entry>
+            <Label Margin="5,0,0,0" Text="Altura (m):" FontAttributes="Bold"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite sua altura..." Text="{Binding HeightEntry}" BackgroundColor="Azure" TextColor="{Binding HeightColorValidation}">
+                <Entry.Behaviors>
+                    <xct:EventToCommandBehavior EventName="TextChanged" Command="{Binding CaloricSuggestChangedCommand}"></xct:EventToCommandBehavior>
+                </Entry.Behaviors>
+            </Entry>
+            <Label Margin="5,0,0,0" Text="Nível de atividade física:" FontAttributes="Bold"/>
+            <Picker ItemsSource="{Binding HabitualPhysicalActivityOptions}" SelectedIndex="{Binding HabitualPhysicalActivityIndex}" BackgroundColor="Azure" TextColor="{Binding PhysicalActivityColorValidation}">
+                <Picker.Behaviors>
+                    <xct:EventToCommandBehavior EventName="SelectedIndexChanged" Command="{Binding CaloricSuggestChangedCommand}" EventArgsConverter="{StaticResource selectedIndexChangedEventArgsConverter}"></xct:EventToCommandBehavior>
+                </Picker.Behaviors>
+            </Picker>
+            <Label Margin="5,0,0,0" Text="Unidade de energia" FontAttributes="Bold" IsVisible="false"/>
+            <Grid IsVisible="false">
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
@@ -41,20 +62,24 @@
                 <RadioButton Grid.Row="0" Grid.Column="1" Content="kJ (quilojoules)" IsChecked="{Binding KJEnabled}"></RadioButton>
             </Grid>
             <Label Margin="5,0,0,0" Text="Objetivo desejado:" FontAttributes="Bold"/>
-            <Picker ItemsSource="{Binding DailyKiloCaloriesObjectiveOptions}" SelectedIndex="{Binding DailyKiloCaloriesObjectiveIndex}" Background="Azure">
+            <Picker ItemsSource="{Binding DailyKiloCaloriesObjectiveOptions}" SelectedIndex="{Binding DailyKiloCaloriesObjectiveIndex}" BackgroundColor="Azure" TextColor="{Binding DailyKiloCaloriesObjectiveColorValidation}">
                 <Picker.Behaviors>
                     <xct:EventToCommandBehavior EventName="SelectedIndexChanged" Command="{Binding CaloricSuggestChangedCommand}" EventArgsConverter="{StaticResource selectedIndexChangedEventArgsConverter}"></xct:EventToCommandBehavior>
                 </Picker.Behaviors>
             </Picker>
-                
-            <Label Margin="5,0,0,0" Text="Gasto energético basal: "/>
-            <Label Margin="5,0,0,0" Text="{Binding BasalDailyCalories}"/>
-            <Label Margin="5,0,0,0" Text="Gasto energético diário: "/>
-            <Label Margin="5,0,0,0" Text="{Binding DailyKiloCaloriesBurn}"/>
+
+            <Label Margin="5,0,0,0" Text="Gasto energético basal: " IsVisible="false"/>
+            <Label Margin="5,0,0,0" Text="{Binding BasalDailyCalories}" IsVisible="false"/>
+            <Label Margin="5,0,0,0" Text="Gasto energético diário: " IsVisible="false"/>
+            <Label Margin="5,0,0,0" Text="{Binding DailyKiloCaloriesBurn}" IsVisible="false"/>
             <Label Margin="5,0,0,0" Text="Consumo diário de calorias sugerido: " FontAttributes="Bold"/>
-            <Label Margin="5,0,0,0" Text="{Binding DailyKiloCaloriesGoal}"/>
-            <Label Margin="5,0,0,0" Text="Meta diária de consumo de calorias" FontAttributes="Bold"/>
-            <Entry Keyboard="Numeric" Placeholder="Digite sua meta diária de consumo..." Text="{Binding UserInfo.KiloCaloriesDiaryObjective}" Background="Azure"/>
+            <Label Margin="5,0,0,0" Text="{Binding DailyKiloCaloriesGoal}" FontSize="Medium"/>
+            <Label Margin="5,0,0,0" Text="Meta diária de consumo de calorias:" FontAttributes="Bold"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite sua meta diária de consumo..." Text="{Binding UserInfo.KiloCaloriesDiaryObjective}" BackgroundColor="Azure" TextColor="{Binding KiloCaloriesDiaryObjectiveColorValidation}" FontSize="Medium">
+                <Entry.Behaviors>
+                    <xct:EventToCommandBehavior EventName="TextChanged" Command="{Binding CaloricSuggestChangedCommand}"></xct:EventToCommandBehavior>
+                </Entry.Behaviors>
+            </Entry>
             <Label Margin="5,0,0,0" Text="Doenças crônicas não transmissíveis (DCNT)" FontAttributes="Bold"/>
             <Grid>
                 <Grid.RowDefinitions>
