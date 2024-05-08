@@ -11,61 +11,50 @@
         <mct:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
     </ContentPage.Behaviors>
     
-    <ScrollView Margin="10">
-        <StackLayout Margin="10" Spacing="10">
-            <control:SfCircularChart>
-                <control:SfCircularChart.Title>
-                    <Label Text="Saldo calórico de hoje:" HorizontalTextAlignment="Center" FontSize="Large" FontAttributes="Bold"/>
-                </control:SfCircularChart.Title>
-                <control:SfCircularChart.Legend>
-                    <control:ChartLegend></control:ChartLegend>
-                </control:SfCircularChart.Legend>
-                <control:DoughnutSeries StartAngle="120" EndAngle="420"
-                                        ItemsSource="{Binding PartialResultsChart}" ShowDataLabels="True" LabelContext="Percentage" 
-                                        EnableAnimation="True"
-                                        EnableTooltip="True"
-                                        ExplodeOnTouch="True" ExplodeRadius="20"
-                                        InnerRadius="0.4"
-                                        XBindingPath="Label"
-                                        YBindingPath="Value">
+    <ScrollView Margin="5">
+        <StackLayout Margin="5" Spacing="10">
 
-                </control:DoughnutSeries>
-            </control:SfCircularChart>
-            <Label Text="Quantidades em gramas e percentual diário dos demais nutrientes*" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
-            <control:SfCartesianChart  x:Name="chart" IsTransposed="True">
-
-                <control:SfCartesianChart.XAxes>
-                    <control:CategoryAxis>
-
-                    </control:CategoryAxis>
-                </control:SfCartesianChart.XAxes>
-
-                <control:SfCartesianChart.YAxes>
-                    <control:NumericalAxis>
-                        <control:NumericalAxis.PlotBands>
-                            <control:NumericalPlotBandCollection>
-                                <control:NumericalPlotBand Start="0" End="29" 
-                                                                            Fill="Salmon"/>
-                                <control:NumericalPlotBand Start="30" End="74" 
-                                                                        Fill="Yellow"/>
-                                <control:NumericalPlotBand Start="75" End="125" 
-                                                                Fill="YellowGreen"/>
-
-                            </control:NumericalPlotBandCollection>
-                        </control:NumericalAxis.PlotBands>
-                    </control:NumericalAxis>
-                </control:SfCartesianChart.YAxes>
-
-                <control:ColumnSeries ItemsSource="{Binding PartialResultsMacroNutrients}"
-						XBindingPath="Label"
-						YBindingPath="Value" ShowDataLabels="True" LabelContext="YValue"/>
-
-            </control:SfCartesianChart>
-            <Label Text="*Valores diários dos demais nutrientes com referência para uma dieta de 2000 kcal" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
+            <HorizontalStackLayout Spacing="2" VerticalOptions="Center">
+                <Button x:Name="btnTest" Text="Informações" Command="{Binding OpenFlyoutCommand}" />
+                <Button x:Name="btnTermsOfUse" Text="Termos de Uso" Command="{Binding OpenTermsOfUseCommand}" />
+                <Button x:Name="btnConfig" Text="Configurações" Command="{Binding OpenConfigCommand}" />
+            </HorizontalStackLayout>
             <Label></Label>
-            <Button x:Name="btnTest" Text="Informações do aplicativo" Command="{Binding OpenFlyoutCommand}" />
-            <Button x:Name="btnConfig" Text="Configurações" Command="{Binding OpenConfigCommand}" />
-            <Button x:Name="btnTermsOfUse" Text="Termos de Uso e Privacidade" Command="{Binding OpenTermsOfUseCommand}" />
+            <Label Text="Saldo diário de calorias, carboidratos e proteínas" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
+            <control:SfCircularChart>
+                <control:SfCircularChart.Series>
+
+                    <control:RadialBarSeries ItemsSource="{Binding PartialResultsMacroNutrients1}" 
+                            XBindingPath="Label" 
+                            YBindingPath="Value" 
+                            EnableAnimation="True" EnableTooltip="True" GapRatio="0.2" ShowDataLabels="True" InnerRadius="0.05" Radius="1"
+                            MaximumValue="100"
+                            CapStyle = "BothCurve">
+                    </control:RadialBarSeries>
+                    </control:SfCircularChart.Series>
+                <control:SfCircularChart.Legend>
+                    <control:ChartLegend Placement="Top"/>
+                </control:SfCircularChart.Legend>
+            </control:SfCircularChart>
+            <Label Text="Saldo diário de outros macronutrientes" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
+            <control:SfCircularChart>
+                <control:SfCircularChart.Series>
+
+                    <control:RadialBarSeries ItemsSource="{Binding PartialResultsMacroNutrients2}" 
+                XBindingPath="Label" 
+                YBindingPath="Value" 
+                EnableAnimation="True" EnableTooltip="True" GapRatio="0.2" ShowDataLabels="True" InnerRadius="0.05" Radius="1"
+                MaximumValue="100" TrackFill="Khaki"
+                CapStyle = "BothCurve">
+                    </control:RadialBarSeries>
+                </control:SfCircularChart.Series>
+                <control:SfCircularChart.Legend>
+                    <control:ChartLegend Placement="Top"/>
+                </control:SfCircularChart.Legend>
+            </control:SfCircularChart>
+
+            <Label Text="*Valores diários dos demais nutrientes com referência para uma dieta de 2000 kcal" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
+           
             <Label Text="Registrar refeição" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
             <Button x:Name="btnCamera" Text="Por foto" Command="{Binding OpenCameraCommand}" />
             <Button x:Name="btnBarCode" Text="Por código de barras" Command="{Binding OpenBarCodeCommand}" />
