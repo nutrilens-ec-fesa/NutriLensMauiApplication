@@ -63,7 +63,7 @@ namespace NutriLensWebApp.Repositories
 
             try
             {
-                UserInfo newUserInfo = new() { Id = userInfoIdentifier };
+                UserInfo newUserInfo = new() { Id = userInfoIdentifier,  KiloCaloriesDiaryObjective = 2000 };
                 AppMongoDbContext.UserInfo.InsertOne(newUserInfo);
             }
             catch(Exception ex)
