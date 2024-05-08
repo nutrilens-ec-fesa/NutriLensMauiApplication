@@ -19,6 +19,7 @@ namespace NutriLens.ViewModels
 
         public Login LoginModel { get; set; }
         public string PasswordEntry { get; set; }
+        public string AppVersion { get => "V " + AppInfo.Current.VersionString; }
 
         public LoginPageVm(INavigation navigation)
         {
@@ -54,13 +55,36 @@ namespace NutriLens.ViewModels
                 await EntitiesHelperClass.CloseLoading();
                 PasswordEntry = string.Empty;
                 OnPropertyChanged(nameof(PasswordEntry));
-                await ViewServices.PopUpManager.PopPersonalizedAsync("Falha ao logar", ExceptionManager.ExceptionMessage(ex) , "OK");
+                await ViewServices.PopUpManager.PopPersonalizedAsync("Falha ao logar", ExceptionManager.ExceptionMessage(ex), "OK");
                 return;
             }
 
             await EntitiesHelperClass.CloseLoading();
 
             AppDataHelperClass.SetUserInfo(DaoHelperClass.GetUserInfoByAuthenticatedUser());
+
+            EntitiesHelperClass.ShowLoading("Verificando termos de uso");
+
+            bool termsAccepted = false;
+
+            await Task.Run(() => termsAccepted = DaoHelperClass.GetTermsAcceptedByAuthenticatedUser());
+
+            await EntitiesHelperClass.CloseLoading();
+
+            if (!termsAccepted)
+            {
+                TermsOfUsePopup termsOfUsePopup = new TermsOfUsePopup(false, true);
+                await Application.Current.MainPage.ShowPopupAsync(termsOfUsePopup);
+
+                // Se os termos não foram aceitos, interrompe o login
+                if (!termsOfUsePopup.TermsAccepted)
+                    return;
+                else
+                {
+                    AppDataHelperClass.UserInfo.TermsAccepted = true;
+                    AppDataHelperClass.SetUserInfo(AppDataHelperClass.UserInfo);
+                }
+            }
 
             EntitiesHelperClass.ShowLoading("Verificando refeições");
 
@@ -90,7 +114,6 @@ namespace NutriLens.ViewModels
 
             await HandlePermissions();
 
-
             bool hasUserInfo = false;
 
             await Task.Run(() => hasUserInfo = AppDataHelperClass.HasUserInfo);
@@ -116,9 +139,19 @@ namespace NutriLens.ViewModels
 
                 if (!termsAccepted)
                 {
-                    TermsOfUsePopup termsOfUsePopup = new TermsOfUsePopup();
+                    TermsOfUsePopup termsOfUsePopup = new TermsOfUsePopup(false, true);
                     await Application.Current.MainPage.ShowPopupAsync(termsOfUsePopup);
+
+                    // Se os termos não foram aceitos, interrompe o login
+                    if (!termsOfUsePopup.TermsAccepted)
+                        return;
+                    else
+                    {
+                        AppDataHelperClass.UserInfo.TermsAccepted = true;
+                        AppDataHelperClass.SetUserInfo(AppDataHelperClass.UserInfo);
+                    }
                 }
+
 
                 EntitiesHelperClass.ShowLoading("Verificando refeições");
 
