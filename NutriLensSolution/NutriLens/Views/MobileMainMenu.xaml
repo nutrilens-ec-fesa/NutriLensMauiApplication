@@ -10,15 +10,18 @@
         <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
         <mct:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
     </ContentPage.Behaviors>
-    
+
     <ScrollView Margin="5">
         <StackLayout Margin="5" Spacing="10">
 
-            <HorizontalStackLayout Spacing="2" VerticalOptions="Center">
-                <Button x:Name="btnTest" Text="Informações" Command="{Binding OpenFlyoutCommand}" />
-                <Button x:Name="btnTermsOfUse" Text="Termos de Uso" Command="{Binding OpenTermsOfUseCommand}" />
-                <Button x:Name="btnConfig" Text="Configurações" Command="{Binding OpenConfigCommand}" />
-            </HorizontalStackLayout>
+            <Grid ColumnSpacing="2" VerticalOptions="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" x:Name="btnTermsOfUse" Text="Termos de Uso" Command="{Binding OpenTermsOfUseCommand}" />
+                <Button Grid.Column="1" x:Name="btnConfig" Text="Configurações" Command="{Binding OpenConfigCommand}" />
+            </Grid>
             <Label></Label>
             <Label Text="Saldo diário de calorias, carboidratos e proteínas" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
             <control:SfCircularChart>
@@ -29,9 +32,10 @@
                             YBindingPath="Value" 
                             EnableAnimation="True" EnableTooltip="True" GapRatio="0.2" ShowDataLabels="True" InnerRadius="0.05" Radius="1"
                             MaximumValue="100"
-                            CapStyle = "BothCurve">
+                            CapStyle = "BothCurve"
+                            PaletteBrushes="{Binding Chart1ColorPalette}">
                     </control:RadialBarSeries>
-                    </control:SfCircularChart.Series>
+                </control:SfCircularChart.Series>
                 <control:SfCircularChart.Legend>
                     <control:ChartLegend Placement="Top"/>
                 </control:SfCircularChart.Legend>
@@ -44,8 +48,9 @@
                 XBindingPath="Label" 
                 YBindingPath="Value" 
                 EnableAnimation="True" EnableTooltip="True" GapRatio="0.2" ShowDataLabels="True" InnerRadius="0.05" Radius="1"
-                MaximumValue="100" TrackFill="Khaki"
-                CapStyle = "BothCurve">
+                MaximumValue="100"
+                CapStyle = "BothCurve"
+                PaletteBrushes="{Binding Chart2ColorPalette}">
                     </control:RadialBarSeries>
                 </control:SfCircularChart.Series>
                 <control:SfCircularChart.Legend>
@@ -54,7 +59,7 @@
             </control:SfCircularChart>
 
             <Label Text="*Valores diários dos demais nutrientes com referência para uma dieta de 2000 kcal" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
-           
+
             <Label Text="Registrar refeição" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
             <Button x:Name="btnCamera" Text="Por foto" Command="{Binding OpenCameraCommand}" />
             <Button x:Name="btnBarCode" Text="Por código de barras" Command="{Binding OpenBarCodeCommand}" />
@@ -70,12 +75,13 @@
             <Button x:Name="btnListAll" Text="Listar todas as refeições" Command="{Binding ListAllCommand}"/>
             <Label Text="Consultar fotos" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
             <Button x:Name="btnOpenGallery" Text="Galeria" Command="{Binding OpenGalleryCommand}"/>
-            
+
             <Label Text="Configurações" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" IsVisible="{Binding DevUser}"/>
             <Button x:Name="btnEditBarCodeProducts" Text="Editar produtos (cód. barras)" Command="{Binding EditBarCodeProductsCommand}" IsVisible="{Binding DevUser}"/>
             <Button x:Name="btnEditAiModelPrompt" Text="Editar prompt GPT-4" Command="{Binding EditAiModelPromptCommand}" IsVisible="{Binding DevUser}"/>
-            
+
             <Label Text="Opções" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+            <Button x:Name="btnTest" Text="Sobre" Command="{Binding OpenFlyoutCommand}" />
             <Button x:Name="btnLogOut" BackgroundColor="IndianRed" Text="Sair" Command="{Binding LogOutCommand}"/>
             <Button x:Name="btnQuit" BackgroundColor="IndianRed" Text="Fechar aplicativo" Command="{Binding CloseApplicationCommand}"/>
             <Label Text="{Binding AppVersion}" HorizontalOptions="Center" Margin="10"></Label>

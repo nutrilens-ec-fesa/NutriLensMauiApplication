@@ -13,6 +13,7 @@ using NutriLensClassLibrary.Models;
 using System.Reflection;
 using ExceptionLibrary;
 using Android.Speech;
+using System.Collections.ObjectModel;
 
 namespace NutriLens.ViewModels
 {
@@ -34,7 +35,7 @@ namespace NutriLens.ViewModels
                 _mealList = new MealListClass(AppDataHelperClass.GetTodayMeals());
                 _physicalActivitiesList = AppDataHelperClass.GetTodayPhysicalActivities();
                 _caloricBalance = _mealList.TotalEnergeticConsumption() - EntitiesHelperClass.TotalEnergeticConsumption(_physicalActivitiesList);
-                return _caloricBalance.ToString("0.00") + " " + AppConfigHelperClass.EnergeticUnit;  
+                return _caloricBalance.ToString("0.00") + " " + AppConfigHelperClass.EnergeticUnit;
             }
         }
 
@@ -60,7 +61,7 @@ namespace NutriLens.ViewModels
                 _caloricBalance = _mealList.TotalEnergeticConsumption() - EntitiesHelperClass.TotalEnergeticConsumption(_physicalActivitiesList);
                 double diaryObjective = AppDataHelperClass.GetEnergeticDiaryObjective();
                 double partialResults = (_caloricBalance / diaryObjective) * 100;
-                
+
                 List<DataModel> donut = new List<DataModel>();
                 DataModel consumed = new DataModel();
                 consumed.Label = "Consumido: " + _caloricBalance.ToString("0.0") + " Kcal";
@@ -157,6 +158,8 @@ namespace NutriLens.ViewModels
 
         public string AppVersion { get => "V " + AppInfo.Current.VersionString; }
 
+        public ObservableCollection<Brush> Chart1ColorPalette { get; set; }
+        public ObservableCollection<Brush> Chart2ColorPalette { get; set; }
 
         public List<DataModel> PartialResultsMacroNutrients1
         {
@@ -170,9 +173,6 @@ namespace NutriLens.ViewModels
 
                 double carboidratos = _mealList.TotalCarbohydratesConsumption();    //300g   %100 VD
                 double proteinas = _mealList.TotalProteinsConsumption();            //75g    %100 VD 
-                double gordura = _mealList.TotalFatConsumption();                   //55g    %100 VD Gorduras totais
-                double fibra = _mealList.TotalFibersConsumption();                  //25g    %100 VD
-                double sodio = _mealList.TotalSodiumConsumption();                  //2,4g     %100 VD
 
                 List<DataModel> barChart = new List<DataModel>();
 
@@ -209,18 +209,19 @@ namespace NutriLens.ViewModels
                 DataModel gord = new DataModel();
                 gord.Label = "Gorduras:\n " + gordura.ToString("0.0") + "g\n" + " de 55g";
                 gord.Value = (gordura / 55) * 100;
-                gord.TrackFill = new SolidColorBrush(Color.FromArgb("#E3955D"));
+                gord.TrackStroke = SolidColorBrush.Red;
                 barChart.Add(gord);
 
 
                 DataModel fib = new DataModel();
                 fib.Label = "Fibras:\n " + fibra.ToString("0.0") + "g\n" + " de 25g";
                 fib.Value = (fibra / 25) * 100;
+                fib.TrackFill = SolidColorBrush.Magenta;
                 barChart.Add(fib);
-                
+
                 DataModel sod = new DataModel();
                 sod.Label = "Sódio:\n " + sodio.ToString("0.0") + "mg" + " de 2400mg";
-                sod.Value = (sodio / 2400) *100;
+                sod.Value = (sodio / 2400) * 100;
                 barChart.Add(sod);
 
                 return barChart;
@@ -233,6 +234,20 @@ namespace NutriLens.ViewModels
         {
             _navigation = navigation;
             Application.Current.UserAppTheme = AppTheme.Light;
+
+            Chart1ColorPalette = new ObservableCollection<Brush>
+            {
+                new SolidColorBrush(ColorHelperClass.ProteinColor),
+                new SolidColorBrush(ColorHelperClass.CarbohydratesColor),
+                new SolidColorBrush(ColorHelperClass.CaloriesColor)
+            };
+
+            Chart2ColorPalette = new ObservableCollection<Brush>
+            {
+                new SolidColorBrush(ColorHelperClass.FatColor),
+                new SolidColorBrush(ColorHelperClass.FibersColor),
+                new SolidColorBrush(ColorHelperClass.SodiumColor),
+            };
         }
 
 
@@ -266,7 +281,7 @@ namespace NutriLens.ViewModels
             await TextToSpeech.SpeakAsync("Claro! Informe todos os itens do seu prato e a quantidade em gramas de cada um deles.");
             string command = await VoiceCommandsHelperClass.GetVoiceCommand();
 
-            if(await ViewServices.PopUpManager.PopYesOrNoAsync("Detecção por voz", "Fala detectada: " + command + Environment.NewLine + "Deseja continuar?"))
+            if (await ViewServices.PopUpManager.PopYesOrNoAsync("Detecção por voz", "Fala detectada: " + command + Environment.NewLine + "Deseja continuar?"))
             {
                 List<FoodItem> foodItems;
 
@@ -329,7 +344,7 @@ namespace NutriLens.ViewModels
             {
                 List<Meal> mealsInPeriod = AppDataHelperClass.GetMealsByDateRange(periodChoosePopup.StartSelectedDate, periodChoosePopup.EndSelectedDate);
 
-                if(mealsInPeriod.Count == 0)
+                if (mealsInPeriod.Count == 0)
                 {
                     await ViewServices.PopUpManager.PopErrorAsync("Não foram encontradas refeições no perído informado!");
                     return;
@@ -351,7 +366,7 @@ namespace NutriLens.ViewModels
                 AppDataHelperClass.FilteredMealList = null;
                 await _navigation.PushAsync(ViewServices.ResolvePage<IMealHistoricPage>());
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await ViewServices.PopUpManager.PopErrorAsync(ExceptionManager.ExceptionMessage(ex));
             }
@@ -407,13 +422,13 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private void Disappearing()
         {
-            
+
         }
 
         [RelayCommand]
         private async void LogOut()
         {
-            if(await ViewServices.PopUpManager.PopYesOrNoAsync("Sair", "Deseja sair deste dispositivo?"))
+            if (await ViewServices.PopUpManager.PopYesOrNoAsync("Sair", "Deseja sair deste dispositivo?"))
             {
                 AppDataHelperClass.CleanUserInfo();
                 AppDataHelperClass.CleanSessionInfo();
