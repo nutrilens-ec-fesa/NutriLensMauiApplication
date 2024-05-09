@@ -10,7 +10,7 @@
     <ScrollView>
         <VerticalStackLayout x:Name="gridPictures">
             <Button x:Name="BtnSyncUserDatabase" Margin="20,20,20,0" Text="Buscar minhas fotos em nuvem" Clicked="BtnSyncUserDatabase_Clicked"></Button>
-            <Button x:Name="BtnSyncDatabase" Margin="20,20,20,20" Text="Buscar todas as fotos em nuvem" Clicked="BtnSyncDatabase_Clicked"></Button>
+            <Button x:Name="BtnSyncDatabase" Margin="20,20,20,20" Text="Buscar todas as fotos em nuvem" Clicked="BtnSyncDatabase_Clicked" IsVisible="{Binding DevUser}"></Button>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

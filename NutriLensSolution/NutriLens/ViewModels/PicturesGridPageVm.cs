@@ -1,10 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using NutriLens.Entities;
 
 namespace NutriLens.ViewModels
 {
     internal class PicturesGridPageVm : ObservableObject
     {
         public Grid PicturesGrid { get; set; }
+
+        public bool DevUser { get => AppDataHelperClass.UserInfo.DevUser; }
 
         public PicturesGridPageVm()
         {
