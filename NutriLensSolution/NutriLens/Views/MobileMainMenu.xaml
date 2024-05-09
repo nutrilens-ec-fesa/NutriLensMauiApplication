@@ -70,9 +70,11 @@
             <Button x:Name="btnListAll" Text="Listar todas as refeições" Command="{Binding ListAllCommand}"/>
             <Label Text="Consultar fotos" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
             <Button x:Name="btnOpenGallery" Text="Galeria" Command="{Binding OpenGalleryCommand}"/>
-            <Label Text="Configurações" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
-            <Button x:Name="btnEditBarCodeProducts" Text="Editar produtos (cód. barras)" Command="{Binding EditBarCodeProductsCommand}"/>
-            <Button x:Name="btnEditAiModelPrompt" Text="Editar prompt GPT-4" Command="{Binding EditAiModelPromptCommand}"/>
+            
+            <Label Text="Configurações" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" IsVisible="{Binding DevUser}"/>
+            <Button x:Name="btnEditBarCodeProducts" Text="Editar produtos (cód. barras)" Command="{Binding EditBarCodeProductsCommand}" IsVisible="{Binding DevUser}"/>
+            <Button x:Name="btnEditAiModelPrompt" Text="Editar prompt GPT-4" Command="{Binding EditAiModelPromptCommand}" IsVisible="{Binding DevUser}"/>
+            
             <Label Text="Opções" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
             <Button x:Name="btnLogOut" BackgroundColor="IndianRed" Text="Sair" Command="{Binding LogOutCommand}"/>
             <Button x:Name="btnQuit" BackgroundColor="IndianRed" Text="Fechar aplicativo" Command="{Binding CloseApplicationCommand}"/>

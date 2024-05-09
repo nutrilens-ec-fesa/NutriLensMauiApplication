@@ -227,6 +227,8 @@ namespace NutriLens.ViewModels
             }
         }
 
+        public bool DevUser { get => AppDataHelperClass.UserInfo.DevUser; }
+
         public MainMenuPageVM(INavigation navigation)
         {
             _navigation = navigation;
