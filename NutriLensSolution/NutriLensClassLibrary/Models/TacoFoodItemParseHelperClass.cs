@@ -47,6 +47,9 @@ namespace NutriLensClassLibrary.Models
                 if (Regex.IsMatch(tacoItem.Nome, @"CORAÇÃO", RegexOptions.IgnoreCase) && !Regex.IsMatch(simpleFoodItem.Item, @"CORAÇÃO", RegexOptions.IgnoreCase))
                     continue;
 
+                if (Regex.IsMatch(tacoItem.Nome, @"QUIBE", RegexOptions.IgnoreCase) && !Regex.IsMatch(simpleFoodItem.Item, @"QUIBE", RegexOptions.IgnoreCase))
+                    continue;
+
                 if (!Regex.IsMatch(tacoItem.Nome, @"BATATA", RegexOptions.IgnoreCase) && Regex.IsMatch(simpleFoodItem.Item, @"BATATA", RegexOptions.IgnoreCase))
                     continue;
 
