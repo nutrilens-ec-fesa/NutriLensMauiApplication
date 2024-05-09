@@ -1,4 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace NutriLensClassLibrary.Models
 {
@@ -117,5 +119,12 @@ namespace NutriLensClassLibrary.Models
         /// </summary>
         public DailyKiloCaloriesObjective DailyKiloCaloriesObjective { get; set; }
 
+        /// <summary>
+        /// Propriedade que identifica se o usuário possui uma especialização dentro do sistema
+        /// </summary>
+        public string Role { get; set; }
+
+        [JsonIgnore, BsonIgnore]
+        public bool DevUser { get => Role == "DEV"; }
     }
 }
