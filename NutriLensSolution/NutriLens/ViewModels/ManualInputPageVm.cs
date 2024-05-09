@@ -101,6 +101,7 @@ namespace NutriLens.ViewModels
                         Name = addFoodItemPopup.SelectedItem.Nome,
                         Portion = addFoodItemPopup.InputPortion,
                         KiloCalories = addFoodItemPopup.InputCalories,
+                        TacoFoodItem = TacoFoodItemParseHelperClass.GetTacoFoodItem(addFoodItemPopup.SelectedItem, addFoodItemPopup.InputPortion)
                     };
                 }
                 else
