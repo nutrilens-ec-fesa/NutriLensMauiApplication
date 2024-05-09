@@ -148,7 +148,7 @@ namespace NutriLensClassLibrary.Models
             return true;
         }
 
-        private static TacoItem GetTacoFoodItem(TacoItem taco, string portion)
+        public static TacoItem GetTacoFoodItem(TacoItem taco, string portion)
         {
             double portionDouble = double.Parse(portion);
 
