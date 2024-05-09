@@ -80,7 +80,7 @@
                     <xct:EventToCommandBehavior EventName="TextChanged" Command="{Binding CaloricSuggestChangedCommand}"></xct:EventToCommandBehavior>
                 </Entry.Behaviors>
             </Entry>
-            <Label Margin="5,0,0,0" Text="Doenças crônicas não transmissíveis (DCNT)" FontAttributes="Bold"/>
+            <Label Margin="5,30,0,0" Text="Doenças crônicas não transmissíveis (DCNT)" FontAttributes="Bold"/>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
@@ -98,7 +98,7 @@
                     <Label Text="Diabetes" VerticalOptions="Center" />
                 </StackLayout>
             </Grid>
-            <Label Margin="5,0,0,0" Text="Restrições alimentares"/>
+            <Label Margin="5,0,0,0" Text="Restrições alimentares" FontAttributes="Bold"/>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
@@ -116,7 +116,7 @@
                     <Label Text="Intolerante a glúten" VerticalOptions="Center" />
                 </StackLayout>
             </Grid>
-            <Button Text="Salvar informações" Command="{Binding SaveConfigsCommand}" />
+            <Button Margin="0,30,0,0" Text="Salvar informações" Command="{Binding SaveConfigsCommand}" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
