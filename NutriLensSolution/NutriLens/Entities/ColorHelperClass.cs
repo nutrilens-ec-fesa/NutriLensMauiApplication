@@ -35,5 +35,10 @@ namespace NutriLens.Entities
         public static Color FatColor { get => Praegressus; }
         public static Color FibersColor { get => Gold; }
         public static Color SodiumColor{ get => BabyBlue; }
+        public static Color CholesterolColor { get => DarkMagenta; }
+        public static Color CalciumColor { get => Tan; }
+        public static Color IronColor { get => LightBlue; }
+
+
     }
 }

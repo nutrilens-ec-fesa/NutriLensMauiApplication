@@ -320,5 +320,77 @@ namespace NutriLens.Models
 
             return totalSodium;
         }
+
+        public double TotalCholesterolConsumption()
+        {
+            double totalCholesterol;
+
+            try
+            {
+                totalCholesterol = Math.Round(MealList
+                    .SelectMany(meal => meal.FoodItems)
+                    .Where(x => x.TacoFoodItem != null && x.TacoFoodItem.Colesterol != null && double.TryParse(x.TacoFoodItem.Colesterol.ToString(), out _))
+                    .Sum(foodItem => (double)foodItem.TacoFoodItem.Colesterol), 2);
+
+                totalCholesterol += Math.Round(MealList
+                    .SelectMany(meal => meal.FoodItems)
+                    .Where(x => x.BarcodeItemEntry != null)
+                    .Sum(foodItem => foodItem.BarcodeItemEntry.CholesterolConsumption), 2);
+            }
+            catch
+            {
+                totalCholesterol = 0;
+            }
+
+            return totalCholesterol;
+        }
+
+        public double TotalCalciumConsumption()
+        {
+            double totalCalcium;
+
+            try
+            {
+                totalCalcium = Math.Round(MealList
+                    .SelectMany(meal => meal.FoodItems)
+                    .Where(x => x.TacoFoodItem != null && x.TacoFoodItem.Calcio != null && double.TryParse(x.TacoFoodItem.Calcio.ToString(), out _))
+                    .Sum(foodItem => (double)foodItem.TacoFoodItem.Calcio), 2);
+
+                totalCalcium += Math.Round(MealList
+                    .SelectMany(meal => meal.FoodItems)
+                    .Where(x => x.BarcodeItemEntry != null)
+                    .Sum(foodItem => foodItem.BarcodeItemEntry.CalciumConsumption), 2);
+            }
+            catch
+            {
+                totalCalcium = 0;
+            }
+
+            return totalCalcium;
+        }
+
+        public double TotalIronConsumption()
+        {
+            double totalIron;
+
+            try
+            {
+                totalIron = Math.Round(MealList
+                    .SelectMany(meal => meal.FoodItems)
+                    .Where(x => x.TacoFoodItem != null && x.TacoFoodItem.Ferro != null && double.TryParse(x.TacoFoodItem.Ferro.ToString(), out _))
+                    .Sum(foodItem => (double)foodItem.TacoFoodItem.Ferro), 2);
+
+                totalIron += Math.Round(MealList
+                    .SelectMany(meal => meal.FoodItems)
+                    .Where(x => x.BarcodeItemEntry != null)
+                    .Sum(foodItem => foodItem.BarcodeItemEntry.IronConsumption), 2);
+            }
+            catch
+            {
+                totalIron = 0;
+            }
+
+            return totalIron;
+        }
     }
 }

@@ -155,11 +155,40 @@ namespace NutriLens.ViewModels
             }
         }
 
+        public string TodayMealCholesterol
+        {
+            get
+            {
+                _mealList = new MealListClass(AppDataHelperClass.GetTodayMeals());
+                return $"Colesterol: {_mealList.TotalCholesterolConsumption} mg";
+            }
+        }
+
+        public string TodayMealCalcium
+        {
+            get
+            {
+                _mealList = new MealListClass(AppDataHelperClass.GetTodayMeals());
+                return $"Calcio: {_mealList.TotalCalciumConsumption} mg";
+            }
+        }
+
+        public string TodayMealIron
+        {
+            get
+            {
+                _mealList = new MealListClass(AppDataHelperClass.GetTodayMeals());
+                return $"Ferro: {_mealList.TotalIronConsumption} mg";
+            }
+        }
+
 
         public string AppVersion { get => "V " + AppInfo.Current.VersionString; }
 
         public ObservableCollection<Brush> Chart1ColorPalette { get; set; }
         public ObservableCollection<Brush> Chart2ColorPalette { get; set; }
+
+        public ObservableCollection<Brush> Chart3ColorPalette { get; set; }
 
         public List<DataModel> PartialResultsMacroNutrients1
         {
@@ -182,12 +211,12 @@ namespace NutriLens.ViewModels
                 barChart.Add(prot);
 
                 DataModel carb = new DataModel();
-                carb.Label = "Carboidratos:\n" + carboidratos.ToString("0.0") + "g\n" + " de 300g";
+                carb.Label = "Carboidratos:\n " + carboidratos.ToString("0.0") + "g\n" + " de 300g";
                 carb.Value = (carboidratos / 300) * 100;
                 barChart.Add(carb);
 
                 DataModel consumed = new DataModel();
-                consumed.Label = "Calorias:\n " + _caloricBalance.ToString("0.0") + "g\n" + " de " + diaryObjective.ToString("0.0") + "g";
+                consumed.Label = "Calorias:\n " + _caloricBalance.ToString("0.0") + "kcal\n" + " de " + diaryObjective.ToString("0.0") + "kcal";
                 consumed.Value = partialResults;
                 barChart.Add(consumed);
 
@@ -220,9 +249,40 @@ namespace NutriLens.ViewModels
                 barChart.Add(fib);
 
                 DataModel sod = new DataModel();
-                sod.Label = "Sódio:\n " + sodio.ToString("0.0") + "mg" + " de 2400mg";
+                sod.Label = "Sódio:\n " + sodio.ToString("0.0") + "mg\n" + " de 2400mg";
                 sod.Value = (sodio / 2400) * 100;
                 barChart.Add(sod);
+
+                return barChart;
+            }
+        }
+
+        public List<DataModel> PartialResultsMacroNutrients3
+        {
+            get
+            {
+
+                double colesterol = _mealList.TotalCholesterolConsumption();        //300mg    %100 VD Gorduras totais
+                double calcio = _mealList.TotalCalciumConsumption();                //1000mg    %100 VD
+                double ferro = _mealList.TotalIronConsumption();                    //14mg   %100 VD
+
+                List<DataModel> barChart = new List<DataModel>();
+
+                DataModel col = new DataModel();
+                col.Label = "Colesterol:\n " + colesterol.ToString("0.0") + "mg\n" + " de 300mg";
+                col.Value = (colesterol / 300) * 100;
+                barChart.Add(col);
+
+
+                DataModel cal = new DataModel();
+                cal.Label = "Cálcio:\n " + calcio.ToString("0.0") + "mg\n" + " de 1000mg";
+                cal.Value = (calcio / 1000) * 100;
+                barChart.Add(cal);
+
+                DataModel fer = new DataModel();
+                fer.Label = "Ferro:\n " + ferro.ToString("0.0") + "mg\n" + " de 14mg";
+                fer.Value = (ferro / 14) * 100;
+                barChart.Add(fer);
 
                 return barChart;
             }
@@ -247,6 +307,13 @@ namespace NutriLens.ViewModels
                 new SolidColorBrush(ColorHelperClass.FatColor),
                 new SolidColorBrush(ColorHelperClass.FibersColor),
                 new SolidColorBrush(ColorHelperClass.SodiumColor),
+            };
+
+            Chart3ColorPalette = new ObservableCollection<Brush>
+            {
+                new SolidColorBrush(ColorHelperClass.CholesterolColor),
+                new SolidColorBrush(ColorHelperClass.CalciumColor),
+                new SolidColorBrush(ColorHelperClass.IronColor),
             };
         }
 
@@ -314,6 +381,7 @@ namespace NutriLens.ViewModels
             OnPropertyChanged(nameof(PartialResultsChart));
             OnPropertyChanged(nameof(PartialResultsMacroNutrients1));
             OnPropertyChanged(nameof(PartialResultsMacroNutrients2));
+            OnPropertyChanged(nameof(PartialResultsMacroNutrients3));
         }
 
         [RelayCommand]
@@ -414,9 +482,13 @@ namespace NutriLens.ViewModels
             OnPropertyChanged(nameof(TodayMealFat));
             OnPropertyChanged(nameof(TodayMealFibers));
             OnPropertyChanged(nameof(TodayMealSodium));
+            OnPropertyChanged(nameof(TodayMealCholesterol));
+            OnPropertyChanged(nameof(TodayMealCalcium));
+            OnPropertyChanged(nameof(TodayMealIron));
             OnPropertyChanged(nameof(PartialResultsChart));
             OnPropertyChanged(nameof(PartialResultsMacroNutrients1));
             OnPropertyChanged(nameof(PartialResultsMacroNutrients2));
+            OnPropertyChanged(nameof(PartialResultsMacroNutrients3));
         }
 
         [RelayCommand]

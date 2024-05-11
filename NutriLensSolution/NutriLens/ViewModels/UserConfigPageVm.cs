@@ -10,6 +10,7 @@ using NutriLensClassLibrary.Models;
 using System.Collections.ObjectModel;
 using StringLibrary;
 using System.ComponentModel;
+using CommunityToolkit.Maui.Core.Extensions;
 
 namespace NutriLens.ViewModels
 {
@@ -65,6 +66,24 @@ namespace NutriLens.ViewModels
 
         public string DailyKiloCaloriesGoal { get; set; }
 
+        public string CarbohydrateGoalEntry { get; set; }
+
+        public string ProteinGoalEntry { get; set; }
+
+        public string FatGoalEntry { get; set; }
+
+        public string FiberGoalEntry { get; set; }
+
+        public string SodiumGoalEntry { get; set; }
+
+        public string CholesterolGoalEntry { get; set; }
+
+        public string CalciumGoalEntry { get; set; }
+
+        public string IronGoalEntry { get; set; }
+
+        public bool UseSuggestedCaloricGoalEntry { get; set; }
+
         public Color GenderColorValidation { get => GenderIndex == 0 ? ColorHelperClass.InvalidFieldColor : ColorHelperClass.ValidFieldColor; }
 
         public Color BornColorValidation
@@ -97,6 +116,94 @@ namespace NutriLens.ViewModels
             }
         }
 
+        public Color CarbohydrateGoalColorValidation
+        {
+            get
+            {
+                if (StringFunctions.ParseDoubleValue(CarbohydrateGoalEntry, out double carbohydrateValue) && carbohydrateValue > 0)
+                    return ColorHelperClass.ValidFieldColor;
+                else
+                    return ColorHelperClass.InvalidFieldColor;
+            }
+        }
+
+        public Color ProteinGoalColorValidation
+        {
+            get
+            {
+                if (StringFunctions.ParseDoubleValue(ProteinGoalEntry, out double proteinValue) && proteinValue > 0)
+                    return ColorHelperClass.ValidFieldColor;
+                else
+                    return ColorHelperClass.InvalidFieldColor;
+            }
+        }
+
+        public Color FatGoalColorValidation
+        {
+            get
+            {
+                if (StringFunctions.ParseDoubleValue(FatGoalEntry, out double fatValue) && fatValue > 0)
+                    return ColorHelperClass.ValidFieldColor;
+                else
+                    return ColorHelperClass.InvalidFieldColor;
+            }
+        }
+
+        public Color FiberGoalColorValidation
+        {
+            get
+            {
+                if (StringFunctions.ParseDoubleValue(FiberGoalEntry, out double fiberValue) && fiberValue > 0)
+                    return ColorHelperClass.ValidFieldColor;
+                else
+                    return ColorHelperClass.InvalidFieldColor;
+            }
+        }
+
+        public Color SodiumGoalColorValidation
+        {
+            get
+            {
+                if (StringFunctions.ParseDoubleValue(SodiumGoalEntry, out double sodiumValue) && sodiumValue > 0)
+                    return ColorHelperClass.ValidFieldColor;
+                else
+                    return ColorHelperClass.InvalidFieldColor;
+            }
+        }
+
+        public Color CholesterolGoalColorValidation
+        {
+            get
+            {
+                if (StringFunctions.ParseDoubleValue(CholesterolGoalEntry, out double cholesterolValue) && cholesterolValue > 0)
+                    return ColorHelperClass.ValidFieldColor;
+                else
+                    return ColorHelperClass.InvalidFieldColor;
+            }
+        }
+
+        public Color CalciumGoalColorValidation
+        {
+            get
+            {
+                if (StringFunctions.ParseDoubleValue(CalciumGoalEntry, out double calciumValue) && calciumValue > 0)
+                    return ColorHelperClass.ValidFieldColor;
+                else
+                    return ColorHelperClass.InvalidFieldColor;
+            }
+        }
+
+        public Color IronGoalColorValidation
+        {
+            get
+            {
+                if (StringFunctions.ParseDoubleValue(IronGoalEntry, out double ironValue) && ironValue > 0)
+                    return ColorHelperClass.ValidFieldColor;
+                else
+                    return ColorHelperClass.InvalidFieldColor;
+            }
+        }
+
         public Color PhysicalActivityColorValidation { get => HabitualPhysicalActivityIndex == 0 ? ColorHelperClass.InvalidFieldColor : ColorHelperClass.ValidFieldColor; }
         
         public Color DailyKiloCaloriesObjectiveColorValidation { get => DailyKiloCaloriesObjectiveIndex == 0 ? ColorHelperClass.InvalidFieldColor : ColorHelperClass.ValidFieldColor; }
@@ -122,6 +229,8 @@ namespace NutriLens.ViewModels
             _navigation = navigation;
             UserInfo = AppDataHelperClass.UserInfo;
 
+            var anvisaLimits = AppDataHelperClass.GetAnvisaLimits();
+
             if (UserInfo.BornDate == DateTime.MinValue)
                 UserInfo.BornDate = DateTime.Now;
 
@@ -142,6 +251,53 @@ namespace NutriLens.ViewModels
             KJEnabled = !KcalEnabled;
             WeightEntry = UserInfo.Weight.ToString("0.00");
             HeightEntry = UserInfo.Height.ToString("0.00");
+
+            if(UserInfo.DailyCarbohydrateGoal.IsZeroOrNaN())
+                CarbohydrateGoalEntry = anvisaLimits.Carboidratos.ToString("0.00");
+            else
+                CarbohydrateGoalEntry = UserInfo.DailyCarbohydrateGoal.ToString("0.00");
+
+            if (UserInfo.DailyProteinGoal.IsZeroOrNaN())
+                ProteinGoalEntry = anvisaLimits.Proteinas.ToString("0.00");
+            else
+                ProteinGoalEntry = UserInfo.DailyProteinGoal.ToString("0.00");
+
+            if (UserInfo.DailyFatGoal.IsZeroOrNaN())
+                FatGoalEntry = anvisaLimits.GordurasTotais.ToString("0.00");
+            else
+                FatGoalEntry = UserInfo.DailyFatGoal.ToString("0.00");
+
+            if (UserInfo.DailyFiberGoal.IsZeroOrNaN())
+                FiberGoalEntry = anvisaLimits.FibraAlimentar.ToString("0.00");
+            else
+                FiberGoalEntry = UserInfo.DailyFiberGoal.ToString("0.00");
+
+            if (UserInfo.DailySodiumGoal.IsZeroOrNaN())
+                SodiumGoalEntry = anvisaLimits.Sodio.ToString("0.00");
+            else
+                SodiumGoalEntry = UserInfo.DailySodiumGoal.ToString("0.00");
+
+            if (UserInfo.DailyCholesterolGoal.IsZeroOrNaN())
+                CholesterolGoalEntry = anvisaLimits.Colesterol.ToString("0.00");
+            else
+                CholesterolGoalEntry = UserInfo.DailyCholesterolGoal.ToString("0.00");
+
+            if (UserInfo.DailyCalciumGoal.IsZeroOrNaN())
+                CalciumGoalEntry = anvisaLimits.Calcio.ToString("0.00");
+            else
+                CalciumGoalEntry = UserInfo.DailyCalciumGoal.ToString("0.00");
+
+            if (UserInfo.DailyIronGoal.IsZeroOrNaN())
+                IronGoalEntry = anvisaLimits.Ferro.ToString("0.00");
+            else
+                IronGoalEntry = UserInfo.DailyIronGoal.ToString("0.00");
+
+            UseSuggestedCaloricGoalEntry = UserInfo.UseSuggestedCaloricGoal;
+
+            if (UseSuggestedCaloricGoalEntry)
+            {
+                UserInfo.KiloCaloriesDiaryObjective = int.Parse(DailyKiloCaloriesGoal);
+            }
 
             HabitualPhysicalActivityOptions = new ObservableCollection<string>();
             DailyKiloCaloriesObjectiveOptions = new ObservableCollection<string>();
@@ -210,6 +366,15 @@ namespace NutriLens.ViewModels
             UserInfo.HabitualPhysicalActivity = (HabitualPhysicalActivity)HabitualPhysicalActivityIndex;
             UserInfo.DailyKiloCaloriesObjective = (DailyKiloCaloriesObjective)DailyKiloCaloriesObjectiveIndex;
             UserInfo.Weight = double.Parse(WeightEntry);
+            UserInfo.DailyCarbohydrateGoal = double.Parse(CarbohydrateGoalEntry);
+            UserInfo.DailyProteinGoal = double.Parse(ProteinGoalEntry);
+            UserInfo.DailyFatGoal = double.Parse(FatGoalEntry);
+            UserInfo.DailyFiberGoal = double.Parse(FiberGoalEntry);
+            UserInfo.DailySodiumGoal = double.Parse(SodiumGoalEntry);
+            UserInfo.DailyCholesterolGoal = double.Parse(CholesterolGoalEntry);
+            UserInfo.DailyCalciumGoal = double.Parse(CalciumGoalEntry);
+            UserInfo.DailyIronGoal = double.Parse(IronGoalEntry);
+            UserInfo.UseSuggestedCaloricGoal = UseSuggestedCaloricGoalEntry;
 
             DateTime born = UserInfo.BornDate;
             int age = AppDataHelperClass.GetAge(born);
@@ -264,6 +429,15 @@ namespace NutriLens.ViewModels
                 int age = AppDataHelperClass.GetAge(born);
                 UserInfo.Gender = (Gender)GenderIndex;
                 UserInfo.Weight = double.Parse(WeightEntry);
+                UserInfo.DailyCarbohydrateGoal = double.Parse(CarbohydrateGoalEntry);
+                UserInfo.DailyProteinGoal = double.Parse(ProteinGoalEntry);
+                UserInfo.DailyFatGoal = double.Parse(FatGoalEntry);
+                UserInfo.DailyFiberGoal = double.Parse(FiberGoalEntry);
+                UserInfo.DailySodiumGoal = double.Parse(SodiumGoalEntry);
+                UserInfo.DailyCholesterolGoal = double.Parse(CholesterolGoalEntry);
+                UserInfo.DailyCalciumGoal = double.Parse(CalciumGoalEntry);
+                UserInfo.DailyIronGoal = double.Parse(IronGoalEntry);
+                UserInfo.UseSuggestedCaloricGoal = UseSuggestedCaloricGoalEntry;
                 double weight = UserInfo.Weight;
                 string gender = UserInfo.Gender.ToString();
                 double basal = AppDataHelperClass.GetBasalDailyCalories(age, gender, weight);
@@ -280,6 +454,11 @@ namespace NutriLens.ViewModels
                 string objective = UserInfo.DailyKiloCaloriesObjective.ToString();
                 DailyKiloCaloriesGoal = Math.Round(AppDataHelperClass.GetDailyKiloCaloriesGoal(dailyKiloCaloriesBurn, objective)).ToString() + " kcal";
                 OnPropertyChanged(nameof(DailyKiloCaloriesGoal));
+
+                if (UseSuggestedCaloricGoalEntry)
+                {
+                    UserInfo.KiloCaloriesDiaryObjective = int.Parse(DailyKiloCaloriesGoal);
+                }
             }
             catch (Exception ex)
             {
@@ -303,6 +482,7 @@ namespace NutriLens.ViewModels
             OnPropertyChanged(nameof(DailyKiloCaloriesObjectiveColorValidation));
             OnPropertyChanged(nameof(BornColorValidation));
             OnPropertyChanged(nameof(KiloCaloriesDiaryObjectiveColorValidation));
+            OnPropertyChanged(nameof(UseSuggestedCaloricGoalEntry));
         }
     }
 

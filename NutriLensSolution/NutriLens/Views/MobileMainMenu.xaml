@@ -57,6 +57,22 @@
                     <control:ChartLegend Placement="Top"/>
                 </control:SfCircularChart.Legend>
             </control:SfCircularChart>
+            <control:SfCircularChart>
+                <control:SfCircularChart.Series>
+
+                    <control:RadialBarSeries ItemsSource="{Binding PartialResultsMacroNutrients3}" 
+                XBindingPath="Label" 
+                YBindingPath="Value" 
+                EnableAnimation="True" EnableTooltip="True" GapRatio="0.2" ShowDataLabels="True" InnerRadius="0.05" Radius="1"
+                MaximumValue="100"
+                CapStyle = "BothCurve"
+                PaletteBrushes="{Binding Chart3ColorPalette}">
+                    </control:RadialBarSeries>
+                </control:SfCircularChart.Series>
+                <control:SfCircularChart.Legend>
+                    <control:ChartLegend Placement="Top"/>
+                </control:SfCircularChart.Legend>
+            </control:SfCircularChart>
 
             <Label Text="*Valores diários dos demais nutrientes com referência para uma dieta de 2000 kcal" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
 

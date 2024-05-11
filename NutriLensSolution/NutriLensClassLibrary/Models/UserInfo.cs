@@ -83,6 +83,48 @@ namespace NutriLensClassLibrary.Models
         /// </summary>
         public double DailyKiloCaloriesGoal { get; set; }
 
+        /// <summary>
+        /// Customização da meta de ingestão de carboidratos diários
+        /// </summary>
+        public double DailyCarbohydrateGoal { get; set; }
+        
+        /// /// <summary>
+        /// Customização da meta de ingestão de proteinas diárias
+        /// </summary>
+        public double DailyProteinGoal { get; set; }
+        
+
+        /// <summary>
+        /// Customização da meta de ingestão de gorduras diários
+        /// </summary>
+        public double DailyFatGoal { get; set; }
+        
+
+        /// <summary>
+        /// Customização da meta de ingestão de fibras diários
+        /// </summary>
+        public double DailyFiberGoal { get; set; }
+        
+
+        /// <summary>
+        /// Customização da meta de ingestão de sódio diários
+        /// </summary>
+        public double DailySodiumGoal { get; set; }
+
+        /// <summary>
+        /// Customização da meta de ingestão de colesterol diários
+        /// </summary>
+        public double DailyCholesterolGoal { get; set; }
+
+        /// <summary>
+        /// Customização da meta de ingestão de calcio diários
+        /// </summary>
+        public double DailyCalciumGoal { get; set; }
+
+        /// <summary>
+        /// Customização da meta de ingestão de ferro diários
+        /// </summary>
+        public double DailyIronGoal { get; set; }
 
         /// <summary>
         /// Usuário hipertenso
@@ -122,7 +164,13 @@ namespace NutriLensClassLibrary.Models
         /// <summary>
         /// Propriedade que identifica se o usuário possui uma especialização dentro do sistema
         /// </summary>
+        /// 
         public string Role { get; set; }
+
+        /// <summary>
+        /// Informa se usuario utiliza estimativa de gasto calorico automatica
+        /// </summary>
+        public bool UseSuggestedCaloricGoal { get; set; }
 
         [JsonIgnore, BsonIgnore]
         public bool DevUser { get => Role == "DEV"; }

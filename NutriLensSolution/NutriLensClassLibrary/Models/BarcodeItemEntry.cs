@@ -77,6 +77,27 @@ namespace NutriLensClassLibrary.Models
             set { Sodium = StringFunctions.ParseDoubleValue(value); }
         }
 
+        [JsonIgnore, BsonIgnore]
+        public string CholesterolEntry
+        {
+            get => Cholesterol.ToString("0.00");
+            set { Cholesterol = StringFunctions.ParseDoubleValue(value); }
+        }
+
+        [JsonIgnore, BsonIgnore]
+        public string CalciumEntry
+        {
+            get => Calcium.ToString("0.00");
+            set { Calcium = StringFunctions.ParseDoubleValue(value); }
+        }
+
+        [JsonIgnore, BsonIgnore]
+        public string IronEntry
+        {
+            get => Iron.ToString("0.00");
+            set { Iron = StringFunctions.ParseDoubleValue(value); }
+        }
+
         /// <summary>
         /// Quantidade a ser consumida
         /// </summary>
@@ -112,6 +133,15 @@ namespace NutriLensClassLibrary.Models
 
         [JsonIgnore, BsonIgnore]
         public double SodiumConsumption { get => (QuantityConsumption * Sodium) / UnitsPerPortion; }
+
+        [JsonIgnore, BsonIgnore]
+        public double CholesterolConsumption { get => (QuantityConsumption * Cholesterol) / UnitsPerPortion; }
+
+        [JsonIgnore, BsonIgnore]
+        public double CalciumConsumption { get => (QuantityConsumption * Calcium) / UnitsPerPortion; }
+
+        [JsonIgnore, BsonIgnore]
+        public double IronConsumption { get => (QuantityConsumption * Iron) / UnitsPerPortion; }
 
         [JsonIgnore, BsonIgnore]
         public string BarCodeEntryInfo

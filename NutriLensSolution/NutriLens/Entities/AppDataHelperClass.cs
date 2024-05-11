@@ -731,6 +731,24 @@ namespace NutriLens.Entities
 
             return taco;
         }
+
+        public static AnvisaLimits GetAnvisaLimits()
+        {
+            var limits = new AnvisaLimits();
+
+            limits.Carboidratos = 300;      //g
+            limits.Proteinas = 75;          //g
+            limits.GordurasTotais = 55;     //g
+            limits.GordurasSaturadas = 22;  //g
+            limits.FibraAlimentar = 25;     //g
+            limits.Sodio = 2400;            //mg
+            limits.Colesterol = 300;        //mg
+            limits.Calcio = 1000;           //mg
+            limits.Ferro = 14;              //mg
+
+            return limits;
+
+        }
     }
 }
 

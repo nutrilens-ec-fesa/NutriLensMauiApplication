@@ -80,5 +80,11 @@ namespace NutriLensClassLibrary.Models
         /// Sódio
         /// </summary>
         public double Sodium { get; set; }
+
+        public double Cholesterol { get; set; }
+
+        public double Calcium { get; set; }
+
+        public double Iron { get; set; }
     }
 }

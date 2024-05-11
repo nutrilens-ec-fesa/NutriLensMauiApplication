@@ -73,13 +73,83 @@
             <Label Margin="5,0,0,0" Text="Gasto energético diário: " IsVisible="false"/>
             <Label Margin="5,0,0,0" Text="{Binding DailyKiloCaloriesBurn}" IsVisible="false"/>
             <Label Margin="5,0,0,0" Text="Consumo diário de calorias sugerido: " FontAttributes="Bold"/>
-            <Label Margin="5,0,0,0" Text="{Binding DailyKiloCaloriesGoal}" FontSize="Medium"/>
+            <Label Text="{Binding DailyKiloCaloriesGoal}" FontSize="Medium"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding UserInfo.UseSuggestedCaloricGoalEntry}"></CheckBox>
+                    <Label Text="Utilizar meta diaria de calorias sugerido" VerticalOptions="Center" />
+                </StackLayout>
+            </Grid>
             <Label Margin="5,0,0,0" Text="Meta diária de consumo de calorias:" FontAttributes="Bold"/>
             <Entry Keyboard="Numeric" Placeholder="Digite sua meta diária de consumo..." Text="{Binding UserInfo.KiloCaloriesDiaryObjective}" BackgroundColor="Azure" TextColor="{Binding KiloCaloriesDiaryObjectiveColorValidation}" FontSize="Medium">
                 <Entry.Behaviors>
                     <xct:EventToCommandBehavior EventName="TextChanged" Command="{Binding CaloricSuggestChangedCommand}"></xct:EventToCommandBehavior>
                 </Entry.Behaviors>
             </Entry>
+
+            <Label Margin="5,0,0,0" Text="Customizar meta diária de carboidratos (g):" FontAttributes="Bold"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite a meta diária de carboidratos..." Text="{Binding CarbohydrateGoalEntry}" BackgroundColor="Azure" TextColor="{Binding CarbohydrateGoalColorValidation}">
+                <Entry.Behaviors>
+                    <xct:EventToCommandBehavior EventName="TextChanged" Command="{Binding CaloricSuggestChangedCommand}"></xct:EventToCommandBehavior>
+                </Entry.Behaviors>
+            </Entry>
+
+            <Label Margin="5,0,0,0" Text="Customizar meta diária de proteínas (g):" FontAttributes="Bold"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite a meta diária de proteínas..." Text="{Binding ProteinGoalEntry}" BackgroundColor="Azure" TextColor="{Binding ProteinGoalColorValidation}">
+                <Entry.Behaviors>
+                    <xct:EventToCommandBehavior EventName="TextChanged" Command="{Binding CaloricSuggestChangedCommand}"></xct:EventToCommandBehavior>
+                </Entry.Behaviors>
+            </Entry>
+
+            <Label Margin="5,0,0,0" Text="Customizar meta diária de gorduras (g):" FontAttributes="Bold"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite a meta diária de gorduras..." Text="{Binding FatGoalEntry}" BackgroundColor="Azure" TextColor="{Binding FatGoalColorValidation}">
+                <Entry.Behaviors>
+                    <xct:EventToCommandBehavior EventName="TextChanged" Command="{Binding CaloricSuggestChangedCommand}"></xct:EventToCommandBehavior>
+                </Entry.Behaviors>
+            </Entry>
+
+            <Label Margin="5,0,0,0" Text="Customizar meta diária de fibras (g):" FontAttributes="Bold"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite a meta diária de fibras..." Text="{Binding FiberGoalEntry}" BackgroundColor="Azure" TextColor="{Binding FiberGoalColorValidation}">
+                <Entry.Behaviors>
+                    <xct:EventToCommandBehavior EventName="TextChanged" Command="{Binding CaloricSuggestChangedCommand}"></xct:EventToCommandBehavior>
+                </Entry.Behaviors>
+            </Entry>
+
+            <Label Margin="5,0,0,0" Text="Customizar meta diária de sódio (mg):" FontAttributes="Bold"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite a meta diária de sódio..." Text="{Binding SodiumGoalEntry}" BackgroundColor="Azure" TextColor="{Binding SodiumGoalColorValidation}">
+                <Entry.Behaviors>
+                    <xct:EventToCommandBehavior EventName="TextChanged" Command="{Binding CaloricSuggestChangedCommand}"></xct:EventToCommandBehavior>
+                </Entry.Behaviors>
+            </Entry>
+
+            <Label Margin="5,0,0,0" Text="Customizar meta diária de colesterol (mg):" FontAttributes="Bold"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite a meta diária de sódio..." Text="{Binding CholesterolGoalEntry}" BackgroundColor="Azure" TextColor="{Binding CholesterolGoalColorValidation}">
+                <Entry.Behaviors>
+                    <xct:EventToCommandBehavior EventName="TextChanged" Command="{Binding CaloricSuggestChangedCommand}"></xct:EventToCommandBehavior>
+                </Entry.Behaviors>
+            </Entry>
+
+            <Label Margin="5,0,0,0" Text="Customizar meta diária de cálcio (mg):" FontAttributes="Bold"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite a meta diária de sódio..." Text="{Binding CalciumGoalEntry}" BackgroundColor="Azure" TextColor="{Binding CalciumGoalColorValidation}">
+                <Entry.Behaviors>
+                    <xct:EventToCommandBehavior EventName="TextChanged" Command="{Binding CaloricSuggestChangedCommand}"></xct:EventToCommandBehavior>
+                </Entry.Behaviors>
+            </Entry>
+
+            <Label Margin="5,0,0,0" Text="Customizar meta diária de ferro (mg):" FontAttributes="Bold"/>
+            <Entry Keyboard="Numeric" Placeholder="Digite a meta diária de sódio..." Text="{Binding IronGoalEntry}" BackgroundColor="Azure" TextColor="{Binding IronGoalColorValidation}">
+                <Entry.Behaviors>
+                    <xct:EventToCommandBehavior EventName="TextChanged" Command="{Binding CaloricSuggestChangedCommand}"></xct:EventToCommandBehavior>
+                </Entry.Behaviors>
+            </Entry>
+
             <Label Margin="5,30,0,0" Text="Doenças crônicas não transmissíveis (DCNT)" FontAttributes="Bold"/>
             <Grid>
                 <Grid.RowDefinitions>
