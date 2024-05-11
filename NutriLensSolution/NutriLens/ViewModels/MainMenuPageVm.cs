@@ -14,6 +14,7 @@ using System.Reflection;
 using ExceptionLibrary;
 using Android.Speech;
 using System.Collections.ObjectModel;
+using CommunityToolkit.Maui.Core.Extensions;
 
 namespace NutriLens.ViewModels
 {
@@ -23,6 +24,7 @@ namespace NutriLens.ViewModels
 
         private MealListClass _mealList;
         private List<PhysicalActivity> _physicalActivitiesList;
+        private UserInfo UserInfo;
 
         private double _caloricBalance;
         private double _mealCalories;
@@ -194,6 +196,17 @@ namespace NutriLens.ViewModels
         {
             get
             {
+                var anvisaLimits = AppDataHelperClass.GetAnvisaLimits();
+                double limiteCarboidratos = AppDataHelperClass.UserInfo.DailyCarbohydrateGoal;
+                double limiteProteinas = AppDataHelperClass.UserInfo.DailyProteinGoal;
+
+                if (AppDataHelperClass.UserInfo.DailyCarbohydrateGoal.IsZeroOrNaN())
+                    limiteCarboidratos = anvisaLimits.Carboidratos;
+
+                if (AppDataHelperClass.UserInfo.DailyCarbohydrateGoal.IsZeroOrNaN())
+                    limiteProteinas = anvisaLimits.Proteinas;
+
+
                 _mealList = new MealListClass(AppDataHelperClass.GetTodayMeals());
                 _physicalActivitiesList = AppDataHelperClass.GetTodayPhysicalActivities();
                 _caloricBalance = _mealList.TotalEnergeticConsumption() - EntitiesHelperClass.TotalEnergeticConsumption(_physicalActivitiesList);
@@ -206,13 +219,13 @@ namespace NutriLens.ViewModels
                 List<DataModel> barChart = new List<DataModel>();
 
                 DataModel prot = new DataModel();
-                prot.Label = "Proteínas:\n " + proteinas.ToString("0.0") + "g\n" + " de 75g";
-                prot.Value = (proteinas / 75) * 100;
+                prot.Label = "Proteínas:\n " + proteinas.ToString("0.0") + "g\n" + " de " + limiteProteinas.ToString("0.0") + "g";
+                prot.Value = (proteinas / limiteProteinas) * 100;
                 barChart.Add(prot);
 
                 DataModel carb = new DataModel();
-                carb.Label = "Carboidratos:\n " + carboidratos.ToString("0.0") + "g\n" + " de 300g";
-                carb.Value = (carboidratos / 300) * 100;
+                carb.Label = "Carboidratos:\n " + carboidratos.ToString("0.0") + "g\n" + " de " + limiteCarboidratos.ToString("0.0") + "g";
+                carb.Value = (carboidratos / limiteCarboidratos) * 100;
                 barChart.Add(carb);
 
                 DataModel consumed = new DataModel();
@@ -228,6 +241,19 @@ namespace NutriLens.ViewModels
         {
             get
             {
+                var anvisaLimits = AppDataHelperClass.GetAnvisaLimits();
+                double limiteGorduras = AppDataHelperClass.UserInfo.DailyFatGoal;
+                double limiteFibras = AppDataHelperClass.UserInfo.DailyFiberGoal;
+                double limiteSodio = AppDataHelperClass.UserInfo.DailySodiumGoal;
+
+                if (AppDataHelperClass.UserInfo.DailyFatGoal.IsZeroOrNaN())
+                    limiteGorduras = anvisaLimits.GordurasTotais;
+
+                if (AppDataHelperClass.UserInfo.DailyFiberGoal.IsZeroOrNaN())
+                    limiteFibras = anvisaLimits.FibraAlimentar;
+
+                if (AppDataHelperClass.UserInfo.DailySodiumGoal.IsZeroOrNaN())
+                    limiteSodio = anvisaLimits.Sodio;
 
                 double gordura = _mealList.TotalFatConsumption();                   //55g    %100 VD Gorduras totais
                 double fibra = _mealList.TotalFibersConsumption();                  //25g    %100 VD
@@ -236,21 +262,21 @@ namespace NutriLens.ViewModels
                 List<DataModel> barChart = new List<DataModel>();
 
                 DataModel gord = new DataModel();
-                gord.Label = "Gorduras:\n " + gordura.ToString("0.0") + "g\n" + " de 55g";
-                gord.Value = (gordura / 55) * 100;
+                gord.Label = "Gorduras:\n " + gordura.ToString("0.0") + "g\n" + " de " + limiteGorduras.ToString("0.0") + "g";
+                gord.Value = (gordura / limiteGorduras) * 100;
                 gord.TrackStroke = SolidColorBrush.Red;
                 barChart.Add(gord);
 
 
                 DataModel fib = new DataModel();
-                fib.Label = "Fibras:\n " + fibra.ToString("0.0") + "g\n" + " de 25g";
-                fib.Value = (fibra / 25) * 100;
+                fib.Label = "Fibras:\n " + fibra.ToString("0.0") + "g\n" + " de " + limiteFibras.ToString("0.0") + "g";
+                fib.Value = (fibra / limiteFibras) * 100;
                 fib.TrackFill = SolidColorBrush.Magenta;
                 barChart.Add(fib);
 
                 DataModel sod = new DataModel();
-                sod.Label = "Sódio:\n " + sodio.ToString("0.0") + "mg\n" + " de 2400mg";
-                sod.Value = (sodio / 2400) * 100;
+                sod.Label = "Sódio:\n " + sodio.ToString("0.0") + "mg\n" + " de " + limiteSodio.ToString("0.0") + "mg";
+                sod.Value = (sodio / limiteSodio) * 100;
                 barChart.Add(sod);
 
                 return barChart;
@@ -261,6 +287,20 @@ namespace NutriLens.ViewModels
         {
             get
             {
+                var anvisaLimits = AppDataHelperClass.GetAnvisaLimits();
+                double limiteColesterol = AppDataHelperClass.UserInfo.DailyCholesterolGoal;
+                double limiteCalcio = AppDataHelperClass.UserInfo.DailyCalciumGoal;
+                double limiteFerro = AppDataHelperClass.UserInfo.DailyIronGoal;
+
+                if (AppDataHelperClass.UserInfo.DailyCholesterolGoal.IsZeroOrNaN())
+                    limiteColesterol = anvisaLimits.Colesterol;
+
+                if (AppDataHelperClass.UserInfo.DailyCalciumGoal.IsZeroOrNaN())
+                    limiteCalcio = anvisaLimits.Calcio;
+
+                if (AppDataHelperClass.UserInfo.DailyIronGoal.IsZeroOrNaN())
+                    limiteFerro = anvisaLimits.Ferro;
+
 
                 double colesterol = _mealList.TotalCholesterolConsumption();        //300mg    %100 VD Gorduras totais
                 double calcio = _mealList.TotalCalciumConsumption();                //1000mg    %100 VD
@@ -269,19 +309,19 @@ namespace NutriLens.ViewModels
                 List<DataModel> barChart = new List<DataModel>();
 
                 DataModel col = new DataModel();
-                col.Label = "Colesterol:\n " + colesterol.ToString("0.0") + "mg\n" + " de 300mg";
-                col.Value = (colesterol / 300) * 100;
+                col.Label = "Colesterol:\n " + colesterol.ToString("0.0") + "mg\n" + " de " + limiteColesterol.ToString("0.0") + "mg";
+                col.Value = (colesterol / limiteColesterol) * 100;
                 barChart.Add(col);
 
 
                 DataModel cal = new DataModel();
-                cal.Label = "Cálcio:\n " + calcio.ToString("0.0") + "mg\n" + " de 1000mg";
-                cal.Value = (calcio / 1000) * 100;
+                cal.Label = "Cálcio:\n " + calcio.ToString("0.0") + "mg\n" + " de " + limiteCalcio.ToString("0.0") + "mg";
+                cal.Value = (calcio / limiteCalcio) * 100;
                 barChart.Add(cal);
 
                 DataModel fer = new DataModel();
-                fer.Label = "Ferro:\n " + ferro.ToString("0.0") + "mg\n" + " de 14mg";
-                fer.Value = (ferro / 14) * 100;
+                fer.Label = "Ferro:\n " + ferro.ToString("0.0") + "mg\n" + " de " + limiteFerro.ToString("0.0") + "mg";
+                fer.Value = (ferro / limiteFerro) * 100;
                 barChart.Add(fer);
 
                 return barChart;
