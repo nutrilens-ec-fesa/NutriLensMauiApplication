@@ -53,10 +53,18 @@
                                             <RowDefinition></RowDefinition>
                                             <RowDefinition></RowDefinition>
                                             <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"></ColumnDefinition>
-                                            <ColumnDefinition Width="3*"></ColumnDefinition>
+                                            <ColumnDefinition Width="2*"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
                                         <Label Grid.Row="0" Grid.Column="0" FontAttributes="Bold" Text="Item: "></Label>
                                         <Label Grid.Row="0" Grid.Column="1" Margin="5,0,0,0" Text="{Binding Name}" LineBreakMode="WordWrap"></Label>
@@ -64,6 +72,22 @@
                                         <Label Grid.Row="1" Grid.Column="1" Margin="5,0,0,0" Text="{Binding PortionInfo}"></Label>
                                         <Label Grid.Row="2" Grid.Column="0" FontAttributes="Bold" Text="Calorias:"></Label>
                                         <Label Grid.Row="2" Grid.Column="1" Margin="5,0,0,0" Text="{Binding KiloCalorieInfo}"></Label>
+                                        <Label Grid.Row="3" Grid.Column="0" FontAttributes="Bold" Text="Proteínas:"></Label>
+                                        <Label Grid.Row="3" Grid.Column="1" Margin="5,0,0,0" Text="{Binding TacoFoodItem.Proteina, StringFormat='{0:F2}g'}"></Label>
+                                        <Label Grid.Row="4" Grid.Column="0" FontAttributes="Bold" Text="Carboidratos:"></Label>
+                                        <Label Grid.Row="4" Grid.Column="1" Margin="5,0,0,0" Text="{Binding TacoFoodItem.Carboidrato, StringFormat='{0:F2}g'}"></Label>
+                                        <Label Grid.Row="5" Grid.Column="0" FontAttributes="Bold" Text="Gorduras:"></Label>
+                                        <Label Grid.Row="5" Grid.Column="1" Margin="5,0,0,0" Text="{Binding TacoFoodItem.Lipideos, StringFormat='{0:F2}g'}"></Label>
+                                        <Label Grid.Row="6" Grid.Column="0" FontAttributes="Bold" Text="Fibras:"></Label>
+                                        <Label Grid.Row="6" Grid.Column="1" Margin="5,0,0,0" Text="{Binding TacoFoodItem.FibraAlimentar, StringFormat='{0:F2}g'}"></Label>
+                                        <Label Grid.Row="7" Grid.Column="0" FontAttributes="Bold" Text="Sódio:"></Label>
+                                        <Label Grid.Row="7" Grid.Column="1" Margin="5,0,0,0" Text="{Binding TacoFoodItem.Sodio, StringFormat='{0:F2}mg'}"></Label>
+                                        <Label Grid.Row="8" Grid.Column="0" FontAttributes="Bold" Text="Colesterol:"></Label>
+                                        <Label Grid.Row="8" Grid.Column="1" Margin="5,0,0,0" Text="{Binding TacoFoodItem.Colesterol, StringFormat='{0:F2}mg'}"></Label>
+                                        <Label Grid.Row="9" Grid.Column="0" FontAttributes="Bold" Text="Calcio:"></Label>
+                                        <Label Grid.Row="9" Grid.Column="1" Margin="5,0,0,0" Text="{Binding TacoFoodItem.Calcio, StringFormat='{0:F2}mg'}"></Label>
+                                        <Label Grid.Row="10" Grid.Column="0" FontAttributes="Bold" Text="Ferro:"></Label>
+                                        <Label Grid.Row="10" Grid.Column="1" Margin="5,0,0,0" Text="{Binding TacoFoodItem.Ferro, StringFormat='{0:F2}mg'}"></Label>
                                     </Grid>
                                     <ImageButton Grid.Column="1" Source="delete_icon.png" Command="{Binding Path=BindingContext.DeleteItemCommand, Source={x:Reference ManualInputPage}}" CommandParameter="{Binding .}" HeightRequest="50">
                                     </ImageButton>
