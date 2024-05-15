@@ -63,6 +63,8 @@ namespace NutriLensClassLibrary.Models
         public object? Niacina { get; set; }
         [BsonElement("Vitamina C (mg)")]
         public object? VitaminaC { get; set; }
+        public bool? Liquid { get; set; }
+        public bool? TacoOriginal { get; set; }
 
         public double GetValue(string propertyName)
         {
