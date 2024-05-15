@@ -81,6 +81,7 @@
             <Button x:Name="btnBarCode" Text="Por código de barras" Command="{Binding OpenBarCodeCommand}" />
             <Button x:Name="btnManual" Text="Por inserção manual" Command="{Binding OpenManualInputCommand}" />
             <Button x:Name="btnVoice" Text="Por voz" Command="{Binding VoiceInputCommand}" />
+            <Button x:Name="btnDescription" Text="Por descrição" Command="{Binding DescriptionInputCommand}" />
             <Label Text="Registrar atividade física" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
             <Button x:Name="btnPhysicalActivity" Text="Informar nova atividade física" Command="{Binding RegisterPhysicalActivityCommand}" />
             <Label Text="Consultar histórico" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />

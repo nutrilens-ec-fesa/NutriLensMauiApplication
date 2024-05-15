@@ -411,6 +411,34 @@ namespace NutriLens.ViewModels
         }
 
         [RelayCommand]
+        private async Task DescriptionInput()
+        {
+            TextEntryPopup textEntryPopup = new TextEntryPopup("Informe todos os itens do seu prato e a quantidade aproximada em gramas de cada um deles.");
+            await Application.Current.MainPage.ShowPopupAsync(textEntryPopup);
+
+            if (!string.IsNullOrEmpty(textEntryPopup.Entry))
+            {
+                List<FoodItem> foodItems;
+
+                while (true)
+                {
+                    foodItems = await EntitiesHelperClass.GetAiAnalysisByMealDescription(textEntryPopup.Entry);
+
+                    if (foodItems == null)
+                    {
+                        if (!await ViewServices.PopUpManager.PopYesOrNoAsync("Falha na identificação dos alimentos", "Deseja tentar novamente?"))
+                            return;
+                    }
+                    else
+                        break;
+                }
+
+                AppDataHelperClass.DetectedFoodItems = foodItems;
+                await OpenManualInput();
+            }
+        }
+
+        [RelayCommand]
         private async Task RegisterPhysicalActivity()
         {
             AddPhysicalActivityPopup physicalActivityPopup = new AddPhysicalActivityPopup();
