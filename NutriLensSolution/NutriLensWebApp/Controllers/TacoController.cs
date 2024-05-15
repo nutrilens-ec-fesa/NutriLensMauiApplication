@@ -63,7 +63,59 @@ namespace NutriLensWebApp.Controllers
                 TacoFoodItemParseHelperClass.TacoFoodItems = tacoItemRepo.GetList();
                 return Ok(TacoFoodItemParseHelperClass.Parse(simpleFoodItem));
             }
-            catch(Exception ex)
+            catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
+        [HttpPut, Route("v1/UpdateLiquids")]
+        public IActionResult UpdateLiquids([FromServices] ITacoItemRepository tacoItemRepository)
+        {
+            try
+            {
+                List<TacoItem> tacoItems = tacoItemRepository.GetList();
+
+                List<int> liquidsIds = new List<int>()
+                {
+                    188, 209, 211, 213, 215, 217, 218, 219, 234, 252, 258, 259, 260,
+                    267, 268, 269, 270, 271, 272, 446, 454, 455, 457, 458, 460, 470,
+                    471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483,
+                    518, 523
+                };
+
+                foreach (TacoItem tacoItem in tacoItems)
+                {
+                    tacoItem.Liquid = liquidsIds.Contains(tacoItem.id);
+                }
+
+                tacoItemRepository.UpdateTacoItems(tacoItems);
+
+                return Ok("Elementos líquidos da tabela TACO atualizados com sucesso!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
+        [HttpPut, Route("v1/UpdateTacoOriginals")]
+        public IActionResult UpdateTacoOriginals([FromServices] ITacoItemRepository tacoItemRepository)
+        {
+            try
+            {
+                List<TacoItem> tacoItems = tacoItemRepository.GetList();
+
+                foreach (TacoItem tacoItem in tacoItems)
+                {
+                    tacoItem.TacoOriginal = tacoItem.id <= 597;
+                }
+
+                tacoItemRepository.UpdateTacoItems(tacoItems);
+
+                return Ok("Elementos originais da tabela TACO atualizados com sucesso!");
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ExceptionManager.ExceptionMessage(ex));
             }
