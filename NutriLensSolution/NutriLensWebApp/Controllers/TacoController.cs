@@ -1,6 +1,7 @@
 ﻿using ExceptionLibrary;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using NutriLensClassLibrary.Models;
 using NutriLensWebApp.Interfaces;
 
@@ -116,6 +117,21 @@ namespace NutriLensWebApp.Controllers
                 return Ok("Elementos originais da tabela TACO atualizados com sucesso!");
             }
             catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
+        [HttpGet, Route("v1/GetTacoHash")]
+        public IActionResult GetTacoHash([FromServices] ITacoItemRepository tacoItemRepository)
+        {
+            try
+            {
+                string tacoJson = JsonConvert.SerializeObject(tacoItemRepository.GetList());
+                string tacoHash = CryptographyLibrary.CryptographyManager.Crypt(tacoJson, CryptographyLibrary.EnumCryptAlgorithm.caSHA256);
+                return Ok(tacoHash);
+            }
+            catch(Exception ex)
             {
                 return BadRequest(ExceptionManager.ExceptionMessage(ex));
             }
