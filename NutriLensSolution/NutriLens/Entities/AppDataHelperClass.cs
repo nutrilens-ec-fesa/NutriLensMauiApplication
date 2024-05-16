@@ -1,14 +1,9 @@
 ﻿using ExceptionLibrary;
+using Newtonsoft.Json;
 using NutriLens.Models;
 using NutriLens.Services;
 using NutriLensClassLibrary.Entities;
 using NutriLensClassLibrary.Models;
-using StringLibrary;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace NutriLens.Entities
 {
@@ -50,7 +45,12 @@ namespace NutriLens.Entities
             /// <summary>
             /// Lista de atividades físicas realizadas
             /// </summary>
-            PhysicalActivityList
+            PhysicalActivityList,
+
+            /// <summary>
+            /// Hash da última tabela TACO baixada
+            /// </summary>
+            TacoHash,
         }
 
         private static List<Meal> _mealList;
@@ -748,6 +748,50 @@ namespace NutriLens.Entities
 
             return limits;
 
+        }
+
+        public static async Task CheckTacoUpdate()
+        {
+            await Task.Run(() =>
+            {
+                bool tacoDownloaded = TacoFoodItems != null && TacoFoodItems.Count > 0;
+                string cloudTacoHash = DaoHelperClass.GetTacoHash();
+
+                if (!tacoDownloaded)
+                {
+                    List<TacoItem> tacoItems = DaoHelperClass.GetTacoItemsList();
+                    SetTacoItems(tacoItems.OrderBy(x => x.Nome).ToList());
+                    SetTacoHash(cloudTacoHash);
+                }
+                else
+                {
+                    string localTacoHash = GetTacoHash();
+
+                    if (cloudTacoHash != localTacoHash)
+                    {
+                        List<TacoItem> tacoItems = DaoHelperClass.GetTacoItemsList();
+                        SetTacoItems(tacoItems.OrderBy(x => x.Nome).ToList());
+                        SetTacoHash(cloudTacoHash);
+                    }
+                }
+            });
+        }
+
+        public static string GetTacoHash()
+        {
+            try
+            {
+                return ViewServices.AppDataManager.GetItem<string>(DataItems.TacoHash);
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
+        public static void SetTacoHash(string hash)
+        {
+            ViewServices.AppDataManager.SetItem(DataItems.TacoHash, hash);
         }
     }
 }
