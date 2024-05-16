@@ -45,9 +45,9 @@ namespace NutriLensClassLibrary.Models
                 foreach(FoodItem foodItem in FoodItems)
                 {
                     if (foodItem.TacoFoodItem != null)
-                        stringBuilder.Append($"   - {foodItem.TacoFoodItem.Nome} ({foodItem.Portion} g - {foodItem.KiloCalorieInfo}){Environment.NewLine}");
+                        stringBuilder.Append($"   - {foodItem.TacoFoodItem.Nome} ({foodItem.Portion} {foodItem.PortionUnit} - {foodItem.KiloCalorieInfo}){Environment.NewLine}");
                     else
-                        stringBuilder.Append($"   - {foodItem.Name} ({foodItem.Portion} g - {foodItem.KiloCalorieInfo}){Environment.NewLine}");
+                        stringBuilder.Append($"   - {foodItem.Name} ({foodItem.Portion} {foodItem.PortionUnit} - {foodItem.KiloCalorieInfo}){Environment.NewLine}");
                 }
 
                 return stringBuilder.ToString();

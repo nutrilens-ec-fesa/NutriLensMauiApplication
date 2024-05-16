@@ -89,11 +89,11 @@ namespace NutriLensClassLibrary.Models
         #region Getters only
 
         [JsonIgnore]
-        public string NamePlusPortion { get => $"{Name}{(string.IsNullOrEmpty(Portion) ? string.Empty : $" - {Portion}g")}"; }
+        public string NamePlusPortion { get => $"{Name}{(string.IsNullOrEmpty(Portion) ? string.Empty : $" - {Portion}{PortionUnit}")}"; }
         [JsonIgnore]
-        public string NamePlusPortionPlusKcalInfo { get => $"{Name}{(string.IsNullOrEmpty(Portion) ? string.Empty : $" - {Portion}g")} - {KiloCalorieInfo}"; }
+        public string NamePlusPortionPlusKcalInfo { get => $"{Name}{(string.IsNullOrEmpty(Portion) ? string.Empty : $" - {Portion}{PortionUnit}")} - {KiloCalorieInfo}"; }
         [JsonIgnore]
-        public string NamePlusPortionPlusKjInfo { get => $"{Name}{(string.IsNullOrEmpty(Portion) ? string.Empty : $" - {Portion}g")} - {KiloJoulesInfo}"; }
+        public string NamePlusPortionPlusKjInfo { get => $"{Name}{(string.IsNullOrEmpty(Portion) ? string.Empty : $" - {Portion}{PortionUnit}")} - {KiloJoulesInfo}"; }
         [JsonIgnore]
         public double KiloJoules { get => KiloCalories * Constants.kcalToKJFactor; }
         [JsonIgnore]
@@ -103,8 +103,8 @@ namespace NutriLensClassLibrary.Models
         [JsonIgnore]
         public string GptQueryString { get => $"{Name}{(string.IsNullOrEmpty(Portion) ? string.Empty : $" - {Portion}")}"; }
         [JsonIgnore]
-        public string PortionInfo { get => Portion + 'g'; }
-
+        public string PortionInfo { get => Portion + PortionUnit; }
+        public string PortionUnit { get => TacoFoodItem != null && TacoFoodItem.Liquid != null && (bool)TacoFoodItem.Liquid ? "ml" : "g"; }
 
 
         #endregion
