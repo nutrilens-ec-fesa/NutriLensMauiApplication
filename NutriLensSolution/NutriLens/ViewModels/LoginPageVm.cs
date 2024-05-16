@@ -107,6 +107,8 @@ namespace NutriLens.ViewModels
         {
             EntitiesHelperClass.ShowLoading("    Carregando    ");
 
+            AppDataHelperClass.CheckTacoUpdate();
+
             // Tempo para a tela renderizar
             await Task.Run(() => Thread.Sleep(1000));
 
