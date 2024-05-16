@@ -593,6 +593,25 @@ namespace NutriLens.Entities
                 return HttpManager.GetContent<List<TacoItem>>(content);
         }
 
+        /// <summary>
+        /// Obtém o código hash da lista de itens da tabela TACO presentes na base, útil para comparar com o local e saber se precisa de atualização
+        /// </summary>
+        /// <returns></returns>
+        public static string GetTacoHash()
+        {
+            GetRequest httpRequest = new(UriAndPaths.ApiUrl, "Taco/v1/GetTacoHash")
+            {
+                Token = AppDataHelperClass.NutriLensApiToken
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (!resp.IsSuccessStatusCode)
+                throw new UnsuccessfullRequestException(content);
+            else
+                return HttpManager.GetContent<string>(content);
+        }
+
         #endregion
     }
 }
