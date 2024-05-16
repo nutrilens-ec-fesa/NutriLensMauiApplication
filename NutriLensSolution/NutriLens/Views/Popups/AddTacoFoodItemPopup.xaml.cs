@@ -126,6 +126,11 @@ public partial class AddTacoFoodItemPopup : Popup
     {
         if (tacoPicker.SelectedItem != null && tacoPicker.SelectedItem is TacoItem selecteditem)
         {
+            if (selecteditem.Liquid != null && (bool)selecteditem.Liquid)
+                lblPortionLabel.Text = "Porção (ml): ";
+            else
+                lblPortionLabel.Text = "Porção (g): ";
+
             if (double.TryParse(inputPortion.Text, out double quantity))
             {
                 inputCalories.Text = (quantity * selecteditem.GetValue(nameof(selecteditem.EnergiaKcal)) / 100).ToString();

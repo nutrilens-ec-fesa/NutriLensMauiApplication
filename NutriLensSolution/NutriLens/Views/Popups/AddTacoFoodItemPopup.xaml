@@ -31,7 +31,7 @@
                 <Label Grid.Row="2" Grid.Column="0" Text="Item: " TextColor="White"></Label>
                 <Picker Grid.Row="3" Grid.Column="0" x:Name="tacoPicker" BackgroundColor="Black" TextColor="White" HorizontalOptions="FillAndExpand" SelectedIndexChanged="tacoPicker_SelectedIndexChanged"></Picker>
 
-                <Label Grid.Row="4" Grid.Column="0" Text="Porção (g): " TextColor="White"></Label>
+                <Label Grid.Row="4" Grid.Column="0" x:Name="lblPortionLabel" Text="Porção (g): " TextColor="White"></Label>
                 <Entry Grid.Row="5" Grid.Column="0" x:Name="inputPortion" BackgroundColor="Black" TextColor="White" HorizontalOptions="FillAndExpand" Unfocused="inputPortion_Unfocused" TextChanged="inputPortion_TextChanged"></Entry>
 
                 <Label Grid.Row="6" Grid.Column="0" Text="Calorias: " TextColor="White"></Label>
