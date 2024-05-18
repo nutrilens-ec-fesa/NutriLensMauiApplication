@@ -143,7 +143,7 @@ namespace NutriLens.ViewModels
             else
             {
                 AppDataHelperClass.MealToEdit.FoodItems = FoodItems.ToList();
-                AppDataHelperClass.SaveChangesOnMeals();
+                await AppDataHelperClass.UpdateMeal(AppDataHelperClass.MealToEdit);
                 AppDataHelperClass.MealToEdit = null;
                 await ViewServices.PopUpManager.PopInfoAsync("Refeição editada com sucesso!");
                 await _navigation.PopAsync();
@@ -169,7 +169,9 @@ namespace NutriLens.ViewModels
                 else if (AppDataHelperClass.MealToEdit != null)
                 {
                     AppDataHelperClass.DetectedFoodItems = null;
-                    AppDataHelperClass.NewFoodPicturePath = AppDataHelperClass.MealToEdit.MealPicturePath;
+
+                    if(File.Exists(AppDataHelperClass.MealToEdit.MealPicturePath))
+                        AppDataHelperClass.NewFoodPicturePath = AppDataHelperClass.MealToEdit.MealPicturePath;
 
                     foreach (FoodItem food in AppDataHelperClass.MealToEdit.FoodItems)
                     {
