@@ -47,20 +47,21 @@
                                         <ColumnDefinition Width="6*"></ColumnDefinition>
                                         <ColumnDefinition Width="*"></ColumnDefinition>
                                         <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
                                     <Grid Grid.Column="0">
                                         <Grid.RowDefinitions>
                                             <RowDefinition></RowDefinition>
                                             <RowDefinition></RowDefinition>
                                             <RowDefinition></RowDefinition>
+                                            <!--<RowDefinition></RowDefinition>
                                             <RowDefinition></RowDefinition>
                                             <RowDefinition></RowDefinition>
                                             <RowDefinition></RowDefinition>
                                             <RowDefinition></RowDefinition>
                                             <RowDefinition></RowDefinition>
                                             <RowDefinition></RowDefinition>
-                                            <RowDefinition></RowDefinition>
-                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>-->
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -72,7 +73,7 @@
                                         <Label Grid.Row="1" Grid.Column="1" Margin="5,0,0,0" Text="{Binding PortionInfo}"></Label>
                                         <Label Grid.Row="2" Grid.Column="0" FontAttributes="Bold" Text="Calorias:"></Label>
                                         <Label Grid.Row="2" Grid.Column="1" Margin="5,0,0,0" Text="{Binding KiloCalorieInfo}"></Label>
-                                        <Label Grid.Row="3" Grid.Column="0" FontAttributes="Bold" Text="Proteínas:"></Label>
+                                        <!--<Label Grid.Row="3" Grid.Column="0" FontAttributes="Bold" Text="Proteínas:"></Label>
                                         <Label Grid.Row="3" Grid.Column="1" Margin="5,0,0,0" Text="{Binding TacoFoodItem.Proteina, StringFormat='{0:F2}g'}"></Label>
                                         <Label Grid.Row="4" Grid.Column="0" FontAttributes="Bold" Text="Carboidratos:"></Label>
                                         <Label Grid.Row="4" Grid.Column="1" Margin="5,0,0,0" Text="{Binding TacoFoodItem.Carboidrato, StringFormat='{0:F2}g'}"></Label>
@@ -87,12 +88,13 @@
                                         <Label Grid.Row="9" Grid.Column="0" FontAttributes="Bold" Text="Calcio:"></Label>
                                         <Label Grid.Row="9" Grid.Column="1" Margin="5,0,0,0" Text="{Binding TacoFoodItem.Calcio, StringFormat='{0:F2}mg'}"></Label>
                                         <Label Grid.Row="10" Grid.Column="0" FontAttributes="Bold" Text="Ferro:"></Label>
-                                        <Label Grid.Row="10" Grid.Column="1" Margin="5,0,0,0" Text="{Binding TacoFoodItem.Ferro, StringFormat='{0:F2}mg'}"></Label>
+                                        <Label Grid.Row="10" Grid.Column="1" Margin="5,0,0,0" Text="{Binding TacoFoodItem.Ferro, StringFormat='{0:F2}mg'}"></Label>-->
                                     </Grid>
                                     <ImageButton Grid.Column="1" Source="delete_icon.png" Command="{Binding Path=BindingContext.DeleteItemCommand, Source={x:Reference ManualInputPage}}" CommandParameter="{Binding .}" HeightRequest="50">
                                     </ImageButton>
                                     <ImageButton Grid.Column="2" Source="edit_icon.png" Margin="3" Command="{Binding Path=BindingContext.EditItemCommand, Source={x:Reference ManualInputPage}}" CommandParameter="{Binding .}" HeightRequest="50">
-
+                                    </ImageButton>
+                                    <ImageButton Grid.Column="3" Source="list_icon.png" Margin="3" Command="{Binding Path=BindingContext.ListItemCommand, Source={x:Reference ManualInputPage}}" CommandParameter="{Binding .}" HeightRequest="50">
                                     </ImageButton>
                                 </Grid>
                             </ViewCell.View>

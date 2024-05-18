@@ -136,6 +136,9 @@
 	  <Compile Update="Views\Popups\AddTbcaFoodItemPopup.xaml.cs">
 	    <DependentUpon>AddTbcaFoodItemPopup.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\Popups\ListTacoMacronutrientsPopup.xaml.cs">
+	    <DependentUpon>ListTacoMacronutrientsPopup.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -207,6 +210,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Popups\LoadingPopup.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Popups\ListTacoMacronutrientsPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Popups\TextEntryPopup.xaml">

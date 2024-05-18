@@ -206,6 +206,14 @@ namespace NutriLens.ViewModels
         }
 
         [RelayCommand]
+        private async Task ListItem(FoodItem item)
+        {
+            ListTacoMacronutrientsPopup showFoodItemPopup = new ListTacoMacronutrientsPopup(item);
+            await Application.Current.MainPage.ShowPopupAsync(showFoodItemPopup);
+
+        }
+
+        [RelayCommand]
         private async Task EditItem(FoodItem item)
         {
             AddTacoFoodItemPopup addFoodItemPopup = new AddTacoFoodItemPopup(item);
