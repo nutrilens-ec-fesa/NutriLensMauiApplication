@@ -18,6 +18,7 @@ builder.Services.AddTransient<IUserInfo, UserInfoRepository>();
 builder.Services.AddTransient<IBarcodeItem, BarcodeItemRepository>();
 builder.Services.AddTransient<IMongoImage, MongoImageRepository>();
 builder.Services.AddTransient<IOpenAiPrompt, OpenAiPromptRepository>();
+builder.Services.AddTransient<IMeal, MealRepository>();
 
 #endregion
 

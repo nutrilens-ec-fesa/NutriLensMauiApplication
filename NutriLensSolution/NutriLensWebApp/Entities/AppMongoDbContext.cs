@@ -123,5 +123,16 @@ namespace NutriLensWebApp.Entities
                 return _openAiPrompt;
             }
         }
+
+        private static IMongoCollection<Meal>? _meal;
+
+        public static IMongoCollection<Meal> Meal
+        {
+            get
+            {
+                _meal ??= Client.GetDatabase(_database).GetCollection<Meal>("MealCollection");
+                return _meal;
+            }
+        }
     }
 }
