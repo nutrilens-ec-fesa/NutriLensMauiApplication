@@ -613,5 +613,109 @@ namespace NutriLens.Entities
         }
 
         #endregion
+
+        #region Meal
+
+        /// <summary>
+        /// Ontém o código hash da lista de refeições do usuário presente na base
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="UnsuccessfullRequestException"></exception>
+        public static HashItem GetUserMealsHash()
+        {
+            GetRequest httpRequest = new(UriAndPaths.ApiUrl, "Meal/v1/GetUserMealsHash")
+            {
+                Token = AppDataHelperClass.NutriLensApiToken
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (!resp.IsSuccessStatusCode)
+                throw new UnsuccessfullRequestException(content);
+            else
+                return HttpManager.GetContent<HashItem>(content);
+        }
+
+        /// <summary>
+        /// Obtém todas as refeições do usuário
+        /// </summary>
+        /// <returns></returns>
+        public static List<Meal> GetAllUserMeals()
+        {
+            GetRequest httpRequest = new(UriAndPaths.ApiUrl, "Meal/v1/GetAllUserMeals")
+            {
+                Token = AppDataHelperClass.NutriLensApiToken
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (!resp.IsSuccessStatusCode)
+                throw new UnsuccessfullRequestException(content);
+            else
+                return HttpManager.GetContent<List<Meal>>(content);
+        }
+
+        /// <summary>
+        /// Insere ou atualiza as refeições na base de dados
+        /// </summary>
+        /// <param name="meals"></param>
+        /// <returns></returns>
+        /// <exception cref="UnsuccessfullRequestException"></exception>
+        public static bool InsertMeals(List<Meal> meals)
+        {
+            PostRequest httpRequest = new(UriAndPaths.ApiUrl, "Meal/v1/InsertMeals")
+            {
+                Token = AppDataHelperClass.NutriLensApiToken,
+                Body = meals
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (resp.IsSuccessStatusCode)
+            {
+                List<string> generatedIds = HttpManager.GetContent<List<string>>(content);
+
+                for(int i = 0; i < meals.Count; i++)
+                {
+                    meals[i].Id = generatedIds[i];
+                }
+
+                return true;
+            }
+            else
+                throw new UnsuccessfullRequestException(content);
+        }
+
+        public static bool UpdateMeal(Meal meal)
+        {
+            PutRequest httpRequest = new(UriAndPaths.ApiUrl, "Meal/v1/UpdateMeal")
+            {
+                Token = AppDataHelperClass.NutriLensApiToken,
+                Body = meal
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (resp.IsSuccessStatusCode)
+                return true;
+            else
+                throw new UnsuccessfullRequestException(content);
+        }
+
+        public static bool RemoveMeal(Meal meal)
+        {
+            DeleteRequest httpRequest = new(UriAndPaths.ApiUrl, "Meal/v1/RemoveMeal", meal.Id)
+            {
+                Token = AppDataHelperClass.NutriLensApiToken
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (resp.IsSuccessStatusCode)
+                return true;
+            else
+                throw new UnsuccessfullRequestException(content);
+        }
+        #endregion
     }
 }
