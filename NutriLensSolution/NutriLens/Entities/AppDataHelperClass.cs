@@ -2,8 +2,11 @@
 using Newtonsoft.Json;
 using NutriLens.Models;
 using NutriLens.Services;
+using NutriLens.Views.Popups;
 using NutriLensClassLibrary.Entities;
 using NutriLensClassLibrary.Models;
+using Xamarin.KotlinX.Coroutines;
+using ZXing.QrCode.Internal;
 
 namespace NutriLens.Entities
 {
@@ -51,6 +54,11 @@ namespace NutriLens.Entities
             /// Hash da última tabela TACO baixada
             /// </summary>
             TacoHash,
+
+            /// <summary>
+            /// Hash das refeições do usuário na base de dados
+            /// </summary>
+            MealListHash,
         }
 
         private static List<Meal> _mealList;
@@ -59,6 +67,7 @@ namespace NutriLens.Entities
         private static List<TacoItem> _tacoFoodItems;
         private static List<PhysicalActivity> _physicalActivityList;
         private static string _nutriLensApiToken;
+        private static List<BarcodeItemEntry> _barcodeItems;
 
         public static string NewFoodPicturePath { get; set; }
 
@@ -235,11 +244,24 @@ namespace NutriLens.Entities
         /// Adiciona uma nova refeição
         /// </summary>
         /// <param name="meal"></param>
-        public static void AddMeal(Meal meal)
+        public static async void AddMeal(Meal meal)
         {
             meal.UserInfoId = UserInfo.Id;
             MealList.Add(meal);
             ViewServices.AppDataManager.SetItem(nameof(DataItems.MealList) + UserInfo.Id, MealList);
+
+            bool mealSyncronized = false;
+
+            EntitiesHelperClass.ShowLoading("Sincronizando refeição em nuvem");
+
+            await Task.Run(() =>
+            {
+                mealSyncronized = DaoHelperClass.InsertMeals(new List<Meal> { meal });
+                HashItem cloudUserMealsHash = DaoHelperClass.GetUserMealsHash();
+                SetUserMealsHash(cloudUserMealsHash.Hash);
+            });
+
+            await EntitiesHelperClass.CloseLoading();
         }
 
         /// <summary>
@@ -332,10 +354,41 @@ namespace NutriLens.Entities
                 return meals.OrderBy(x => x.DateTime).ToList()[0].DateTime;
         }
 
-        public static void RemoveMeal(Meal meal)
+        public static async Task RemoveMeal(Meal meal)
         {
             MealList.Remove(meal);
             ViewServices.AppDataManager.SetItem(nameof(DataItems.MealList) + UserInfo.Id, MealList);
+
+            bool mealSyncronized = false;
+
+            EntitiesHelperClass.ShowLoading("Sincronizando refeição em nuvem");
+
+            await Task.Run(() =>
+            {
+                mealSyncronized = DaoHelperClass.RemoveMeal(meal);
+                HashItem cloudUserMealsHash = DaoHelperClass.GetUserMealsHash();
+                SetUserMealsHash(cloudUserMealsHash.Hash);
+            });
+
+            await EntitiesHelperClass.CloseLoading();
+        }
+
+        public static async Task UpdateMeal(Meal meal)
+        {
+            bool mealSyncronized = false;
+
+            EntitiesHelperClass.ShowLoading("Sincronizando refeição em nuvem");
+
+            await Task.Run(() =>
+            {
+                mealSyncronized = DaoHelperClass.UpdateMeal(meal);
+                HashItem cloudUserMealsHash = DaoHelperClass.GetUserMealsHash();
+                SetUserMealsHash(cloudUserMealsHash.Hash);
+            });
+
+            await EntitiesHelperClass.CloseLoading();
+
+            SaveChangesOnMeals();
         }
 
         public static void SaveChangesOnMeals()
@@ -792,6 +845,128 @@ namespace NutriLens.Entities
         public static void SetTacoHash(string hash)
         {
             ViewServices.AppDataManager.SetItem(DataItems.TacoHash, hash);
+        }
+
+        public static string GetUserMealsHash()
+        {
+            try
+            {
+                return ViewServices.AppDataManager.GetItem<string>(DataItems.MealListHash);
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
+        public static void SetUserMealsHash(string hash)
+        {
+            ViewServices.AppDataManager.SetItem(DataItems.MealListHash, hash);
+        }
+
+        public static async Task CheckCloudMeals()
+        {
+            await Task.Run(() =>
+            {
+                HashItem cloudUserMealsHash = DaoHelperClass.GetUserMealsHash();
+
+                if (!string.IsNullOrEmpty(cloudUserMealsHash.Hash) && cloudUserMealsHash.ItemsCount > 0)
+                {
+                    if (GetUserMealsHash() != cloudUserMealsHash.Hash)
+                    {
+                        List<Meal> meals = DaoHelperClass.GetAllUserMeals();
+                        ViewServices.AppDataManager.SetItem(nameof(DataItems.MealList) + UserInfo.Id, meals);
+                        _mealList = GetAllMeals();
+                        SetUserMealsHash(cloudUserMealsHash.Hash);
+                    }
+                }
+                else if (MealList.Count > 0)
+                {
+                    DaoHelperClass.InsertMeals(MealList);
+                    cloudUserMealsHash = DaoHelperClass.GetUserMealsHash();
+                    SetUserMealsHash(cloudUserMealsHash.Hash);
+                }
+            });
+        }
+
+        public static async Task CreateDummyMeals()
+        {
+            int[] refeicoes = new int[] { 8, 10, 12, 15, 18 };
+            int indexRefeicao = 0;
+
+            DateTime dateTime = DateTime.Now.AddMonths(-6).Date.AddHours(8);
+
+            Random random = new Random();
+
+            List<Meal> randomizedMeals = new List<Meal>();
+
+            while (DateTime.Now > dateTime)
+            {
+                int randomizedSeconds = random.Next(0, 1800);
+                randomizedSeconds = randomizedSeconds % 2 == 0 ? randomizedSeconds : randomizedSeconds * (-1);
+
+                Meal randomizedMeal = new Meal()
+                {
+                    DateTime = dateTime.Date.AddHours(refeicoes[indexRefeicao]).AddSeconds(randomizedSeconds),
+                    UserInfoId = UserInfo.Id,
+                    Name = "Refeição",
+                    FoodItems = await GetRandomFoodItems(),
+                };
+
+                randomizedMeals.Add(randomizedMeal);
+            }
+        }
+
+        public static async Task<List<FoodItem>> GetRandomFoodItems()
+        {
+            Random random = new Random();
+            int foodItemsQuantity = random.Next(1, 5);
+            List<FoodItem> randomizedFoodItems = new List<FoodItem>();
+
+            for (int i = 0; i < foodItemsQuantity; i++)
+            {
+                bool tacoItem = random.Next(0, 10) > 2;
+                FoodItem foodItem = new FoodItem();
+
+                if (tacoItem)
+                {
+                    TacoItem randomTacoItem = TacoFoodItems.ElementAt(random.Next(0, TacoFoodItems.Count));
+
+                    int portion = random.Next(50, 150);
+                    double kcalTaco = Convert.ToDouble(randomTacoItem.EnergiaKcal);
+                    double kiloCalories = (portion * kcalTaco) / 100;
+
+                    foodItem = new FoodItem()
+                    {
+                        Name = randomTacoItem.Nome,
+                        Portion = portion.ToString(),
+                        KiloCalories = kiloCalories,
+                        TacoFoodItem = GetTacoFoodItem(randomTacoItem, portion.ToString())
+                    };
+
+                }
+                else
+                {
+                    if (_barcodeItems == null)
+                        await Task.Run(() => _barcodeItems = DaoHelperClass.GetAllBarCodeItems());
+
+                    BarcodeItemEntry randomBarcodeItemEntry = _barcodeItems.ElementAt(random.Next(0, _barcodeItems.Count));
+
+                    int portion = random.Next(1, 10);
+
+                    foodItem = new FoodItem
+                    {
+                        KiloCalories = randomBarcodeItemEntry.TotalCaloriesConsumption,
+                        BarcodeItemEntry = randomBarcodeItemEntry,
+                        Name = randomBarcodeItemEntry.ProductName,
+                        Portion = (randomBarcodeItemEntry.BasePortion * portion).ToString("0.00"),
+                    };
+                }
+
+                randomizedFoodItems.Add(foodItem);
+            }
+
+            return randomizedFoodItems;
         }
     }
 }
