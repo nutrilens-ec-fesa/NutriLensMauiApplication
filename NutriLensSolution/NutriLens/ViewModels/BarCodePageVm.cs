@@ -305,7 +305,7 @@ namespace NutriLens.ViewModels
             else
             {
                 AppDataHelperClass.MealToEdit.FoodItems = barcodeFoodItems;
-                AppDataHelperClass.SaveChangesOnMeals();
+                await AppDataHelperClass.UpdateMeal(AppDataHelperClass.MealToEdit);
                 AppDataHelperClass.MealToEdit = null;
 
                 await ViewServices.PopUpManager.PopInfoAsync("Refeição editada com sucesso!");
