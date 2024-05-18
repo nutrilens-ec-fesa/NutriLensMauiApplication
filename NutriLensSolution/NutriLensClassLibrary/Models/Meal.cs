@@ -1,5 +1,8 @@
-﻿using NutriLensClassLibrary.Models;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+using NutriLensClassLibrary.Models;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace NutriLensClassLibrary.Models
 {
@@ -8,6 +11,9 @@ namespace NutriLensClassLibrary.Models
     /// </summary>
     public class Meal
     {
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
+
         /// <summary>
         /// Id do usuário da refeição
         /// </summary>
@@ -33,9 +39,13 @@ namespace NutriLensClassLibrary.Models
         /// </summary>
         public string MealPicturePath { get; set; }
 
+        [JsonIgnore, BsonIgnore]
         public string DateInfo { get => DateTime.ToShortDateString(); }
+        [JsonIgnore, BsonIgnore]
         public string TimeInfo { get => DateTime.ToShortTimeString(); }
+        [JsonIgnore, BsonIgnore]
         public string FoodItemsCountInfo { get => FoodItems.Count.ToString(); }
+        [JsonIgnore, BsonIgnore]
         public string FoodItemsInfo
         {
             get
@@ -53,10 +63,12 @@ namespace NutriLensClassLibrary.Models
                 return stringBuilder.ToString();
             }
         }
+        [JsonIgnore, BsonIgnore]
         public string TotalKcalInfo
         {
             get => Math.Round(FoodItems.Select(x => x.KiloCalories).Sum(), 2).ToString() + " kcal";
         }
+        [JsonIgnore, BsonIgnore]
         public string TotalMassInfo
         {
             get => Math.Round(FoodItems.Select(x => double.Parse(x.Portion)).Sum(), 2).ToString() + " g";
