@@ -89,6 +89,7 @@ namespace NutriLens.ViewModels
             EntitiesHelperClass.ShowLoading("Verificando refeições");
 
             await Task.Run(AppDataHelperClass.CheckUndefinedUserMeals);
+            await Task.Run(AppDataHelperClass.CheckCloudMeals);
 
             await EntitiesHelperClass.CloseLoading();
 
@@ -158,6 +159,7 @@ namespace NutriLens.ViewModels
                 EntitiesHelperClass.ShowLoading("Verificando refeições");
 
                 await Task.Run(AppDataHelperClass.CheckUndefinedUserMeals);
+                await Task.Run(AppDataHelperClass.CheckCloudMeals);
 
                 await EntitiesHelperClass.CloseLoading();
 
