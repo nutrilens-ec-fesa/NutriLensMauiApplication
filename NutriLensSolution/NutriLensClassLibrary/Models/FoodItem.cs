@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using NutriLensClassLibrary.Entities;
 using System.ComponentModel;
@@ -88,22 +89,23 @@ namespace NutriLensClassLibrary.Models
 
         #region Getters only
 
-        [JsonIgnore]
+        [BsonIgnore, JsonIgnore]
         public string NamePlusPortion { get => $"{Name}{(string.IsNullOrEmpty(Portion) ? string.Empty : $" - {Portion}{PortionUnit}")}"; }
-        [JsonIgnore]
+        [BsonIgnore, JsonIgnore]
         public string NamePlusPortionPlusKcalInfo { get => $"{Name}{(string.IsNullOrEmpty(Portion) ? string.Empty : $" - {Portion}{PortionUnit}")} - {KiloCalorieInfo}"; }
-        [JsonIgnore]
+        [BsonIgnore, JsonIgnore]
         public string NamePlusPortionPlusKjInfo { get => $"{Name}{(string.IsNullOrEmpty(Portion) ? string.Empty : $" - {Portion}{PortionUnit}")} - {KiloJoulesInfo}"; }
-        [JsonIgnore]
+        [BsonIgnore, JsonIgnore]
         public double KiloJoules { get => KiloCalories * Constants.kcalToKJFactor; }
-        [JsonIgnore]
+        [BsonIgnore, JsonIgnore]
         public string KiloCalorieInfo { get => $"{KiloCalories} {Constants.kcalUnit}"; }
-        [JsonIgnore]
+        [BsonIgnore, JsonIgnore]
         public string KiloJoulesInfo { get => $"{KiloCalories * Constants.kcalToKJFactor} {Constants.kJUnit}"; }
-        [JsonIgnore]
+        [BsonIgnore, JsonIgnore]
         public string GptQueryString { get => $"{Name}{(string.IsNullOrEmpty(Portion) ? string.Empty : $" - {Portion}")}"; }
-        [JsonIgnore]
+        [BsonIgnore, JsonIgnore]
         public string PortionInfo { get => Portion + PortionUnit; }
+        [BsonIgnore, JsonIgnore]
         public string PortionUnit { get => TacoFoodItem != null && TacoFoodItem.Liquid != null && (bool)TacoFoodItem.Liquid ? "ml" : "g"; }
 
 
