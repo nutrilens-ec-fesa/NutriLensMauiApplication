@@ -10,61 +10,67 @@ namespace NutriLensClassLibrary.Models
         [BsonId, JsonIgnore]
         public ObjectId _id { get; set; }
         public int id { get; set; }
+        public int? Category { get; set; }
         public string Nome { get; set; }
         [BsonElement("Energia (kJ)")]
-        public object? EnergiaKj { get; set; }
+        public double? EnergiaKj { get; set; }
         [BsonElement("Energia (kcal)")]
-        public object? EnergiaKcal { get; set; }
+        public double? EnergiaKcal { get; set; }
         [BsonElement("Umidade (%)")]
-        public object? Umidade { get; set; }
+        public double? Umidade { get; set; }
         [BsonElement("Proteína (g)")]
-        public object? Proteina { get; set; }
+        public double? Proteina { get; set; }
         [BsonElement("Lipídeos (g)")]
-        public object? Lipideos { get; set; }
+        public double? Lipideos { get; set; }
         [BsonElement("Colesterol (mg)")]
-        public object? Colesterol { get; set; }
+        public double? Colesterol { get; set; }
         [BsonElement("Carboidrato (g)")]
-        public object? Carboidrato { get; set; }
+        public double? Carboidrato { get; set; }
         [BsonElement("Fibra Alimentar (g)")]
-        public object? FibraAlimentar { get; set; }
+        public double? FibraAlimentar { get; set; }
         [BsonElement("Cinzas (g)")]
-        public object? Cinzas { get; set; }
+        public double? Cinzas { get; set; }
         [BsonElement("Cálcio (mg)")]
-        public object? Calcio { get; set; }
+        public double? Calcio { get; set; }
         [BsonElement("Magnésio (mg)")]
-        public object? Magnesio { get; set; }
+        public double? Magnesio { get; set; }
         [BsonElement("Manganês (mg)")]
-        public object? Manganes { get; set; }
+        public double? Manganes { get; set; }
         [BsonElement("Fósforo (mg)")]
-        public object? Fosforo { get; set; }
+        public double? Fosforo { get; set; }
         [BsonElement("Ferro (mg)")]
-        public object? Ferro { get; set; }
+        public double? Ferro { get; set; }
         [BsonElement("Sódio (mg)")]
-        public object? Sodio { get; set; }
+        public double? Sodio { get; set; }
         [BsonElement("Potássio (mg)")]
-        public object? Potassio { get; set; }
+        public double? Potassio { get; set; }
         [BsonElement("Cobre (mg)")]
-        public object? Cobre { get; set; }
+        public double? Cobre { get; set; }
         [BsonElement("Zinco (mg)")]
-        public object? Zinco { get; set; }
+        public double? Zinco { get; set; }
         [BsonElement("Retinol (µg)")]
-        public object? Retinol { get; set; }
+        public double? Retinol { get; set; }
         [BsonElement("RE (µg)")]
-        public object? RE { get; set; }
+        public double? RE { get; set; }
         [BsonElement("RAE (µg)")]
-        public object? RAE { get; set; }
+        public double? RAE { get; set; }
         [BsonElement("Tiamina (mg)")]
-        public object? Tiamina { get; set; }
+        public double? Tiamina { get; set; }
         [BsonElement("Riboflavina (mg)")]
-        public object? Riboflavina { get; set; }
+        public double? Riboflavina { get; set; }
         [BsonElement("Piridoxina (mg)")]
-        public object? Piridoxina { get; set; }
+        public double? Piridoxina { get; set; }
         [BsonElement("Niacina (mg)")]
-        public object? Niacina { get; set; }
+        public double? Niacina { get; set; }
         [BsonElement("Vitamina C (mg)")]
-        public object? VitaminaC { get; set; }
+        public double? VitaminaC { get; set; }
         public bool? Liquid { get; set; }
         public bool? TacoOriginal { get; set; }
+        public bool? Gluten { get; set; }
+        public bool? Lactose { get; set; }
+
+        [BsonIgnore, JsonIgnore]
+        public TacoCategory TacoCategory { get => Category != null ? (TacoCategory)Category : TacoCategory.INDEFINIDO; }
 
         public double GetValue(string propertyName)
         {
@@ -82,5 +88,25 @@ namespace NutriLensClassLibrary.Models
         {
             return Nome;
         }
+    }
+
+    public enum TacoCategory
+    {
+        INDEFINIDO,
+        CEREAIS_E_DERIVADOS,
+        VERDURAS_HORTALICAS_E_DERIVADOS,
+        FRUTAS_E_DERIVADOS,
+        GORDURAS_E_OLEOS,
+        PESCADOS_E_FRUTOS_DO_MAR,
+        CARNES_E_DERIVADOS,
+        LEITE_E_DERIVADOS,
+        BEBIDAS,
+        OVOS_E_DERIVADOS,
+        PRODUTOS_ACUCARADOS,
+        MISCELANEAS,
+        OUTROS_ALIMENTOS_INDUSTRIALIZADOS,
+        ALIMENTOS_PREPARADOS,
+        LEGUMINOSAS_E_DERIVADOS,
+        NOZES_E_SEMENTES
     }
 }
