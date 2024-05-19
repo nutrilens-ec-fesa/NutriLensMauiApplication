@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:control="clr-namespace:Syncfusion.Maui.Charts;assembly=Syncfusion.Maui.Charts"
+             x:Class="NutriLens.Views.Popups.ShowTacoMealItemPopup"
+             Color="Azure">
+
+    <ScrollView Margin="5">
+        <StackLayout Margin="5" Spacing="10">
+            <Label Text="Macronutrientes da refeição selecionada" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
+            <control:SfCircularChart>
+                <control:SfCircularChart.Series>
+
+                    <control:RadialBarSeries ItemsSource="{Binding PartialResultsMacroNutrients1}" 
+                XBindingPath="Label" 
+                YBindingPath="Value" 
+                EnableAnimation="True" EnableTooltip="True" GapRatio="0.2" ShowDataLabels="True" InnerRadius="0.05" Radius="1"
+                MaximumValue="100"
+                CapStyle = "BothCurve"
+                PaletteBrushes="{Binding Chart1ColorPalette}">
+                    </control:RadialBarSeries>
+                </control:SfCircularChart.Series>
+                <control:SfCircularChart.Legend>
+                    <control:ChartLegend Placement="Top"/>
+                </control:SfCircularChart.Legend>
+            </control:SfCircularChart>
+            
+            <control:SfCircularChart>
+                <control:SfCircularChart.Series>
+                    <control:RadialBarSeries ItemsSource="{Binding PartialResultsMacroNutrients2}" 
+                        XBindingPath="Label" 
+                        YBindingPath="Value" 
+                        EnableAnimation="True" EnableTooltip="True" GapRatio="0.2" ShowDataLabels="True" InnerRadius="0.05" Radius="1"
+                        MaximumValue="100"
+                        CapStyle = "BothCurve"
+                        PaletteBrushes="{Binding Chart2ColorPalette}">
+                </control:RadialBarSeries>
+            </control:SfCircularChart.Series>
+            <control:SfCircularChart.Legend>
+                <control:ChartLegend Placement="Top"/>
+            </control:SfCircularChart.Legend>
+        </control:SfCircularChart>
+
+            <control:SfCircularChart>
+                <control:SfCircularChart.Series>
+                    <control:RadialBarSeries ItemsSource="{Binding PartialResultsMacroNutrients3}" 
+                        XBindingPath="Label" 
+                        YBindingPath="Value" 
+                        EnableAnimation="True" EnableTooltip="True" GapRatio="0.2" ShowDataLabels="True" InnerRadius="0.05" Radius="1"
+                        MaximumValue="100"
+                        CapStyle = "BothCurve"
+                        PaletteBrushes="{Binding Chart3ColorPalette}">
+                    </control:RadialBarSeries>
+                </control:SfCircularChart.Series>
+                <control:SfCircularChart.Legend>
+                    <control:ChartLegend Placement="Top"/>
+                </control:SfCircularChart.Legend>
+            </control:SfCircularChart>
+            <Button x:Name="btnConfirmEntry" Text="OK" Clicked="btnConfirmEntry_Clicked"></Button>
+        </StackLayout>
+     </ScrollView>  
+</toolkit:Popup>

@@ -20,9 +20,9 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <ViewCell.View>
-                                <Grid Margin="10">
-                                    <Grid.RowDefinitions>
+                            <ViewCell.View command="{Binding Path=BindingContext.MealTappedCommand, Source={x:Reference MealHistoricPage}}" CommandParameter="{Binding .}">
+                                <Grid Margin="10" >
+                                    <Grid.RowDefinitions >
                                         <RowDefinition></RowDefinition>
                                         <RowDefinition></RowDefinition>
                                         <RowDefinition></RowDefinition>
@@ -35,6 +35,7 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="2*"></ColumnDefinition>
                                         <ColumnDefinition Width="4*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
                                         <ColumnDefinition Width="*"></ColumnDefinition>
                                         <ColumnDefinition Width="*"></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
@@ -60,6 +61,7 @@
                                     <Label Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="4" Text="{Binding FoodItemsInfo}"></Label>
                                     <ImageButton Grid.Row="0" Grid.RowSpan="5" Grid.Column="2" Source="delete_icon.png" Command="{Binding Path=BindingContext.DeleteItemCommand, Source={x:Reference MealHistoricPage}}" CommandParameter="{Binding .}" HeightRequest="50" />
                                     <ImageButton Grid.Row="0" Grid.RowSpan="5" Grid.Column="3" Source="edit_icon.png" Margin="4" Command="{Binding Path=BindingContext.EditItemCommand, Source={x:Reference MealHistoricPage}}" CommandParameter="{Binding .}" HeightRequest="50" />
+                                    <ImageButton Grid.Row="0" Grid.RowSpan="5" Grid.Column="4" Source="list_icon.png" Margin="4" Command="{Binding Path=BindingContext.MealTappedCommand, Source={x:Reference MealHistoricPage}}" CommandParameter="{Binding .}" HeightRequest="50" />
                                 </Grid>
                             </ViewCell.View>
                         </ViewCell>

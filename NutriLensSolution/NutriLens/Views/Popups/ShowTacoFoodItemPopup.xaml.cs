@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 
 namespace NutriLens.Views.Popups;
 
-public partial class ListTacoMacronutrientsPopup : Popup
+public partial class ShowTacoFoodItemPopup : Popup
 {
     public ObservableCollection<TacoItem> TacoItems { get; set; }
 
@@ -17,7 +17,7 @@ public partial class ListTacoMacronutrientsPopup : Popup
     public ObservableCollection<Brush> Chart2ColorPalette { get; set; }
     public ObservableCollection<Brush> Chart3ColorPalette { get; set; }
 
-    public ListTacoMacronutrientsPopup(FoodItem foodItem)
+    public ShowTacoFoodItemPopup(FoodItem foodItem)
 	{
 		InitializeComponent();
 

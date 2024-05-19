@@ -1,8 +1,10 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.Input;
 using NutriLens.Entities;
 using NutriLens.Models;
 using NutriLens.Services;
 using NutriLens.ViewInterfaces;
+using NutriLens.Views.Popups;
 using NutriLensClassLibrary.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -94,9 +96,11 @@ namespace NutriLens.ViewModels
         }
 
         [RelayCommand]
-        private async void MealTapped(object obj)
+        private async Task MealTapped(Meal item)
         {
             // TODO: Tomar ação para quando o item for clicado
+            ShowTacoMealItemPopup showMealItemPopup = new ShowTacoMealItemPopup(item);
+            await Application.Current.MainPage.ShowPopupAsync(showMealItemPopup);
         }
 
         [RelayCommand]

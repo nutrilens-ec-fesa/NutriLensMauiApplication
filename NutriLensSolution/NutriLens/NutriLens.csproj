@@ -130,14 +130,17 @@
 	  <Compile Update="Views\Popups\AddTacoFoodItemPopup.xaml.cs">
 	    <DependentUpon>AddTacoFoodItemPopup.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\Popups\ShowTacoMealItemPopup.xaml.cs">
+	    <DependentUpon>ShowTacoMealItemPopup.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\Popups\TermsOfUsePopup.xaml.cs">
 	    <DependentUpon>TermsOfUsePopup.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\Popups\AddTbcaFoodItemPopup.xaml.cs">
 	    <DependentUpon>AddTbcaFoodItemPopup.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Views\Popups\ListTacoMacronutrientsPopup.xaml.cs">
-	    <DependentUpon>ListTacoMacronutrientsPopup.xaml</DependentUpon>
+	  <Compile Update="Views\Popups\ShowTacoFoodItemPopup.xaml.cs">
+	    <DependentUpon>ShowTacoFoodItemPopup.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
@@ -197,6 +200,9 @@
 	  <MauiXaml Update="Views\Popups\PeriodChoosePopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\Popups\ShowTacoMealItemPopup.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\Popups\TermsOfUsePopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -212,7 +218,7 @@
 	  <MauiXaml Update="Views\Popups\LoadingPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\Popups\ListTacoMacronutrientsPopup.xaml">
+	  <MauiXaml Update="Views\Popups\ShowTacoFoodItemPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Popups\TextEntryPopup.xaml">
