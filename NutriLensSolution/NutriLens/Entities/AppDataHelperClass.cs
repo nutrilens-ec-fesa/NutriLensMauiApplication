@@ -5,6 +5,7 @@ using NutriLens.Services;
 using NutriLens.Views.Popups;
 using NutriLensClassLibrary.Entities;
 using NutriLensClassLibrary.Models;
+using Org.Apache.Http.Conn;
 using Xamarin.KotlinX.Coroutines;
 using ZXing.QrCode.Internal;
 
@@ -68,6 +69,33 @@ namespace NutriLens.Entities
         private static List<PhysicalActivity> _physicalActivityList;
         private static string _nutriLensApiToken;
         private static List<BarcodeItemEntry> _barcodeItems;
+        private static Random _random = new Random();
+
+        private static List<TacoItem> breakfastTacoItems = TacoFoodItems.Where(x =>
+                        x.TacoCategory == TacoCategory.CEREAIS_E_DERIVADOS ||
+                        x.TacoCategory == TacoCategory.FRUTAS_E_DERIVADOS ||
+                        x.TacoCategory == TacoCategory.LEITE_E_DERIVADOS ||
+                        x.TacoCategory == TacoCategory.BEBIDAS ||
+                        x.TacoCategory == TacoCategory.OVOS_E_DERIVADOS).ToList();
+
+        private static List<TacoItem> morningSnackTacoItems = TacoFoodItems.Where(x =>
+                        x.TacoCategory == TacoCategory.FRUTAS_E_DERIVADOS ||
+                        x.TacoCategory == TacoCategory.LEITE_E_DERIVADOS).ToList();
+
+        private static List<TacoItem> afternoonSnackTacoItems = TacoFoodItems.Where(x =>
+                    x.TacoCategory == TacoCategory.FRUTAS_E_DERIVADOS ||
+                    x.TacoCategory == TacoCategory.PRODUTOS_ACUCARADOS ||
+                    x.TacoCategory == TacoCategory.NOZES_E_SEMENTES).ToList();
+
+        private static List<TacoItem> LunchAndMealTacoItems = TacoFoodItems.Where(x =>
+                    x.TacoCategory == TacoCategory.CEREAIS_E_DERIVADOS ||
+                    x.TacoCategory == TacoCategory.FRUTAS_E_DERIVADOS ||
+                    x.TacoCategory == TacoCategory.LEGUMINOSAS_E_DERIVADOS ||
+                    x.TacoCategory == TacoCategory.CARNES_E_DERIVADOS ||
+                    x.TacoCategory == TacoCategory.PESCADOS_E_FRUTOS_DO_MAR ||
+                    x.TacoCategory == TacoCategory.ALIMENTOS_PREPARADOS ||
+                    x.TacoCategory == TacoCategory.PRODUTOS_ACUCARADOS ||
+                    x.TacoCategory == TacoCategory.OVOS_E_DERIVADOS).ToList();
 
         public static string NewFoodPicturePath { get; set; }
 
@@ -238,6 +266,19 @@ namespace NutriLens.Entities
         /// </summary>
         public static bool HasUserInfo { get => UserInfo != null && !string.IsNullOrEmpty(UserInfo.Id); }
 
+        /// <summary>
+        /// Indica o tipo de refeição, os valores correspondem a hora em que a refeição normalmente
+        /// é feita
+        /// </summary>
+        public enum MealKind
+        {
+            Breakfast = 8,
+            MorningSnack = 10,
+            Lunch = 12,
+            AfternoonSnack = 15,
+            Dinner = 18
+        }
+
         #region Meal methods
 
         /// <summary>
@@ -389,6 +430,25 @@ namespace NutriLens.Entities
             await EntitiesHelperClass.CloseLoading();
 
             SaveChangesOnMeals();
+        }
+
+        public static async Task RemoveAllMeals()
+        {
+            _mealList = new List<Meal>();
+            ViewServices.AppDataManager.DeleteItem(nameof(DataItems.MealList) + UserInfo.Id);
+
+            bool mealSyncronized = false;
+
+            EntitiesHelperClass.ShowLoading("Sincronizando refeições em nuvem");
+
+            await Task.Run(() =>
+            {
+                mealSyncronized = DaoHelperClass.RemoveAllMeals();
+                HashItem cloudUserMealsHash = DaoHelperClass.GetUserMealsHash();
+                SetUserMealsHash(cloudUserMealsHash.Hash);
+            });
+
+            await EntitiesHelperClass.CloseLoading();
         }
 
         public static void SaveChangesOnMeals()
@@ -682,6 +742,7 @@ namespace NutriLens.Entities
             _tacoFoodItems = null;
             _physicalActivityList = null;
             _nutriLensApiToken = string.Empty;
+            SetUserMealsHash(string.Empty);
 
             // Limpeza de propriedades
             NewFoodPicturePath = string.Empty;
@@ -889,79 +950,167 @@ namespace NutriLens.Entities
             });
         }
 
-        public static async Task CreateDummyMeals()
+        /// <summary>
+        /// Cria refeilções mockadas
+        /// </summary>
+        /// <returns></returns>
+        public static async Task CreateMockMeals()
         {
-            int[] refeicoes = new int[] { 8, 10, 12, 15, 18 };
-            int indexRefeicao = 0;
+            // Array com os horários base para as refeições
+            int[] mealHours = new int[]
+            {
+                (int)MealKind.Breakfast,
+                (int)MealKind.MorningSnack,
+                (int)MealKind.Lunch,
+                (int)MealKind.AfternoonSnack,
+                (int)MealKind.Dinner
+            };
 
-            DateTime dateTime = DateTime.Now.AddMonths(-6).Date.AddHours(8);
+            // Índice do horário de refeição
+            int mealHourIndex = 0;
 
-            Random random = new Random();
+            // Data e hora do início do mock (6 meses para trás)
+            DateTime dateTime = DateTime.Now.AddMonths(-6).Date;
 
             List<Meal> randomizedMeals = new List<Meal>();
 
+            // Enquanto a data atual foi maior que a data e hora de controle
             while (DateTime.Now > dateTime)
             {
-                int randomizedSeconds = random.Next(0, 1800);
+                // Quantidade de segundos que serão deslocados do horário de refeição planejado
+                // Utilizado para simular uma situação real
+                int randomizedSeconds = _random.Next(0, 1800);
+
+                // Caso o número de segundos tenha sido par, desloca para cima
+                // Caso o número de segundos tenha sido ímpar, descola para baixo
                 randomizedSeconds = randomizedSeconds % 2 == 0 ? randomizedSeconds : randomizedSeconds * (-1);
 
+                DateTime mealDateTime = dateTime.Date.AddHours(mealHours[mealHourIndex]).AddSeconds(randomizedSeconds);
+
+                if (mealDateTime > DateTime.Now)
+                    break;
+
+                // Refeição aleatória
                 Meal randomizedMeal = new Meal()
                 {
-                    DateTime = dateTime.Date.AddHours(refeicoes[indexRefeicao]).AddSeconds(randomizedSeconds),
+                    // Data com o deslocamento aleatório em segundos
+                    DateTime = mealDateTime,
                     UserInfoId = UserInfo.Id,
                     Name = "Refeição",
-                    FoodItems = await GetRandomFoodItems(),
+                    FoodItems = await GetRandomFoodItems((MealKind)mealHours[mealHourIndex++]),
                 };
+
+                // Reset da váriavel de índice
+                if (mealHourIndex == mealHours.Length)
+                {
+                    mealHourIndex = 0;
+                    dateTime = mealDateTime.Date.AddDays(1);
+                }
 
                 randomizedMeals.Add(randomizedMeal);
             }
+
+            _mealList = randomizedMeals;
+
+            ViewServices.AppDataManager.SetItem(nameof(DataItems.MealList) + UserInfo.Id, _mealList);
+
+            bool mealSyncronized = false;
+
+            await Task.Run(() =>
+            {
+                mealSyncronized = DaoHelperClass.InsertMeals(_mealList);
+                HashItem cloudUserMealsHash = DaoHelperClass.GetUserMealsHash();
+                SetUserMealsHash(cloudUserMealsHash.Hash);
+            });
+
+            await ViewServices.PopUpManager.PopInfoAsync("Refeições mocks geradas com sucesso!");
         }
 
-        public static async Task<List<FoodItem>> GetRandomFoodItems()
+        /// <summary>
+        /// Obtém uma lista de FoodItems aleatórios
+        /// </summary>
+        /// <param name="mealKind"></param>
+        /// <returns></returns>
+        public static async Task<List<FoodItem>> GetRandomFoodItems(MealKind mealKind)
         {
-            Random random = new Random();
-            int foodItemsQuantity = random.Next(1, 5);
-            List<FoodItem> randomizedFoodItems = new List<FoodItem>();
+            // Quantidade de itens alimentícios que terão na refeição
+            int foodItemsQuantity = _random.Next(1, 6);
+
+            List<FoodItem> randomizedFoodItems = new();
+
+            List<TacoItem> possibleTacoItems = new List<TacoItem>();
+
+            switch (mealKind)
+            {
+                case MealKind.Breakfast:
+                    possibleTacoItems = breakfastTacoItems;
+                    break;
+                case MealKind.MorningSnack:
+                    possibleTacoItems = morningSnackTacoItems;
+                    break;
+                case MealKind.AfternoonSnack:
+                    possibleTacoItems = afternoonSnackTacoItems;
+                    break;
+                case MealKind.Lunch:
+                case MealKind.Dinner:
+                    possibleTacoItems = LunchAndMealTacoItems;
+                    break;
+            }
 
             for (int i = 0; i < foodItemsQuantity; i++)
             {
-                bool tacoItem = random.Next(0, 10) > 2;
-                FoodItem foodItem = new FoodItem();
+                // Escolhe um número entre 0 a 10, caso seja maior ou igual a 2, indica que será gerado um item da TACO
+                // caso seja menor que 2, indica que será gerado um item de código de barras
+                // bool tacoItem = _random.Next(0, 10) >= 2;
 
-                if (tacoItem)
+                FoodItem foodItem = new();
+
+                //if (tacoItem)
+                //{
+                TacoItem randomTacoItem;
+
+                // Do-while para continuar até selecionar um alimento coerente
+                do
                 {
-                    TacoItem randomTacoItem = TacoFoodItems.ElementAt(random.Next(0, TacoFoodItems.Count));
+                    // Obtém um item aleatório da TACO
+                    randomTacoItem = possibleTacoItems.ElementAt(_random.Next(0, possibleTacoItems.Count));
+                } while (randomTacoItem.TacoCategory == TacoCategory.CARNES_E_DERIVADOS && randomTacoItem.Nome.ToUpper().Contains("CRU"));
 
-                    int portion = random.Next(50, 150);
-                    double kcalTaco = Convert.ToDouble(randomTacoItem.EnergiaKcal);
-                    double kiloCalories = (portion * kcalTaco) / 100;
+                // Porção aleatória a ser consumida desse alimento
+                int portion = _random.Next(50, 151);
 
-                    foodItem = new FoodItem()
-                    {
-                        Name = randomTacoItem.Nome,
-                        Portion = portion.ToString(),
-                        KiloCalories = kiloCalories,
-                        TacoFoodItem = GetTacoFoodItem(randomTacoItem, portion.ToString())
-                    };
+                double kcalTaco = Convert.ToDouble(randomTacoItem.EnergiaKcal);
+                double kiloCalories = (portion * kcalTaco) / 100;
 
-                }
-                else
+                foodItem = new FoodItem()
                 {
-                    if (_barcodeItems == null)
-                        await Task.Run(() => _barcodeItems = DaoHelperClass.GetAllBarCodeItems());
+                    Name = randomTacoItem.Nome,
+                    Portion = portion.ToString(),
+                    KiloCalories = kiloCalories,
+                    TacoFoodItem = GetTacoFoodItem(randomTacoItem, portion.ToString())
+                };
 
-                    BarcodeItemEntry randomBarcodeItemEntry = _barcodeItems.ElementAt(random.Next(0, _barcodeItems.Count));
+                //}
+                //else
+                //{
+                //    // Verifica se os itens de código de barras já foram carregados
+                //    if (_barcodeItems == null)
+                //        await Task.Run(() => _barcodeItems = DaoHelperClass.GetAllBarCodeItems());
 
-                    int portion = random.Next(1, 10);
+                //    // Ontém um item de código de barras aleatório
+                //    BarcodeItemEntry randomBarcodeItemEntry = _barcodeItems.ElementAt(_random.Next(0, _barcodeItems.Count));
 
-                    foodItem = new FoodItem
-                    {
-                        KiloCalories = randomBarcodeItemEntry.TotalCaloriesConsumption,
-                        BarcodeItemEntry = randomBarcodeItemEntry,
-                        Name = randomBarcodeItemEntry.ProductName,
-                        Portion = (randomBarcodeItemEntry.BasePortion * portion).ToString("0.00"),
-                    };
-                }
+                //    // Obtém uma porção aleatória, entre 1 e 10
+                //    int portion = _random.Next(1, 11);
+
+                //    foodItem = new FoodItem
+                //    {
+                //        KiloCalories = randomBarcodeItemEntry.TotalCaloriesConsumption,
+                //        BarcodeItemEntry = randomBarcodeItemEntry,
+                //        Name = randomBarcodeItemEntry.ProductName,
+                //        Portion = (randomBarcodeItemEntry.BasePortion * portion).ToString("0.00"),
+                //    };
+                //}
 
                 randomizedFoodItems.Add(foodItem);
             }
