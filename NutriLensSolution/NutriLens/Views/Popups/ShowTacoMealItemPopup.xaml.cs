@@ -43,7 +43,6 @@ public partial class ShowTacoMealItemPopup : Popup
             };
 
         List<Meal> meals = new List<Meal>();
-        meals.Add(mealItem);
         MealListClass it = new MealListClass(meals);
         _items = it;
         _items.MealList.Add(mealItem);
