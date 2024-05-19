@@ -99,5 +99,19 @@ namespace NutriLensWebApp.Controllers
                 return BadRequest(ExceptionManager.ExceptionMessage(ex));
             }
         }
+
+        [HttpDelete, Route("v1/RemoveAllAuthUserMeals")]
+        public IActionResult RemoveAllAuthUserMeals([FromServices] IMeal mealRepository)
+        {
+            try
+            {
+                mealRepository.RemoveAllMealByUserIdentifier(EntitiesHelperClass.AuthenticatedUserIdentifier(this));
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
     }
 }

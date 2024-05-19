@@ -9,5 +9,6 @@ namespace NutriLensWebApp.Interfaces
         public void InsertMeals(List<Meal> meals);
         public void UpdateMeal(Meal meal);
         public void RemoveMeal(string mealId);
+        public void RemoveAllMealByUserIdentifier(string userIdentifier);
     }
 }

@@ -55,6 +55,19 @@ namespace NutriLensWebApp.Repositories
             }
         }
 
+        public void RemoveAllMealByUserIdentifier(string userIdentifier)
+        {
+            try
+            {
+                AppMongoDbContext.Meal
+                    .DeleteMany(Builders<Meal>.Filter.Eq(x => x.UserInfoId, userIdentifier));
+            }
+            catch (Exception ex)
+            {
+                throw new DatabaseQueryException("Houve algum problema para deletar a refeição informada");
+            }
+        }
+
         public void RemoveMeal(string mealId)
         {
             try
