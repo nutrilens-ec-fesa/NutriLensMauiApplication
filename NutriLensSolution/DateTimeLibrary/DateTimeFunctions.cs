@@ -48,15 +48,21 @@ namespace DateTimeLibrary
             DateTime lastDayOfWeek = dateTime;
 
             double weekNumber = GetWeekNumber(lastDayOfWeek);
+            bool weekNumberAdjusted = false;
 
             if (weekNumber % 1 != 0)
             {
+                weekNumberAdjusted = true;
+
                 do
                 {
                     lastDayOfWeek = lastDayOfWeek.AddDays(1);
                     weekNumber = GetWeekNumber(lastDayOfWeek);
                 } while (weekNumber % 1 != 0);
             }
+
+            if (!weekNumberAdjusted)
+                lastDayOfWeek = lastDayOfWeek.AddDays(-1).AddDays(7);
 
             return lastDayOfWeek;
         }
@@ -93,7 +99,7 @@ namespace DateTimeLibrary
         /// <returns>True caso seja a mesma data</returns>
         public static bool CheckSameIfIsSameDate(DateTime date1, DateTime date2)
         {
-            return date1.Day == date2.Day && date1.Month == date2.Month && date1.Year == date2.Year;
+            return date1.Date == date2.Date;
         }
     }
 }
