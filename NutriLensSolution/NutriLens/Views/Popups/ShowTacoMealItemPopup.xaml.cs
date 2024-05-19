@@ -56,7 +56,7 @@ public partial class ShowTacoMealItemPopup : Popup
         get
         {
             var anvisaLimits = AppDataHelperClass.GetAnvisaLimits();
-            double limiteCalorias = AppDataHelperClass.UserInfo.DailyKiloCaloriesGoal;
+            double limiteCalorias = AppDataHelperClass.UserInfo.KiloCaloriesDiaryObjective;
             double limiteCarboidratos = AppDataHelperClass.UserInfo.DailyCarbohydrateGoal;
             double limiteProteinas = AppDataHelperClass.UserInfo.DailyProteinGoal;
 
