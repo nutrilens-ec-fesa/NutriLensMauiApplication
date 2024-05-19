@@ -716,6 +716,21 @@ namespace NutriLens.Entities
             else
                 throw new UnsuccessfullRequestException(content);
         }
+
+        public static bool RemoveAllMeals()
+        {
+            DeleteRequest httpRequest = new(UriAndPaths.ApiUrl, "Meal/v1/RemoveAllAuthUserMeals")
+            {
+                Token = AppDataHelperClass.NutriLensApiToken
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (resp.IsSuccessStatusCode)
+                return true;
+            else
+                throw new UnsuccessfullRequestException(content);
+        }
         #endregion
     }
 }
