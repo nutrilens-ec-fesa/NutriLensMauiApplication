@@ -527,6 +527,32 @@ namespace NutriLens.ViewModels
         }
 
         [RelayCommand]
+        private async Task GenerateMocks()
+        {
+            if(AppDataHelperClass.GetAllMeals().Count > 0)
+            {
+                if (await ViewServices.PopUpManager.PopYesOrNoAsync("Gerar mocks", "Já existem refeições registradas, deseja apagar as refeições e gerar as refeições mockadas?"))
+                {
+                    await Task.Run(AppDataHelperClass.RemoveAllMeals);
+
+                    EntitiesHelperClass.ShowLoading("Gerando refeições mocks");
+
+                    await Task.Run(AppDataHelperClass.CreateMockMeals);
+
+                    await EntitiesHelperClass.CloseLoading();
+                }
+            }
+            else if (await ViewServices.PopUpManager.PopYesOrNoAsync("Gerar mocks", "Deseja gerar as refeições mockadas?"))
+            {
+                EntitiesHelperClass.ShowLoading("Gerando refeições mocks");
+
+                await Task.Run(AppDataHelperClass.CreateMockMeals);
+
+                await EntitiesHelperClass.CloseLoading();
+            }
+        }
+
+        [RelayCommand]
         private async Task OpenConfig()
         {
             await _navigation.PushAsync(ViewServices.ResolvePage<IUserConfigPage>());

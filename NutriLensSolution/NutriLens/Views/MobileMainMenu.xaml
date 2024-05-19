@@ -96,6 +96,7 @@
             <Label Text="Configurações" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" IsVisible="{Binding DevUser}"/>
             <Button x:Name="btnEditBarCodeProducts" Text="Editar produtos (cód. barras)" Command="{Binding EditBarCodeProductsCommand}" IsVisible="{Binding DevUser}"/>
             <Button x:Name="btnEditAiModelPrompt" Text="Editar prompt GPT-4" Command="{Binding EditAiModelPromptCommand}" IsVisible="{Binding DevUser}"/>
+            <Button x:Name="btnGenerateMocks" Text="Gerar refeições mock" Command="{Binding GenerateMocksCommand}" IsVisible="{Binding DevUser}"/>
 
             <Label Text="Opções" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
             <Button x:Name="btnTest" Text="Sobre" Command="{Binding OpenFlyoutCommand}" />
