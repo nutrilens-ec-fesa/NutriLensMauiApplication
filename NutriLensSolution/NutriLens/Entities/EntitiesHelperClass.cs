@@ -36,8 +36,15 @@ namespace NutriLens.Entities
         }
         public static async Task CloseLoading()
         {
-            if (_loadingPopup != null)
-                await _loadingPopup.CloseAsync();
+            try
+            {
+                if (_loadingPopup != null)
+                    await _loadingPopup.CloseAsync();
+            }
+            catch
+            {
+
+            }
         }
         
         /// <summary>
