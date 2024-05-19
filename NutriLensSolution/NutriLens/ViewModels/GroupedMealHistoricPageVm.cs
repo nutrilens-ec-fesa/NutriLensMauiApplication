@@ -30,148 +30,149 @@ namespace NutriLens.ViewModels
         }
 
         [RelayCommand]
-        private void Appearing()
+        private async void Appearing()
         {
-            if (MealsList.Count > 0)
-                return;
+            EntitiesHelperClass.ShowLoading("Carregando refeições");
 
-            List<Meal> meals = AppDataHelperClass.GetAllMeals();
-
-            if (meals.Count == 0)
+            await Task.Run(async () =>
             {
-                ViewServices.PopUpManager.PopPersonalizedAsync("Sem refeições", "Não foram encontradas refeições registradas no dispositivo", "OK");
-                _navigation.PopAsync();
-                return;
-            }
+                if (MealsList.Count > 0)
+                {
+                    await EntitiesHelperClass.CloseLoading();
+                    return;
+                }
 
-            Meals = new ObservableCollection<Meal>();
+                List<Meal> meals = AppDataHelperClass.GetAllMeals();
 
-            DateTime lastDateTime = DateTime.MinValue;
+                if (meals.Count == 0)
+                {
+                    ViewServices.PopUpManager.PopPersonalizedAsync("Sem refeições", "Não foram encontradas refeições registradas no dispositivo", "OK");
+                    _navigation.PopAsync();
+                    await EntitiesHelperClass.CloseLoading();
+                    return;
+                }
 
-            switch (_mealHistoryFilter)
-            {
-                case MealHistoryFilter.PerDay:
+                Meals = new ObservableCollection<Meal>();
 
-                    lastDateTime = DateTime.Now;
+                DateTime lastDateTime = DateTime.MinValue;
 
-                    Meal lastMeal = meals.OrderByDescending(x => x.DateTime).ToList()[0];
-
-                    while (lastDateTime > lastMeal.DateTime)
-                    {
-                        if (DateTimeFunctions.CheckSameIfIsSameDate(lastDateTime, lastMeal.DateTime))
-                            break;
-                        else
-                            MealsList.Add(new MealListClass(new List<Meal>(), _mealHistoryFilter, lastDateTime));
-
-                        lastDateTime = lastDateTime.AddDays(-1);
-                    }
-
-                    lastDateTime = DateTime.MinValue;
-
-                    foreach (Meal meal in meals.OrderByDescending(x => x.DateTime))
-                    {
-                        if (lastDateTime == DateTime.MinValue)
-                        {
-                            MealsList.Add(new MealListClass(new List<Meal>(), _mealHistoryFilter));
-                            lastDateTime = meal.DateTime;
-                        }
-
-                        if (meal.DateTime.ToShortDateString() != lastDateTime.ToShortDateString())
-                        {
-                            int i = 1;
-
-                            while (lastDateTime.AddDays(-i) > meal.DateTime)
-                            {
-                                if (DateTimeFunctions.CheckSameIfIsSameDate(lastDateTime.AddDays(-i), meal.DateTime))
-                                    break;
-                                else
-                                    MealsList.Add(new MealListClass(new List<Meal>(), _mealHistoryFilter, lastDateTime.AddDays(-i)));
-                                
-                                i++;
-                            }
-
-                            lastDateTime = meal.DateTime;
-                            MealsList.Add(new MealListClass(new List<Meal>(), _mealHistoryFilter));
-                        }
-
-                        MealsList[^1].MealList.Add(meal);
-                    }
-                    break;
-                case MealHistoryFilter.PerWeek:
-
-                    DateTime lastDayOfWeek = DateTimeFunctions.GetLastDayOfWeekByDateTimeNow();
-
-                    lastDayOfWeek = lastDayOfWeek.AddDays(-1);
-
-                    DateTime weekLastDay = DateTimeFunctions.GetDateTimeEnd(lastDayOfWeek.Date);
-                    DateTime weekFirstDay = weekLastDay.AddDays(-6).Date;
-
-                    bool realMealInserted = false;
-
-                    foreach (Meal meal in meals.OrderByDescending(x => x.DateTime))
-                    {
-                        while (meal.DateTime < weekFirstDay || meal.DateTime > weekLastDay)
-                        {
-                            if(!realMealInserted)
-                                MealsList.Add(new MealListClass(new List<Meal>(), _mealHistoryFilter, weekLastDay));
-                            else
-                                MealsList.Add(new MealListClass(new List<Meal>(), _mealHistoryFilter));
-
-                            weekLastDay = weekFirstDay.AddDays(-1).Date;
-                            weekFirstDay = weekLastDay.AddDays(-6).Date;
-                        }
-
-                        if (MealsList.Count == 0 || (MealsList[^1].MealList.Count > 0 && MealsList[^1].MealList[0].DateTime < weekFirstDay))
-                            MealsList.Add(new MealListClass(new List<Meal>(), _mealHistoryFilter));
-
-                        realMealInserted = true;
-
-                        MealsList[^1].MealList.Add(meal);
-                    }
-                    break;
-                case MealHistoryFilter.PerMonth:
-                    foreach (Meal meal in meals.OrderByDescending(x => x.DateTime))
-                    {
-                        if (meal.DateTime.Month != lastDateTime.Month || meal.DateTime.Year != lastDateTime.Year)
-                        {
-                            int i = 1;
-
-                            while (lastDateTime != DateTime.MinValue && lastDateTime.Year == meal.DateTime.Year && lastDateTime.Month - 1 > meal.DateTime.Month)
-                            {
-                                MealsList.Add(new MealListClass(new List<Meal>() { new Meal { DateTime = new DateTime(lastDateTime.Year, lastDateTime.Month - 1, 1) } }, _mealHistoryFilter));
-                                i++;
-                            }
-
-                            lastDateTime = meal.DateTime;
-                            MealsList.Add(new MealListClass(new List<Meal>(), _mealHistoryFilter));
-                        }
-
-                        MealsList[^1].MealList.Add(meal);
-                    }
-                    break;
-                case MealHistoryFilter.PerPeriod:
-                    break;
-                case MealHistoryFilter.All:
-                    foreach (Meal meal in meals.OrderByDescending(x => x.DateTime))
-                    {
-                        Meals.Add(meal);
-                        MealsList.Add(new MealListClass(new List<Meal>()));
-                        MealsList[^1].MealList.Add(meal);
-                    }
-                    break;
-            }
-
-            foreach (MealListClass meal in MealsList)
-            {
                 switch (_mealHistoryFilter)
                 {
                     case MealHistoryFilter.PerDay:
-                        // MealsListString.Add(meal.DailyInfo);
+
+                        lastDateTime = DateTime.Now;
+
+                        Meal lastMeal = meals.OrderByDescending(x => x.DateTime).ToList()[0];
+
+                        while (lastDateTime.Date > lastMeal.DateTime.Date)
+                        {
+                            if (DateTimeFunctions.CheckSameIfIsSameDate(lastDateTime, lastMeal.DateTime))
+                                break;
+                            else
+                                MealsList.Add(new MealListClass(new List<Meal>(), _mealHistoryFilter, lastDateTime));
+
+                            lastDateTime = lastDateTime.AddDays(-1);
+                        }
+
+                        lastDateTime = DateTime.MinValue;
+
+                        foreach (Meal meal in meals.OrderByDescending(x => x.DateTime))
+                        {
+                            if (lastDateTime == DateTime.MinValue)
+                            {
+                                MealsList.Add(new MealListClass(new List<Meal>(), _mealHistoryFilter));
+                                lastDateTime = meal.DateTime;
+                            }
+
+                            if (meal.DateTime.Date != lastDateTime.Date)
+                            {
+                                int i = 1;
+
+                                while (lastDateTime.AddDays(-i) > meal.DateTime)
+                                {
+                                    if (DateTimeFunctions.CheckSameIfIsSameDate(lastDateTime.AddDays(-i), meal.DateTime))
+                                        break;
+                                    else
+                                        MealsList.Add(new MealListClass(new List<Meal>(), _mealHistoryFilter, lastDateTime.AddDays(-i)));
+
+                                    i++;
+                                }
+
+                                lastDateTime = meal.DateTime;
+                                MealsList.Add(new MealListClass(new List<Meal>(), _mealHistoryFilter));
+                            }
+
+                            MealsList[^1].MealList.Add(meal);
+                        }
+                        break;
+                    case MealHistoryFilter.PerWeek:
+
+                        DateTime lastDayOfWeek = DateTimeFunctions.GetLastDayOfWeekByDateTimeNow();
+
+                        //lastDayOfWeek = lastDayOfWeek.AddDays(-1);
+
+                        DateTime weekLastDay = DateTimeFunctions.GetDateTimeEnd(lastDayOfWeek.Date);
+                        DateTime weekFirstDay = weekLastDay.AddDays(-6).Date;
+
+                        bool realMealInserted = false;
+
+                        foreach (Meal meal in meals.OrderByDescending(x => x.DateTime))
+                        {
+                            while (meal.DateTime < weekFirstDay || meal.DateTime > weekLastDay)
+                            {
+                                if (!realMealInserted)
+                                    MealsList.Add(new MealListClass(new List<Meal>(), _mealHistoryFilter, weekLastDay));
+                                else
+                                    MealsList.Add(new MealListClass(new List<Meal>(), _mealHistoryFilter));
+
+                                weekLastDay = weekLastDay.AddDays(-7);
+                                weekFirstDay = weekLastDay.AddDays(-6).Date;
+                            }
+
+                            if (MealsList.Count == 0 || (MealsList[^1].MealList.Count > 0 && MealsList[^1].MealList[0].DateTime < weekFirstDay))
+                                MealsList.Add(new MealListClass(new List<Meal>(), _mealHistoryFilter));
+
+                            realMealInserted = true;
+
+                            MealsList[^1].MealList.Add(meal);
+                        }
                         break;
                     case MealHistoryFilter.PerMonth:
-                        // MealsListString.Add(meal.MonthlyInfo);
+                        foreach (Meal meal in meals.OrderByDescending(x => x.DateTime))
+                        {
+                            if (meal.DateTime.Month != lastDateTime.Month || meal.DateTime.Year != lastDateTime.Year)
+                            {
+                                int i = 1;
+
+                                while (lastDateTime != DateTime.MinValue && lastDateTime.Year == meal.DateTime.Year && lastDateTime.Month - 1 > meal.DateTime.Month)
+                                {
+                                    MealsList.Add(new MealListClass(new List<Meal>() { new Meal { DateTime = new DateTime(lastDateTime.Year, lastDateTime.Month - 1, 1) } }, _mealHistoryFilter));
+                                    i++;
+                                }
+
+                                lastDateTime = meal.DateTime;
+                                MealsList.Add(new MealListClass(new List<Meal>(), _mealHistoryFilter));
+                            }
+
+                            MealsList[^1].MealList.Add(meal);
+                        }
+                        break;
+                    case MealHistoryFilter.PerPeriod:
                         break;
                     case MealHistoryFilter.All:
+                        foreach (Meal meal in meals.OrderByDescending(x => x.DateTime))
+                        {
+                            Meals.Add(meal);
+                            MealsList.Add(new MealListClass(new List<Meal>()));
+                            MealsList[^1].MealList.Add(meal);
+                        }
+                        break;
+                }
+
+                if (_mealHistoryFilter == MealHistoryFilter.All)
+                {
+                    foreach (MealListClass meal in MealsList)
+                    {
                         string mealInfo = meal.MealList[0].ToString() + Environment.NewLine + Environment.NewLine;
 
                         StringBuilder mealInfoBuilder = new StringBuilder(mealInfo);
@@ -190,18 +191,20 @@ namespace NutriLens.ViewModels
                         }
 
                         meal.MealPlusItemsInfo = mealInfoBuilder.ToString();
-                        // MealsListString.Add(mealInfoBuilder.ToString());
-                        break;
+                    }
                 }
 
                 OnPropertyChanged(nameof(Meals));
                 OnPropertyChanged(nameof(MealsList));
 
                 // OnPropertyChanged(nameof(MealsListString));
-            }
 
-            UpdateMealsList();
+                UpdateMealsList();
+
+                await EntitiesHelperClass.CloseLoading();
+            });
         }
+
 
         private string GetFilterPageName()
         {
@@ -247,3 +250,4 @@ namespace NutriLens.ViewModels
         }
     }
 }
+
