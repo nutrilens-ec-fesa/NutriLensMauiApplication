@@ -7,26 +7,26 @@
              BackgroundColor="#FB7243">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.2*"></RowDefinition>
-            <RowDefinition Height="0.4*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="0.3*"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Margin="0,0,0,0" Text="Registrar novo usuário!" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalOptions="End"/>
         <Image Grid.Row="1" Source="nutrilenslogo.jpg" VerticalOptions="Start" />
         <Frame Grid.Row="2" BackgroundColor="White" CornerRadius="20" Margin="20">
-            <Grid>
+            <Grid RowSpacing="10">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0.1*"></RowDefinition>
-                    <RowDefinition Height="1*"></RowDefinition>
-                    <RowDefinition Height="0.1*"></RowDefinition>
-                    <RowDefinition Height="1*"></RowDefinition>
-                    <RowDefinition Height="0.1*"></RowDefinition>
-                    <RowDefinition Height="1*"></RowDefinition>
-                    <RowDefinition Height="0.1*"></RowDefinition>
-                    <RowDefinition Height="1*"></RowDefinition>
-                    <RowDefinition Height="0.1*"></RowDefinition>
-                    <RowDefinition Height="1*"></RowDefinition>
-                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="2*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Text="Nome" TextColor="Black" />
                 <Entry Grid.Row="1" Keyboard="Text" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding NameEntry}" Placeholder="Digite seu nome..." />
@@ -38,9 +38,7 @@
                 <Entry Grid.Row="7" Keyboard="Text" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding PasswordEntry}" IsPassword="True" Placeholder="Digite sua senha..." />
                 <Label Grid.Row="8" Text="Confirme a senha" TextColor="Black"/>
                 <Entry Grid.Row="9" Keyboard="Text" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding PasswordConfirmEntry}" IsPassword="True" Placeholder="Confirme sua senha..." />
-                <StackLayout Grid.Row="10" Spacing="10" Margin="0,40,0,0" Orientation="Vertical">
-                    <Button Text="Registrar-se" BorderColor="Black" BorderWidth="1" Command="{Binding RegisterCommand}" />
-                </StackLayout>
+                <Button Grid.Row="10" Text="Registrar-se" BorderColor="Black" BorderWidth="1" Command="{Binding RegisterCommand}" />
             </Grid>
         </Frame>
     </Grid>

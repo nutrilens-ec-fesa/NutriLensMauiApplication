@@ -20,22 +20,21 @@
         <Label Grid.Row="0" Margin="0,0,0,0" Text="Bem-vindo ao NutriLens!" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalOptions="End"/>
         <Image Grid.Row="1" Source="nutrilenslogo.jpg" VerticalOptions="Start" />
         <Frame Grid.Row="2" BackgroundColor="White" CornerRadius="20" Margin="20">
-            <Grid>
+            <Grid RowSpacing="10">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0.2*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="2*"></RowDefinition>
-                    <RowDefinition Height="0.2*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="2*"></RowDefinition>
-                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="2*"></RowDefinition>
+                    <RowDefinition Height="2*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Text="Email" TextColor="Black"/>
                 <Entry Grid.Row="1" Keyboard="Email" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding LoginModel.Email}" Placeholder="Digite seu e-mail..."/>
                 <Label Grid.Row="2" Text="Senha" TextColor="Black" />
                 <Entry Grid.Row="3" Keyboard="Text" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding PasswordEntry}" IsPassword="True" Placeholder="Digite sua senha..." />
-                <StackLayout Grid.Row="4" Spacing="10" Margin="0,40,0,0" Orientation="Vertical">
-                    <Button Text="Logar" BorderColor="Black" BorderWidth="1" Command="{Binding LoginCommand}" />
-                    <Button Text="Registrar-se" BorderColor="Black" BorderWidth="1" Command="{Binding RegisterCommand}" />
-                </StackLayout>
+                <Button Grid.Row="4" Text="Logar" BorderColor="Black" BorderWidth="1" Command="{Binding LoginCommand}" />
+                <Button Grid.Row="5" Text="Registrar-se" BorderColor="Black" BorderWidth="1" Command="{Binding RegisterCommand}" />
             </Grid>
         </Frame>
         <Label Grid.Row="3" Text="{Binding AppVersion}" HorizontalOptions="Center" Margin="0,0,0,10"></Label>
