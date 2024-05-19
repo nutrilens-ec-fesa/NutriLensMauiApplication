@@ -13,8 +13,6 @@ public partial class ListTacoMacronutrientsPopup : Popup
     public ObservableCollection<TacoItem> TacoItems { get; set; }
 
     private FoodItem _item { get; set; }
-
-    private double _caloricBalance;
     public ObservableCollection<Brush> Chart1ColorPalette { get; set; }
     public ObservableCollection<Brush> Chart2ColorPalette { get; set; }
     public ObservableCollection<Brush> Chart3ColorPalette { get; set; }
@@ -55,6 +53,7 @@ public partial class ListTacoMacronutrientsPopup : Popup
         get
         {
             var anvisaLimits = AppDataHelperClass.GetAnvisaLimits();
+            double limiteCalorias = AppDataHelperClass.UserInfo.DailyKiloCaloriesGoal;
             double limiteCarboidratos = AppDataHelperClass.UserInfo.DailyCarbohydrateGoal;
             double limiteProteinas = AppDataHelperClass.UserInfo.DailyProteinGoal;
 
@@ -64,10 +63,7 @@ public partial class ListTacoMacronutrientsPopup : Popup
             if (AppDataHelperClass.UserInfo.DailyCarbohydrateGoal.IsZeroOrNaN())
                 limiteProteinas = anvisaLimits.Proteinas;
 
-
-            double diaryObjective = AppDataHelperClass.GetEnergeticDiaryObjective();
-            double partialResults = (_caloricBalance / diaryObjective) * 100;
-
+            double calorias = (double)_item.TacoFoodItem.EnergiaKcal;
             double carboidratos = (double)_item.TacoFoodItem.Carboidrato;    //300g   %100 VD
             double proteinas = (double)_item.TacoFoodItem.Proteina;          //75g    %100 VD 
 
@@ -83,10 +79,10 @@ public partial class ListTacoMacronutrientsPopup : Popup
             carb.Value = (carboidratos / limiteCarboidratos) * 100;
             barChart.Add(carb);
 
-            DataModel consumed = new DataModel();
-            consumed.Label = "Calorias:\n " + _caloricBalance.ToString("0.0") + "kcal\n" + " de " + diaryObjective.ToString("0.0") + "kcal";
-            consumed.Value = partialResults;
-            barChart.Add(consumed);
+            DataModel cal = new DataModel();
+            cal.Label = "Calorias:\n " + calorias.ToString("0.0") + "kcal\n" + " de " + limiteCalorias.ToString("0.0") + "kcal";
+            cal.Value = (calorias / limiteCalorias) * 100;
+            barChart.Add(cal);
 
             return barChart;
         }
