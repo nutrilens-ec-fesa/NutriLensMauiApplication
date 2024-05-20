@@ -63,7 +63,7 @@ public partial class ShowTacoFoodItemPopup : Popup
             if (AppDataHelperClass.UserInfo.DailyCarbohydrateGoal.IsZeroOrNaN())
                 limiteProteinas = anvisaLimits.Proteinas;
 
-            double calorias = (double)_item.TacoFoodItem.EnergiaKcal;
+            double calorias = (double)_item.KiloCalories;
             double carboidratos = (double)_item.TacoFoodItem.Carboidrato;    //300g   %100 VD
             double proteinas = (double)_item.TacoFoodItem.Proteina;          //75g    %100 VD 
 
