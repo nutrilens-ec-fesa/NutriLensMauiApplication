@@ -612,6 +612,33 @@ namespace NutriLens.Entities
                 return HttpManager.GetContent<string>(content);
         }
 
+        public static void InsertTacoItem(TacoItem tacoItem)
+        {
+            PostRequest httpRequest = new(UriAndPaths.ApiUrl, "Taco/v1/InsertTacoItem")
+            {
+                Body = tacoItem,
+                Token = AppDataHelperClass.NutriLensApiToken
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (!resp.IsSuccessStatusCode)
+                throw new UnsuccessfullRequestException(content);
+        }
+
+        public static void UpdateTacoItem(TacoItem tacoItem)
+        {
+            PutRequest httpRequest = new(UriAndPaths.ApiUrl, "Taco/v1/UpdateTacoItem")
+            {
+                Body = tacoItem,
+                Token = AppDataHelperClass.NutriLensApiToken
+            };
+
+            HttpResponseMessage resp = HttpManager.Request(httpRequest, out string content);
+
+            if (!resp.IsSuccessStatusCode)
+                throw new UnsuccessfullRequestException(content);
+        }
         #endregion
 
         #region Meal
@@ -675,7 +702,7 @@ namespace NutriLens.Entities
             {
                 List<string> generatedIds = HttpManager.GetContent<List<string>>(content);
 
-                for(int i = 0; i < meals.Count; i++)
+                for (int i = 0; i < meals.Count; i++)
                 {
                     meals[i].Id = generatedIds[i];
                 }
