@@ -47,7 +47,7 @@ namespace NutriLensWebApp.Repositories
             }
             catch(Exception ex)
             {
-                throw new DatabaseQueryException("Houve algum problema para verifica código de barras já existente", ex);
+                throw new DatabaseQueryException("Houve algum problema para verificar código de barras já existente", ex);
             }
 
             if (existingBarcodeItem != null)
