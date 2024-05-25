@@ -44,15 +44,15 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                         <ColumnDefinition Width="4*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Switch x:Name="switchTermsAcceptance" Grid.Row="0" Grid.Column="0"></Switch>
+                    <Switch x:Name="switchTermsAcceptance" OnColor="{StaticResource PrimaryColor}" ThumbColor="{StaticResource SecondaryColor}" Grid.Row="0" Grid.Column="0"></Switch>
                     <Label Grid.Row="0" Grid.Column="1" Margin="10,0,0,0" TextColor="White" Text="Declaro que li e aceito os Termos de Uso e Privacidade" LineBreakMode="WordWrap"></Label>
                 </Grid>
 
                 <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" HorizontalTextAlignment="Center" Text="Enquanto você não aceitar os termos de uso e privacidade o aplicativo não poderá ser utilizado" TextColor="White"></Label>
 
-                <Button Grid.Row="5" Grid.Column="0" Margin="10,0,10,0" x:Name="btnCancel" Text="Cancelar" Clicked="btnCancel_Clicked"></Button>
+                <Button Grid.Row="5" BackgroundColor="{StaticResource SecondaryColor}" Grid.Column="0" Margin="10,0,10,0" x:Name="btnCancel" Text="Cancelar" Clicked="btnCancel_Clicked"></Button>
 
-                <Button Grid.Row="6" Grid.Column="1" Margin="10,0,10,0" x:Name="btnConfirmActivity" Text="Continuar" Clicked="btnContinue_Clicked"></Button>
+                <Button Grid.Row="6" BackgroundColor="{StaticResource SecondaryColor}" Grid.Column="1" Margin="10,0,10,0" x:Name="btnConfirmActivity" Text="Continuar" Clicked="btnContinue_Clicked"></Button>
             </Grid>
         </Frame.Content>
     </Frame>

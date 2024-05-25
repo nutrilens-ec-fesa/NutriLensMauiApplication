@@ -26,7 +26,7 @@
                 <Label Grid.Row="2" Grid.Column="0" Text="Fim: " TextColor="White"></Label>
                 <DatePicker Grid.Row="3" Grid.Column="0" x:Name="endDate" BackgroundColor="Black" TextColor="White" HorizontalOptions="FillAndExpand" DateSelected="end_DateSelected" MinimumDate="{Binding EndMinDate}" MaximumDate="{Binding EndMaxDate}"></DatePicker>
 
-                <Button Grid.Row="4" x:Name="BtnConfirmPeriod" Text="Confirmar período" Clicked="BtnConfirmPeriod_Clicked"></Button>
+                <Button Grid.Row="4" x:Name="BtnConfirmPeriod" BackgroundColor="{StaticResource SecondaryColor}" TextColor="{StaticResource PrimaryColor}" Text="Confirmar período" Clicked="BtnConfirmPeriod_Clicked"></Button>
             </Grid>
         </Frame.Content>
     </Frame>

@@ -4,105 +4,120 @@
              x:Class="NutriLens.Views.MobileMainMenu"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:control="clr-namespace:Syncfusion.Maui.Charts;assembly=Syncfusion.Maui.Charts"
-             Title="NutriLens">
+             Title="NutriLens"
+             NavigationPage.HasNavigationBar="False">
     <NavigationPage.HasBackButton>False</NavigationPage.HasBackButton>
     <ContentPage.Behaviors>
         <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
         <mct:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
+        <mct:StatusBarBehavior StatusBarColor="{StaticResource SecondaryColor}" />
     </ContentPage.Behaviors>
 
-    <ScrollView Margin="5">
-        <StackLayout Margin="5" Spacing="10">
+    <Grid>
 
-            <Grid ColumnSpacing="2" VerticalOptions="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" x:Name="btnTermsOfUse" Text="Termos de Uso" Command="{Binding OpenTermsOfUseCommand}" />
-                <Button Grid.Column="1" x:Name="btnConfig" Text="Configurações" Command="{Binding OpenConfigCommand}" />
-            </Grid>
-            <Label></Label>
-            <Label Text="Saldo diário de calorias, carboidratos e proteínas" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
-            <control:SfCircularChart>
-                <control:SfCircularChart.Series>
+        <Image Grid.Row="0" Opacity="0.1" Aspect="AspectFill" Source="nutrilens_pattern_background.png"></Image>
 
-                    <control:RadialBarSeries ItemsSource="{Binding PartialResultsMacroNutrients1}" 
+        <ScrollView Margin="5">
+            <StackLayout Margin="5" Spacing="10">
+                <Grid ColumnSpacing="2" VerticalOptions="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" BackgroundColor="{StaticResource SecondaryColor}" x:Name="btnTermsOfUse" Text="Termos de Uso" Command="{Binding OpenTermsOfUseCommand}" />
+                    <Button Grid.Column="1" BackgroundColor="{StaticResource SecondaryColor}" x:Name="btnConfig" Text="Configurações" Command="{Binding OpenConfigCommand}" />
+                </Grid>
+                <Label></Label>
+                <Label Text="Saldo diário de calorias, carboidratos e proteínas" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
+                <control:SfCircularChart>
+                    <control:SfCircularChart.Series>
+
+                        <control:RadialBarSeries ItemsSource="{Binding PartialResultsMacroNutrients1}" 
                             XBindingPath="Label" 
                             YBindingPath="Value" 
                             EnableAnimation="True" EnableTooltip="True" GapRatio="0.2" ShowDataLabels="True" InnerRadius="0.05" Radius="1"
                             MaximumValue="100"
                             CapStyle = "BothCurve"
-                            PaletteBrushes="{Binding Chart1ColorPalette}">
-                    </control:RadialBarSeries>
-                </control:SfCircularChart.Series>
-                <control:SfCircularChart.Legend>
-                    <control:ChartLegend Placement="Top"/>
-                </control:SfCircularChart.Legend>
-            </control:SfCircularChart>
-            <Label Text="Saldo diário de outros macronutrientes" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
-            <control:SfCircularChart>
-                <control:SfCircularChart.Series>
+                            PaletteBrushes="{Binding Chart1ColorPalette}"
+                            TrackFill="{StaticResource TrackFillColor}"
+                                              TrackStroke="{StaticResource SecondaryColor}"
+                                                 TrackStrokeWidth="1">
+                        </control:RadialBarSeries>
+                    </control:SfCircularChart.Series>
+                    <control:SfCircularChart.Legend>
+                        <control:ChartLegend Placement="Top"/>
+                    </control:SfCircularChart.Legend>
+                </control:SfCircularChart>
+                <Label Text="Saldo diário de outros macronutrientes" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
+                <control:SfCircularChart>
+                    <control:SfCircularChart.Series>
 
-                    <control:RadialBarSeries ItemsSource="{Binding PartialResultsMacroNutrients2}" 
+                        <control:RadialBarSeries ItemsSource="{Binding PartialResultsMacroNutrients2}" 
                 XBindingPath="Label" 
                 YBindingPath="Value" 
                 EnableAnimation="True" EnableTooltip="True" GapRatio="0.2" ShowDataLabels="True" InnerRadius="0.05" Radius="1"
                 MaximumValue="100"
                 CapStyle = "BothCurve"
-                PaletteBrushes="{Binding Chart2ColorPalette}">
-                    </control:RadialBarSeries>
-                </control:SfCircularChart.Series>
-                <control:SfCircularChart.Legend>
-                    <control:ChartLegend Placement="Top"/>
-                </control:SfCircularChart.Legend>
-            </control:SfCircularChart>
-            <control:SfCircularChart>
-                <control:SfCircularChart.Series>
+                PaletteBrushes="{Binding Chart2ColorPalette}"
+                                                 TrackFill="{StaticResource TrackFillColor}"
+                  TrackStroke="{StaticResource SecondaryColor}"
+                     TrackStrokeWidth="1">
+                        </control:RadialBarSeries>
+                    </control:SfCircularChart.Series>
+                    <control:SfCircularChart.Legend>
+                        <control:ChartLegend Placement="Top"/>
+                    </control:SfCircularChart.Legend>
+                </control:SfCircularChart>
+                <control:SfCircularChart>
+                    <control:SfCircularChart.Series>
 
-                    <control:RadialBarSeries ItemsSource="{Binding PartialResultsMacroNutrients3}" 
+                        <control:RadialBarSeries ItemsSource="{Binding PartialResultsMacroNutrients3}" 
                 XBindingPath="Label" 
                 YBindingPath="Value" 
                 EnableAnimation="True" EnableTooltip="True" GapRatio="0.2" ShowDataLabels="True" InnerRadius="0.05" Radius="1"
                 MaximumValue="100"
                 CapStyle = "BothCurve"
-                PaletteBrushes="{Binding Chart3ColorPalette}">
-                    </control:RadialBarSeries>
-                </control:SfCircularChart.Series>
-                <control:SfCircularChart.Legend>
-                    <control:ChartLegend Placement="Top"/>
-                </control:SfCircularChart.Legend>
-            </control:SfCircularChart>
+                PaletteBrushes="{Binding Chart3ColorPalette}"
+                                                 TrackFill="{StaticResource TrackFillColor}"
+                  TrackStroke="{StaticResource SecondaryColor}"
+                     TrackStrokeWidth="1">
+                        </control:RadialBarSeries>
+                    </control:SfCircularChart.Series>
+                    <control:SfCircularChart.Legend>
+                        <control:ChartLegend Placement="Top"/>
+                    </control:SfCircularChart.Legend>
+                </control:SfCircularChart>
 
-            <Label Text="*Valores diários dos demais nutrientes com referência para uma dieta de 2000 kcal" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
+                <Label Text="*Valores diários dos demais nutrientes com referência para uma dieta de 2000 kcal" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
 
-            <Label Text="Registrar refeição" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
-            <Button x:Name="btnCamera" Text="Por foto" Command="{Binding OpenCameraCommand}" />
-            <Button x:Name="btnBarCode" Text="Por código de barras" Command="{Binding OpenBarCodeCommand}" />
-            <Button x:Name="btnManual" Text="Por inserção manual" Command="{Binding OpenManualInputCommand}" />
-            <Button x:Name="btnVoice" Text="Por voz" Command="{Binding VoiceInputCommand}" />
-            <Button x:Name="btnDescription" Text="Por descrição" Command="{Binding DescriptionInputCommand}" />
-            <Label Text="Registrar atividade física" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
-            <Button x:Name="btnPhysicalActivity" Text="Informar nova atividade física" Command="{Binding RegisterPhysicalActivityCommand}" />
-            <Label Text="Consultar histórico" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
-            <Button x:Name="btnPerDayHistoric" Text="Por dia" Command="{Binding PerDayHistoricCommand}"/>
-            <Button x:Name="btnPerWeekHistoric" Text="Por semana" Command="{Binding PerWeekHistoricCommand}"/>
-            <Button x:Name="btnPerMonthHistoric" Text="Por mês" Command="{Binding PerMonthHistoricCommand}"/>
-            <Button x:Name="btnPerPeriod" Text="Por período" Command="{Binding PerPeriodHistoricCommand}"/>
-            <Button x:Name="btnListAll" Text="Listar todas as refeições" Command="{Binding ListAllCommand}"/>
-            <Label Text="Consultar fotos" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
-            <Button x:Name="btnOpenGallery" Text="Galeria" Command="{Binding OpenGalleryCommand}"/>
+                <Label Text="Registrar refeição" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+                <Button x:Name="btnCamera" BackgroundColor="{StaticResource SecondaryColor}" Text="Por foto" Command="{Binding OpenCameraCommand}" />
+                <Button x:Name="btnBarCode" BackgroundColor="{StaticResource SecondaryColor}" Text="Por código de barras" Command="{Binding OpenBarCodeCommand}" />
+                <Button x:Name="btnManual" BackgroundColor="{StaticResource SecondaryColor}" Text="Por inserção manual" Command="{Binding OpenManualInputCommand}" />
+                <Button x:Name="btnVoice" BackgroundColor="{StaticResource SecondaryColor}" Text="Por voz" Command="{Binding VoiceInputCommand}" />
+                <Button x:Name="btnDescription" BackgroundColor="{StaticResource SecondaryColor}" Text="Por descrição" Command="{Binding DescriptionInputCommand}" />
+                <Label Text="Registrar atividade física" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+                <Button x:Name="btnPhysicalActivity" BackgroundColor="{StaticResource SecondaryColor}" Text="Informar nova atividade física" Command="{Binding RegisterPhysicalActivityCommand}" />
+                <Label Text="Consultar histórico" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+                <Button x:Name="btnPerDayHistoric" BackgroundColor="{StaticResource SecondaryColor}" Text="Por dia" Command="{Binding PerDayHistoricCommand}"/>
+                <Button x:Name="btnPerWeekHistoric" BackgroundColor="{StaticResource SecondaryColor}" Text="Por semana" Command="{Binding PerWeekHistoricCommand}"/>
+                <Button x:Name="btnPerMonthHistoric" BackgroundColor="{StaticResource SecondaryColor}" Text="Por mês" Command="{Binding PerMonthHistoricCommand}"/>
+                <Button x:Name="btnPerPeriod" BackgroundColor="{StaticResource SecondaryColor}" Text="Por período" Command="{Binding PerPeriodHistoricCommand}"/>
+                <Button x:Name="btnListAll" BackgroundColor="{StaticResource SecondaryColor}" Text="Listar todas as refeições" Command="{Binding ListAllCommand}"/>
+                <Label Text="Consultar fotos" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+                <Button x:Name="btnOpenGallery" BackgroundColor="{StaticResource SecondaryColor}" Text="Galeria" Command="{Binding OpenGalleryCommand}"/>
 
-            <Label Text="Configurações" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" IsVisible="{Binding DevUser}"/>
-            <Button x:Name="btnEditBarCodeProducts" Text="Editar produtos (cód. barras)" Command="{Binding EditBarCodeProductsCommand}" IsVisible="{Binding DevUser}"/>
-            <Button x:Name="btnEditAiModelPrompt" Text="Editar prompt GPT-4" Command="{Binding EditAiModelPromptCommand}" IsVisible="{Binding DevUser}"/>
-            <Button x:Name="btnGenerateMocks" Text="Gerar refeições mock" Command="{Binding GenerateMocksCommand}" IsVisible="{Binding DevUser}"/>
+                <Label Text="Configurações" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" IsVisible="{Binding DevUser}"/>
+                <Button x:Name="btnEditBarCodeProducts" BackgroundColor="{StaticResource SecondaryColor}" Text="Editar produtos (cód. barras)" Command="{Binding EditBarCodeProductsCommand}" IsVisible="{Binding DevUser}"/>
+                <Button x:Name="btnEditAiModelPrompt" BackgroundColor="{StaticResource SecondaryColor}" Text="Editar prompt GPT-4" Command="{Binding EditAiModelPromptCommand}" IsVisible="{Binding DevUser}"/>
+                <Button x:Name="btnGenerateMocks" BackgroundColor="{StaticResource SecondaryColor}" Text="Gerar refeições mock" Command="{Binding GenerateMocksCommand}" IsVisible="{Binding DevUser}"/>
 
-            <Label Text="Opções" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
-            <Button x:Name="btnTest" Text="Sobre" Command="{Binding OpenFlyoutCommand}" />
-            <Button x:Name="btnLogOut" BackgroundColor="IndianRed" Text="Sair" Command="{Binding LogOutCommand}"/>
-            <Button x:Name="btnQuit" BackgroundColor="IndianRed" Text="Fechar aplicativo" Command="{Binding CloseApplicationCommand}"/>
-            <Label Text="{Binding AppVersion}" HorizontalOptions="Center" Margin="10"></Label>
-        </StackLayout>
-    </ScrollView>
+                <Label Text="Opções" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,0" />
+                <Button x:Name="btnTest" BackgroundColor="{StaticResource SecondaryColor}" Text="Sobre" Command="{Binding OpenFlyoutCommand}" />
+                <Button x:Name="btnLogOut" BackgroundColor="IndianRed" Text="Sair" Command="{Binding LogOutCommand}"/>
+                <Button x:Name="btnQuit" BackgroundColor="IndianRed" Text="Fechar aplicativo" Command="{Binding CloseApplicationCommand}"/>
+                <Label Text="{Binding AppVersion}" TextColor="{StaticResource SecondaryColor}" FontAttributes="Bold" HorizontalOptions="Center" Margin="10"></Label>
+            </StackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>

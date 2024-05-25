@@ -84,6 +84,10 @@ namespace NutriLens.ViewModels
 
         public bool UseSuggestedCaloricGoalEntry { get; set; }
 
+        public bool ValidInput { get; set; }
+
+        public bool InvalidInput { get => !ValidInput; }
+
         public Color GenderColorValidation { get => GenderIndex == 0 ? ColorHelperClass.InvalidFieldColor : ColorHelperClass.ValidFieldColor; }
 
         public Color BornColorValidation
@@ -452,6 +456,16 @@ namespace NutriLens.ViewModels
 
                 UserInfo.DailyKiloCaloriesObjective = (DailyKiloCaloriesObjective)DailyKiloCaloriesObjectiveIndex;
                 string objective = UserInfo.DailyKiloCaloriesObjective.ToString();
+
+                double dailyKiloCalories = AppDataHelperClass.GetDailyKiloCaloriesGoal(dailyKiloCaloriesBurn, objective);
+
+                if(dailyKiloCalories == 0)
+                {
+                    ValidInput = false;
+                    UpdateUi();
+                    return;
+                }
+
                 DailyKiloCaloriesGoal = Math.Round(AppDataHelperClass.GetDailyKiloCaloriesGoal(dailyKiloCaloriesBurn, objective)).ToString() + " kcal";
                 OnPropertyChanged(nameof(DailyKiloCaloriesGoal));
 
@@ -459,11 +473,16 @@ namespace NutriLens.ViewModels
                 {
                     UserInfo.KiloCaloriesDiaryObjective = int.Parse(DailyKiloCaloriesGoal);
                 }
+
+                ValidInput = true;
             }
             catch (Exception ex)
             {
+                ValidInput = false;
                 Console.WriteLine(ex);
             }
+
+            UpdateUi();
         }
 
         private void UpdateUi()
@@ -483,6 +502,9 @@ namespace NutriLens.ViewModels
             OnPropertyChanged(nameof(BornColorValidation));
             OnPropertyChanged(nameof(KiloCaloriesDiaryObjectiveColorValidation));
             OnPropertyChanged(nameof(UseSuggestedCaloricGoalEntry));
+
+            OnPropertyChanged(nameof(ValidInput));
+            OnPropertyChanged(nameof(InvalidInput));
         }
     }
 

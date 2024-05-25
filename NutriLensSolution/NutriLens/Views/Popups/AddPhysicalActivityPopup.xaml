@@ -29,9 +29,9 @@
                 <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="Perda calórica (kcal): " TextColor="White"></Label>
                 <Entry Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" x:Name="inputCalories" BackgroundColor="Black" TextColor="White" HorizontalOptions="FillAndExpand"></Entry>
 
-                <Button Grid.Row="4" Grid.Column="0" Margin="10,0,10,0" x:Name="btnCancel" Text="Cancelar" Clicked="btnCancel_Clicked"></Button>
+                <Button Grid.Row="4" Grid.Column="0" BackgroundColor="{StaticResource SecondaryColor}" TextColor="{StaticResource PrimaryColor}" Margin="10,0,10,0" x:Name="btnCancel" Text="Cancelar" Clicked="btnCancel_Clicked"></Button>
 
-                <Button Grid.Row="4" Grid.Column="1" Margin="10,0,10,0" x:Name="btnConfirmActivity" Text="Confirmar atividade" Clicked="btnConfirmActivity_Clicked"></Button>
+                <Button Grid.Row="4" Grid.Column="1" BackgroundColor="{StaticResource SecondaryColor}" TextColor="{StaticResource PrimaryColor}" Margin="10,0,10,0" x:Name="btnConfirmActivity" Text="Confirmar atividade" Clicked="btnConfirmActivity_Clicked"></Button>
 
             </Grid>
         </Frame.Content>

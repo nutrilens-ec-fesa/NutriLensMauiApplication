@@ -4,16 +4,19 @@
              x:Class="NutriLens.Views.MobileRegistrationPage"
              Title="MobileRegistrationPage"
              NavigationPage.HasNavigationBar="False"
-             BackgroundColor="#FB7243">
+             BackgroundColor="{StaticResource PrimaryColor}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="0.3*"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <Label Grid.Row="0" Margin="0,0,0,0" Text="Registrar novo usuário!" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalOptions="End"/>
-        <Image Grid.Row="1" Source="nutrilenslogo.jpg" VerticalOptions="Start" />
-        <Frame Grid.Row="2" BackgroundColor="White" CornerRadius="20" Margin="20">
+        
+        <Image Grid.Row="0" Grid.RowSpan="3" Opacity="0.1" Aspect="AspectFill" Source="nutrilens_pattern_background.png"></Image>
+        
+        <Label Grid.Row="0" Margin="0,0,0,0" Text="Registrar novo usuário!" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalOptions="End" TextColor="{StaticResource SecondaryColor}"/>
+        <Image Grid.Row="1" Source="nutrilens_dark_logo_text.png" VerticalOptions="Start" />
+        <Frame Grid.Row="2" BackgroundColor="{StaticResource PrimaryColor}" CornerRadius="20" Margin="20">
             <Grid RowSpacing="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"></RowDefinition>
@@ -28,17 +31,17 @@
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="2*"></RowDefinition>
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Text="Nome" TextColor="Black" />
-                <Entry Grid.Row="1" Keyboard="Text" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding NameEntry}" Placeholder="Digite seu nome..." />
-                <Label Grid.Row="2" Text="Email" TextColor="Black"/>
-                <Entry Grid.Row="3" Keyboard="Email" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding EmailEntry}" Placeholder="Digite seu e-mail..."/>
-                <Label Grid.Row="4" Text="Confirme o email" TextColor="Black"/>
-                <Entry Grid.Row="5" Keyboard="Email" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding EmailConfirmEntry}" Placeholder="Confirme seu e-mail..." />
-                <Label Grid.Row="6" Text="Senha" TextColor="Black" />
-                <Entry Grid.Row="7" Keyboard="Text" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding PasswordEntry}" IsPassword="True" Placeholder="Digite sua senha..." />
-                <Label Grid.Row="8" Text="Confirme a senha" TextColor="Black"/>
-                <Entry Grid.Row="9" Keyboard="Text" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding PasswordConfirmEntry}" IsPassword="True" Placeholder="Confirme sua senha..." />
-                <Button Grid.Row="10" Text="Registrar-se" BorderColor="Black" BorderWidth="1" Command="{Binding RegisterCommand}" />
+                <Label Grid.Row="0" Text="Nome" TextColor="{StaticResource ControlTextColor}" />
+                <Entry Grid.Row="1" Keyboard="Text" BackgroundColor="{StaticResource ControlBackgroundColor}" TextColor="{StaticResource ControlTextColor}" Text="{Binding NameEntry}" Placeholder="Digite seu nome..." />
+                <Label Grid.Row="2" Text="Email" TextColor="{StaticResource ControlTextColor}"/>
+                <Entry Grid.Row="3" Keyboard="Email" BackgroundColor="{StaticResource ControlBackgroundColor}" TextColor="{StaticResource ControlTextColor}" Text="{Binding EmailEntry}" Placeholder="Digite seu e-mail..."/>
+                <Label Grid.Row="4" Text="Confirme o email" TextColor="{StaticResource ControlTextColor}"/>
+                <Entry Grid.Row="5" Keyboard="Email" BackgroundColor="{StaticResource ControlBackgroundColor}" TextColor="{StaticResource ControlTextColor}" Text="{Binding EmailConfirmEntry}" Placeholder="Confirme seu e-mail..." />
+                <Label Grid.Row="6" Text="Senha" TextColor="{StaticResource ControlTextColor}" />
+                <Entry Grid.Row="7" Keyboard="Text" BackgroundColor="{StaticResource ControlBackgroundColor}" TextColor="{StaticResource ControlTextColor}" Text="{Binding PasswordEntry}" IsPassword="True" Placeholder="Digite sua senha..." />
+                <Label Grid.Row="8" Text="Confirme a senha" TextColor="{StaticResource ControlTextColor}"/>
+                <Entry Grid.Row="9" Keyboard="Text" BackgroundColor="{StaticResource ControlBackgroundColor}" TextColor="{StaticResource ControlTextColor}" Text="{Binding PasswordConfirmEntry}" IsPassword="True" Placeholder="Confirme sua senha..." />
+                <Button Grid.Row="10" BackgroundColor="{StaticResource SecondaryColor}" Text="Registrar-se" BorderColor="Black" BorderWidth="1" Command="{Binding RegisterCommand}" />
             </Grid>
         </Frame>
     </Grid>

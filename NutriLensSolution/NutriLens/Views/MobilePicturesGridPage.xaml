@@ -3,14 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NutriLens.Views.MobilePicturesGridPage"
              xmlns:local="clr-namespace:NutriLens.ViewModels"
-             Title="MobilePicturesGridPage">
+             Title="Galeria"
+             BackgroundColor="{StaticResource PrimaryColor}">
     <ContentPage.BindingContext>
         <local:PicturesGridPageVm />
     </ContentPage.BindingContext>
-    <ScrollView>
-        <VerticalStackLayout x:Name="gridPictures">
-            <Button x:Name="BtnSyncUserDatabase" Margin="20,20,20,0" Text="Buscar minhas fotos em nuvem" Clicked="BtnSyncUserDatabase_Clicked"></Button>
-            <Button x:Name="BtnSyncDatabase" Margin="20,20,20,20" Text="Buscar todas as fotos em nuvem" Clicked="BtnSyncDatabase_Clicked" IsVisible="{Binding DevUser}"></Button>
-        </VerticalStackLayout>
-    </ScrollView>
+    <Grid>
+
+        <Image Grid.Row="0" Opacity="0.1" Aspect="AspectFill" Source="nutrilens_pattern_background.png"></Image>
+        
+        <ScrollView>
+            <VerticalStackLayout x:Name="gridPictures">
+                <Button x:Name="BtnSyncUserDatabase" BackgroundColor="{StaticResource SecondaryColor}" TextColor="{StaticResource PrimaryColor}" Margin="20,20,20,0" Text="Buscar minhas fotos em nuvem" Clicked="BtnSyncUserDatabase_Clicked"></Button>
+                <Button x:Name="BtnSyncDatabase" BackgroundColor="{StaticResource SecondaryColor}" TextColor="{StaticResource PrimaryColor}" Margin="20,20,20,20" Text="Buscar todas as fotos em nuvem" Clicked="BtnSyncDatabase_Clicked" IsVisible="{Binding DevUser}"></Button>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>

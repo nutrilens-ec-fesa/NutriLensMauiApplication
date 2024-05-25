@@ -2,17 +2,23 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NutriLens.Views.MobileFlyoutPage"
-             Title="Sobre">
-    <VerticalStackLayout>
-        <Label Text="Desenvolvido por:" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,20" />
-        
-        <Label Text="Carlos Adonias" VerticalOptions="Center" HorizontalOptions="Center" />
-        <Label Text="Carlos Gonçalves" VerticalOptions="Center" HorizontalOptions="Center" />
-        <Label Text="Gabriel Teixeira" VerticalOptions="Center" HorizontalOptions="Center" />
-        <Label Text="Johnny Messias" VerticalOptions="Center" HorizontalOptions="Center" />
+             Title="Sobre"
+             BackgroundColor="{StaticResource PrimaryColor}">
+    <Grid>
 
-        <Label Text="Orientado por:" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,20"/>
+        <Image Grid.Row="0" Opacity="0.1" Aspect="AspectFill" Source="nutrilens_pattern_background.png"></Image>
         
-        <Label Text="Filippo Valiante" VerticalOptions="Center" HorizontalOptions="Center" />
-    </VerticalStackLayout>
+        <VerticalStackLayout>
+            <Label Text="Desenvolvido por:" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,20" />
+
+            <Label Text="Carlos Adonias" VerticalOptions="Center" HorizontalOptions="Center" />
+            <Label Text="Carlos Gonçalves" VerticalOptions="Center" HorizontalOptions="Center" />
+            <Label Text="Gabriel Teixeira" VerticalOptions="Center" HorizontalOptions="Center" />
+            <Label Text="Johnny Messias" VerticalOptions="Center" HorizontalOptions="Center" />
+
+            <Label Text="Orientado por:" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,20,0,20"/>
+
+            <Label Text="Filippo Valiante" VerticalOptions="Center" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </Grid>
 </ContentPage>

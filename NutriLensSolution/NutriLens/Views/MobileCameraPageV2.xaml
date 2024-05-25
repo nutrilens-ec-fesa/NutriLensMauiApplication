@@ -5,76 +5,81 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:local="clr-namespace:NutriLens.ViewModels"
              xmlns:cv="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
-             Title="Detecção - Visão Computacional">
+             Title="Registro por foto"
+             BackgroundColor="{StaticResource PrimaryColor}">
     <ContentPage.BindingContext>
         <local:CameraPageVmV2 />
     </ContentPage.BindingContext>
-    <ScrollView>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="5*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="5*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
-            <HorizontalStackLayout HorizontalOptions="Center" Margin="5">
-                <Label IsVisible="False" Text="Select a camera:" VerticalOptions="Center" BackgroundColor="White" TextColor="Black"/>
-                <Picker IsVisible="False" VerticalOptions="Center" TextColor="Black" ItemsSource="{Binding Cameras}" SelectedItem="{Binding Camera,Mode=TwoWay}"/>
-            </HorizontalStackLayout>
-            <VerticalStackLayout Grid.Row="0" Grid.ColumnSpan="2" HorizontalOptions="Center" Margin="5">
-                <cv:CameraView x:Name="cameraView" BarCodeOptions="{Binding BarCodeOptions}" HeightRequest="300" WidthRequest="400" BarCodeResults="{Binding BarCodeResults, Mode=OneWayToSource}"
+    <Grid>
+        <Image Grid.Row="0" Opacity="0.1" Aspect="AspectFill" Source="nutrilens_pattern_background.png"></Image>
+        
+        <ScrollView>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="5*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <HorizontalStackLayout HorizontalOptions="Center" Margin="5">
+                    <Label IsVisible="False" Text="Select a camera:" VerticalOptions="Center" BackgroundColor="White" TextColor="Black"/>
+                    <Picker IsVisible="False" VerticalOptions="Center" TextColor="{StaticResource ControlTextColor}" ItemsSource="{Binding Cameras}" SelectedItem="{Binding Camera,Mode=TwoWay}"/>
+                </HorizontalStackLayout>
+                <VerticalStackLayout Grid.Row="0" Grid.ColumnSpan="2" HorizontalOptions="Center" Margin="5">
+                    <cv:CameraView x:Name="cameraView" BarCodeOptions="{Binding BarCodeOptions}" HeightRequest="300" WidthRequest="400" BarCodeResults="{Binding BarCodeResults, Mode=OneWayToSource}"
                             Cameras="{Binding Cameras, Mode=OneWayToSource}" Camera="{Binding Camera}" AutoStartPreview="{Binding AutoStartPreview}" NumCamerasDetected="{Binding NumCameras, Mode=OneWayToSource}"
                             AutoSnapShotAsImageSource="True" AutoSnapShotFormat="PNG" TakeAutoSnapShot="{Binding TakeSnapshot}" AutoSnapShotSeconds="{Binding SnapshotSeconds}"
                             Microphones="{Binding Microphones, Mode=OneWayToSource}" Microphone="{Binding Microphone}" NumMicrophonesDetected="{Binding NumMicrophones, Mode=OneWayToSource}" 
                             AutoRecordingFile="{Binding RecordingFile}" AutoStartRecording="{Binding AutoStartRecording}"/>
+                    <HorizontalStackLayout IsVisible="False" HorizontalOptions="Center" Margin="5">
+                        <Label IsVisible="False" Text="Flash" VerticalOptions="Center" HorizontalOptions="Center" TextColor="{StaticResource ControlTextColor}"/>
+                        <CheckBox BindingContext="{x:Reference cameraView}" VerticalOptions="Center" Color="Black" IsChecked="{Binding TorchEnabled}"/>
+                    </HorizontalStackLayout>
+                    <Stepper IsVisible="False" HorizontalOptions="Center" BindingContext="{x:Reference cameraView}" Minimum="{Binding MinZoomFactor}" Maximum="7" Increment="0.5" Value="{Binding ZoomFactor,Mode=TwoWay}"/>
+                    <!--Command="{Binding TakeSnapshotCmd}"/>-->
+                </VerticalStackLayout>
+
+                <Button x:Name="BtnTakeSnapshot" Grid.Row="1" Grid.ColumnSpan="2" BackgroundColor="{StaticResource SecondaryColor}" TextColor="{StaticResource PrimaryColor}" Margin="5,5,5,2" HorizontalOptions="Center" Text="Capturar" Clicked="BtnTakeSnapshot_Clicked"></Button>
+
                 <HorizontalStackLayout IsVisible="False" HorizontalOptions="Center" Margin="5">
-                    <Label IsVisible="False" Text="Flash" VerticalOptions="Center" HorizontalOptions="Center" TextColor="Black"/>
-                    <CheckBox BindingContext="{x:Reference cameraView}" VerticalOptions="Center" Color="Black" IsChecked="{Binding TorchEnabled}"/>
+                    <Label Text="Select a microphone:" VerticalOptions="Center" BackgroundColor="White" TextColor="{StaticResource ControlTextColor}"/>
+                    <Picker  VerticalOptions="Center" TextColor="{StaticResource ControlTextColor}" ItemsSource="{Binding Microphones}" SelectedItem="{Binding Microphone,Mode=TwoWay}"/>
                 </HorizontalStackLayout>
-                <Stepper IsVisible="False" HorizontalOptions="Center" BindingContext="{x:Reference cameraView}" Minimum="{Binding MinZoomFactor}" Maximum="7" Increment="0.5" Value="{Binding ZoomFactor,Mode=TwoWay}"/>
-                <!--Command="{Binding TakeSnapshotCmd}"/>-->
-            </VerticalStackLayout>
+                <HorizontalStackLayout IsVisible="False" HorizontalOptions="Center">
+                    <Label IsVisible="False" Text="Mirrored" VerticalOptions="Center" TextColor="{StaticResource ControlTextColor}"/>
+                    <CheckBox IsVisible="False" BindingContext="{x:Reference cameraView}" VerticalOptions="Center" Color="Black" IsChecked="{Binding MirroredImage}"/>
+                    <Label IsVisible="False" Text="QR Detec." VerticalOptions="Center" TextColor="{StaticResource ControlTextColor}"/>
+                    <CheckBox IsVisible="False" BindingContext="{x:Reference cameraView}" VerticalOptions="Center" Color="Black" IsChecked="{Binding BarCodeDetectionEnabled}"/>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout IsVisible="False" HorizontalOptions="Center">
+                    <Label Text="AutoSnap freq: " VerticalOptions="Center" TextColor="{StaticResource ControlTextColor}"/>
+                    <Entry WidthRequest="20" Keyboard="Numeric" TextColor="{StaticResource ControlTextColor}" Text="{Binding Seconds, Mode=TwoWay}" />
+                    <Label Text="Take Autosnap" VerticalOptions="Center" TextColor="{StaticResource ControlTextColor}"/>
+                    <CheckBox VerticalOptions="Center" Color="Black" IsChecked="{Binding TakeSnapshot, Mode=OneWayToSource}"/>
+                    <Label Text="As ISource" VerticalOptions="Center" TextColor="{StaticResource ControlTextColor}"/>
+                    <CheckBox BindingContext="{x:Reference cameraView}" IsChecked="{Binding AutoSnapShotAsImageSource}" VerticalOptions="Center" Color="Black"/>
+                </HorizontalStackLayout>
 
-            <Button x:Name="BtnTakeSnapshot" Grid.Row="1" Grid.ColumnSpan="2" Margin="5" HorizontalOptions="Center" Text="Capturar" Clicked="BtnTakeSnapshot_Clicked"></Button>
+                <HorizontalStackLayout IsVisible="False" HorizontalOptions="Center" Margin="5">
+                    <Button IsVisible="False" Text="Start Camera" Command="{Binding StartCamera}" />
+                    <Button IsVisible="False" Text="Stop Camera" Command="{Binding StopCamera}" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout IsVisible="False" HorizontalOptions="Center" Margin="5">
+                    <Button Text="Start Record" Command="{Binding StartRecording}" />
+                    <Button Text="Stop Record" Command="{Binding StopRecording}" />
+                </HorizontalStackLayout>
 
-            <HorizontalStackLayout IsVisible="False" HorizontalOptions="Center" Margin="5">
-                <Label Text="Select a microphone:" VerticalOptions="Center" BackgroundColor="White" TextColor="Black"/>
-                <Picker  VerticalOptions="Center" TextColor="Black" ItemsSource="{Binding Microphones}" SelectedItem="{Binding Microphone,Mode=TwoWay}"/>
-            </HorizontalStackLayout>
-            <HorizontalStackLayout IsVisible="False" HorizontalOptions="Center">
-                <Label IsVisible="False" Text="Mirrored" VerticalOptions="Center" TextColor="Black"/>
-                <CheckBox IsVisible="False" BindingContext="{x:Reference cameraView}" VerticalOptions="Center" Color="Black" IsChecked="{Binding MirroredImage}"/>
-                <Label IsVisible="False" Text="QR Detec." VerticalOptions="Center" TextColor="Black"/>
-                <CheckBox IsVisible="False" BindingContext="{x:Reference cameraView}" VerticalOptions="Center" Color="Black" IsChecked="{Binding BarCodeDetectionEnabled}"/>
-            </HorizontalStackLayout>
-            <HorizontalStackLayout IsVisible="False" HorizontalOptions="Center">
-                <Label Text="AutoSnap freq: " VerticalOptions="Center" TextColor="Black"/>
-                <Entry WidthRequest="20" Keyboard="Numeric" TextColor="Black" Text="{Binding Seconds, Mode=TwoWay}" />
-                <Label Text="Take Autosnap" VerticalOptions="Center" TextColor="Black"/>
-                <CheckBox VerticalOptions="Center" Color="Black" IsChecked="{Binding TakeSnapshot, Mode=OneWayToSource}"/>
-                <Label Text="As ISource" VerticalOptions="Center" TextColor="Black"/>
-                <CheckBox BindingContext="{x:Reference cameraView}" IsChecked="{Binding AutoSnapShotAsImageSource}" VerticalOptions="Center" Color="Black"/>
-            </HorizontalStackLayout>
+                <Label IsVisible="False" Text="{Binding BarcodeText}" TextColor="{StaticResource ControlTextColor}" FontAttributes="Bold" HorizontalOptions="Center" />
 
-            <HorizontalStackLayout IsVisible="False" HorizontalOptions="Center" Margin="5">
-                <Button IsVisible="False" Text="Start Camera" Command="{Binding StartCamera}" />
-                <Button IsVisible="False" Text="Stop Camera" Command="{Binding StopCamera}" />
-            </HorizontalStackLayout>
-            <HorizontalStackLayout IsVisible="False" HorizontalOptions="Center" Margin="5">
-                <Button Text="Start Record" Command="{Binding StartRecording}" />
-                <Button Text="Stop Record" Command="{Binding StopRecording}" />
-            </HorizontalStackLayout>
-
-            <Label IsVisible="False" Text="{Binding BarcodeText}" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center" />
-
-            <Image x:Name="ImgTakenSnapShot" Grid.Row="2" Grid.ColumnSpan="2" HeightRequest="300" WidthRequest="400" BindingContext="{x:Reference cameraView}" Aspect="AspectFill" HorizontalOptions="Center" />
-            <!--<toolkit:MediaElement Source="{Binding VideoSource}" ShouldAutoPlay="False" ShouldShowPlaybackControls="True" HeightRequest="300" WidthRequest="200" />-->
-            <Button x:Name="BtnImportPicture" Grid.Row="3" Grid.Column="0" Margin="5" HorizontalOptions="Center" Text="Importar foto" Command="{Binding ImportPictureCommand}" Clicked="BtnImportPicture_Clicked"></Button>
-            <Button x:Name="BtnSavePicture" Grid.Row="3" Grid.Column="1" Margin="5" HorizontalOptions="Center" Text="Analisar foto" Command="{Binding SavePictureCommand}" Clicked="BtnSavePicture_Clicked"></Button>
-        </Grid>
-    </ScrollView>
+                <Image x:Name="ImgTakenSnapShot" Grid.Row="2" Grid.ColumnSpan="2" HeightRequest="300" WidthRequest="300" BindingContext="{x:Reference cameraView}" Aspect="AspectFill" HorizontalOptions="Center"/>
+                <!--<toolkit:MediaElement Source="{Binding VideoSource}" ShouldAutoPlay="False" ShouldShowPlaybackControls="True" HeightRequest="300" WidthRequest="200" />-->
+                <Button x:Name="BtnImportPicture" Grid.Row="3" Grid.Column="0" BackgroundColor="{StaticResource SecondaryColor}" TextColor="{StaticResource PrimaryColor}" Margin="5" HorizontalOptions="Center" Text="Importar foto" Command="{Binding ImportPictureCommand}" Clicked="BtnImportPicture_Clicked"></Button>
+                <Button x:Name="BtnSavePicture" Grid.Row="3" Grid.Column="1" BackgroundColor="{StaticResource SecondaryColor}" TextColor="{StaticResource PrimaryColor}" Margin="5" HorizontalOptions="Center" Text="Analisar foto" Command="{Binding SavePictureCommand}" Clicked="BtnSavePicture_Clicked"></Button>
+            </Grid>
+        </ScrollView>
+    </Grid>
 </ContentPage>

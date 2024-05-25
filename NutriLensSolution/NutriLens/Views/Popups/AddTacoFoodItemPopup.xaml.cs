@@ -1,5 +1,9 @@
+using Android.Content.Res;
+using AndroidX.Navigation;
 using CommunityToolkit.Maui.Views;
 using NutriLens.Entities;
+using NutriLens.Services;
+using NutriLens.ViewInterfaces;
 using NutriLensClassLibrary.Models;
 using System.Collections.ObjectModel;
 
@@ -7,6 +11,7 @@ namespace NutriLens.Views.Popups;
 
 public partial class AddTacoFoodItemPopup : Popup
 {
+    private INavigation _navigation;
     public bool Confirmed { get; set; }
 
     public ObservableCollection<TacoItem> TacoItems { get; set; }
@@ -14,9 +19,11 @@ public partial class AddTacoFoodItemPopup : Popup
     public string InputPortion { get => inputPortion.Text; }
     public double InputCalories { get => string.IsNullOrEmpty(inputCalories.Text) ? -1 : double.Parse(inputCalories.Text); }
 
-    public AddTacoFoodItemPopup()
+    public AddTacoFoodItemPopup(INavigation navigation)
     {
         InitializeComponent();
+
+        _navigation = navigation;
 
         TacoItems = new ObservableCollection<TacoItem>();
 
@@ -29,9 +36,11 @@ public partial class AddTacoFoodItemPopup : Popup
         tacoPicker.ItemsSource = AppDataHelperClass.TacoFoodItems;
     }
 
-    public AddTacoFoodItemPopup(FoodItem foodItem)
+    public AddTacoFoodItemPopup(INavigation navigation, FoodItem foodItem)
     {
         InitializeComponent();
+
+        _navigation = navigation;
 
         TacoItems = new ObservableCollection<TacoItem>();
 
@@ -143,5 +152,11 @@ public partial class AddTacoFoodItemPopup : Popup
     private void tacoTextSearch_TextChanged(object sender, TextChangedEventArgs e)
     {
         FilterTacoItemsBySearchTextWords();
+    }
+
+    private void AdicionarNovoItemTapped(object sender, TappedEventArgs e)
+    {
+        AppDataHelperClass.AddTacoItemRequested = true;
+        CloseAsync();
     }
 }

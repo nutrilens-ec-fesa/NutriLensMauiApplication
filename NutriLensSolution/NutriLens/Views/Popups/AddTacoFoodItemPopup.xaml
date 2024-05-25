@@ -16,6 +16,7 @@
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="50"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="50"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="50"></RowDefinition>
@@ -31,14 +32,20 @@
                 <Label Grid.Row="2" Grid.Column="0" Text="Item: " TextColor="White"></Label>
                 <Picker Grid.Row="3" Grid.Column="0" x:Name="tacoPicker" BackgroundColor="Black" TextColor="White" HorizontalOptions="FillAndExpand" SelectedIndexChanged="tacoPicker_SelectedIndexChanged"></Picker>
 
-                <Label Grid.Row="4" Grid.Column="0" x:Name="lblPortionLabel" Text="Porção (g): " TextColor="White"></Label>
-                <Entry Grid.Row="5" Grid.Column="0" x:Name="inputPortion" BackgroundColor="Black" TextColor="White" HorizontalOptions="FillAndExpand" Unfocused="inputPortion_Unfocused" TextChanged="inputPortion_TextChanged"></Entry>
+                <Label Grid.Row="4" Grid.Column="0" Text="Adicionar novo item" TextColor="#5A98FA" TextDecorations="Underline">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="AdicionarNovoItemTapped"></TapGestureRecognizer>
+                    </Label.GestureRecognizers>
+                </Label>
+                
+                <Label Grid.Row="5" Grid.Column="0" x:Name="lblPortionLabel" Text="Porção (g): " TextColor="White"></Label>
+                <Entry Grid.Row="6" Grid.Column="0" x:Name="inputPortion" BackgroundColor="Black" TextColor="White" HorizontalOptions="FillAndExpand" Unfocused="inputPortion_Unfocused" TextChanged="inputPortion_TextChanged"></Entry>
 
-                <Label Grid.Row="6" Grid.Column="0" Text="Calorias: " TextColor="White"></Label>
-                <Entry Grid.Row="7" Grid.Column="0" x:Name="inputCalories" BackgroundColor="Black" TextColor="White" HorizontalOptions="FillAndExpand"></Entry>
+                <Label Grid.Row="7" Grid.Column="0" Text="Calorias: " TextColor="White"></Label>
+                <Entry Grid.Row="8" Grid.Column="0" x:Name="inputCalories" BackgroundColor="Black" TextColor="White" HorizontalOptions="FillAndExpand"></Entry>
 
 
-                <Button Grid.Row="8" x:Name="BtnConfirmItem" Text="Confirmar item" Clicked="BtnConfirmItem_Clicked"></Button>
+                <Button Grid.Row="9" x:Name="BtnConfirmItem" Text="Confirmar item" Clicked="BtnConfirmItem_Clicked"></Button>
 
             </Grid>
         </Frame.Content>

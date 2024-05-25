@@ -5,7 +5,7 @@
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="MobileLoginPage"
              NavigationPage.HasNavigationBar="False"
-             BackgroundColor="#FB7243">
+             BackgroundColor="{StaticResource PrimaryColor}">
     <ContentPage.Behaviors>
         <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
         <mct:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
@@ -17,9 +17,11 @@
             <RowDefinition></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <Label Grid.Row="0" Margin="0,0,0,0" Text="Bem-vindo ao NutriLens!" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalOptions="End"/>
-        <Image Grid.Row="1" Source="nutrilenslogo.jpg" VerticalOptions="Start" />
-        <Frame Grid.Row="2" BackgroundColor="White" CornerRadius="20" Margin="20">
+
+        <Image Grid.Row="0" Grid.RowSpan="4" Opacity="0.1" Aspect="AspectFill" Source="nutrilens_pattern_background.png"></Image>
+        <Label Grid.Row="0" Margin="0,0,0,0" Text="Bem-vindo!" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalOptions="End" TextColor="{StaticResource SecondaryColor}"/>
+        <Image Grid.Row="1" Source="nutrilens_dark_logo_text.png" VerticalOptions="Start" />
+        <Frame Grid.Row="2" BackgroundColor="{StaticResource PrimaryColor}" CornerRadius="20" Margin="20">
             <Grid RowSpacing="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"></RowDefinition>
@@ -29,14 +31,14 @@
                     <RowDefinition Height="2*"></RowDefinition>
                     <RowDefinition Height="2*"></RowDefinition>
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Text="Email" TextColor="Black"/>
-                <Entry Grid.Row="1" Keyboard="Email" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding LoginModel.Email}" Placeholder="Digite seu e-mail..."/>
-                <Label Grid.Row="2" Text="Senha" TextColor="Black" />
-                <Entry Grid.Row="3" Keyboard="Text" BackgroundColor="AliceBlue" TextColor="Black" Text="{Binding PasswordEntry}" IsPassword="True" Placeholder="Digite sua senha..." />
-                <Button Grid.Row="4" Text="Logar" BorderColor="Black" BorderWidth="1" Command="{Binding LoginCommand}" />
-                <Button Grid.Row="5" Text="Registrar-se" BorderColor="Black" BorderWidth="1" Command="{Binding RegisterCommand}" />
+                <Label Grid.Row="0" Text="Email" TextColor="{StaticResource ControlTextColor}"/>
+                <Entry Grid.Row="1" Keyboard="Email" BackgroundColor="{StaticResource ControlBackgroundColor}" TextColor="{StaticResource ControlTextColor}" Text="{Binding LoginModel.Email}" Placeholder="Digite seu e-mail..."/>
+                <Label Grid.Row="2" Text="Senha" TextColor="{StaticResource ControlTextColor}" />
+                <Entry Grid.Row="3" Keyboard="Text" BackgroundColor="{StaticResource ControlBackgroundColor}" TextColor="{StaticResource ControlTextColor}" Text="{Binding PasswordEntry}" IsPassword="True" Placeholder="Digite sua senha..." />
+                <Button Grid.Row="4" BackgroundColor="{StaticResource SecondaryColor}" Text="Logar" TextColor="{StaticResource PrimaryColor}" BorderColor="Black" BorderWidth="1" Command="{Binding LoginCommand}" />
+                <Button Grid.Row="5" BackgroundColor="{StaticResource SecondaryColor}" Text="Registrar-se" TextColor="{StaticResource PrimaryColor}"  BorderColor="Black" BorderWidth="1" Command="{Binding RegisterCommand}" />
             </Grid>
         </Frame>
-        <Label Grid.Row="3" Text="{Binding AppVersion}" HorizontalOptions="Center" Margin="0,0,0,10"></Label>
+        <Label Grid.Row="3" TextColor="{StaticResource SecondaryColor}" Text="{Binding AppVersion}" HorizontalOptions="Center" Margin="0,0,0,10"></Label>
     </Grid>
 </ContentPage>
