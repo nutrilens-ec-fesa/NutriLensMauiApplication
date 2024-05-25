@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NutriLens.Views.MobileAddCustomFoodItemPage"
+             Title="MobileAddCustomFoodItemPage">
+    <ScrollView>
+        <VerticalStackLayout Padding="10,20,10,20" Spacing="5">
+            <Label Margin="5,0,0,0" Text="Nome"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Default" Placeholder="Digite a nome/descrição do alimento..." Text="{Binding CustomTacoItem.Nome}"/>
+            <Label Margin="5,0,0,0" Text="Tipo do alimento"/>
+            <Picker BackgroundColor="{StaticResource ControlBackgroundColor}" TextColor="{StaticResource ControlTextColor}" HorizontalOptions="FillAndExpand" ItemsSource="{Binding PossibleFoodTypes}" SelectedItem="{Binding CustomTacoItem.FoodTypeInfo}"></Picker>
+            <Label Margin="5,0,0,0" Text="Contém glúten"/>
+            <Picker BackgroundColor="{StaticResource ControlBackgroundColor}" TextColor="{StaticResource ControlTextColor}" HorizontalOptions="FillAndExpand" ItemsSource="{Binding YesOrNoOptions}" SelectedItem="{Binding CustomTacoItem.GlutenInfo}"></Picker>
+            <Label Margin="5,0,0,0" Text="Contém lactose"/>
+            <Picker BackgroundColor="{StaticResource ControlBackgroundColor}" TextColor="{StaticResource ControlTextColor}" HorizontalOptions="FillAndExpand" ItemsSource="{Binding YesOrNoOptions}" SelectedItem="{Binding CustomTacoItem.LactoseInfo}"></Picker>
+            <Label Margin="5,0,0,0" Text="Porção base (g ou ml)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Text" Placeholder="Digite a porção base..." Text="{Binding CustomTacoItem.PortionEntry}"/>
+            <Label Margin="5,0,0,0" Text="Valor energético (kcal)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite o valor calórico da porção..." Text="{Binding CustomTacoItem.EnergiaKcalEntry}"/>
+            <Label Margin="5,0,0,0" Text="Umidade (%)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite a umidade da porção..." Text="{Binding CustomTacoItem.UmidadeEntry}"/>
+            <Label Margin="5,0,0,0" Text="Proteína (g)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite as proteínas da porção..." Text="{Binding CustomTacoItem.ProteinaEntry}"/>
+            <Label Margin="5,0,0,0" Text="Lipídeos (g)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite os lipídeos da porção..." Text="{Binding CustomTacoItem.LipideosEntry}"/>
+            <Label Margin="5,0,0,0" Text="Colesterol (mg)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite o colesterol da porção..." Text="{Binding CustomTacoItem.ColesterolEntry}"/>
+            <Label Margin="5,0,0,0" Text="Carboidrato (g)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite os carboidratos da porção..." Text="{Binding CustomTacoItem.CarboidratoEntry}"/>
+            <Label Margin="5,0,0,0" Text="Fibra alimentar (g)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite as fibras alimentares da porção..." Text="{Binding CustomTacoItem.FibraAlimentarEntry}"/>
+            <Label Margin="5,0,0,0" Text="Cinzas (g)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite as cinzas da porção..." Text="{Binding CustomTacoItem.CinzasEntry}"/>
+            <Label Margin="5,0,0,0" Text="Cálcio (mg)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite o cálcio da porção..." Text="{Binding CustomTacoItem.CalcioEntry}"/>
+            <Label Margin="5,0,0,0" Text="Magnésio (mg)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite o magnésio da porção..." Text="{Binding CustomTacoItem.MagnesioEntry}"/>
+            <Label Margin="5,0,0,0" Text="Manganês (mg)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite o manganês da porção..." Text="{Binding CustomTacoItem.ManganesEntry}"/>
+            <Label Margin="5,0,0,0" Text="Fósforo (mg)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite o fósforo da porção..." Text="{Binding CustomTacoItem.FosforoEntry}"/>
+            <Label Margin="5,0,0,0" Text="Ferro (mg)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite o ferro da porção..." Text="{Binding CustomTacoItem.FerroEntry}"/>
+            <Label Margin="5,0,0,0" Text="Sódio (mg)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite o sódio da porção..." Text="{Binding CustomTacoItem.SodioEntry}"/>
+            <Label Margin="5,0,0,0" Text="Potássio (mg)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite o potássio da porção..." Text="{Binding CustomTacoItem.PotassioEntry}"/>
+            <Label Margin="5,0,0,0" Text="Cobre (mg)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite o cobre da porção..." Text="{Binding CustomTacoItem.CobreEntry}"/>
+            <Label Margin="5,0,0,0" Text="Zinco (mg)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite o zinco da porção..." Text="{Binding CustomTacoItem.ZincoEntry}"/>
+            <Label Margin="5,0,0,0" Text="Retinol (ug)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite o retinol da porção..." Text="{Binding CustomTacoItem.RetinolEntry}"/>
+            <Label Margin="5,0,0,0" Text="RE (ug)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite o RE da porção..." Text="{Binding CustomTacoItem.REEntry}"/>
+            <Label Margin="5,0,0,0" Text="RAE (ug)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite o RAE da porção..." Text="{Binding CustomTacoItem.RAEEntry}"/>
+            <Label Margin="5,0,0,0" Text="Tiamina (mg)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite a tiamina da porção..." Text="{Binding CustomTacoItem.TiaminaEntry}"/>
+            <Label Margin="5,0,0,0" Text="Riboflavina (mg)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite a riboflavina da porção..." Text="{Binding CustomTacoItem.RiboflavinaEntry}"/>
+            <Label Margin="5,0,0,0" Text="Piridoxina (mg)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite a piridoxina da porção..." Text="{Binding CustomTacoItem.PiridoxinaEntry}"/>
+            <Label Margin="5,0,0,0" Text="Niacina (mg)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite a niacina da porção..." Text="{Binding CustomTacoItem.NiacinaEntry}"/>
+            <Label Margin="5,0,0,0" Text="Vitamina C (mg)"/>
+            <Entry BackgroundColor="{StaticResource ControlBackgroundColor}" Keyboard="Numeric" Placeholder="Digite a vitamina C da porção..." Text="{Binding CustomTacoItem.VitaminaCEntry}"/>
+            <Button Margin="0,20,0,0" Text="Confirmar informações" Command="{Binding ConfirmProductCommand}"></Button>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
