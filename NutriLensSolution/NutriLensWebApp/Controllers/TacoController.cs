@@ -248,6 +248,34 @@ namespace NutriLensWebApp.Controllers
             }
         }
 
+        [HttpPost, Route("v1/InsertTacoItem")]
+        public IActionResult InsertTacoItem([FromBody] TacoItem tacoItem, [FromServices] ITacoItemRepository tacoItemRepository)
+        {
+            try
+            {
+                tacoItemRepository.InsertCustomTacoItem(tacoItem);
+                return CreatedAtAction(nameof(InsertTacoItem), new { id = tacoItem.id }, tacoItem);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
+        [HttpPut, Route("v1/UpdateTacoItem")]
+        public IActionResult UpdateTacoItem([FromBody] TacoItem tacoItem, [FromServices] ITacoItemRepository tacoItemRepository)
+        {
+            try
+            {
+                tacoItemRepository.UpdateTacoItem(tacoItem);
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
         [NonAction]
         public bool InRange(int value, int min, int max)
         {

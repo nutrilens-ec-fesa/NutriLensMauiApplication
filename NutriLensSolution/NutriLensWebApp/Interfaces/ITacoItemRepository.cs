@@ -6,5 +6,7 @@ namespace NutriLensWebApp.Interfaces
     {
         public List<TacoItem> GetList();
         public void UpdateTacoItems(List<TacoItem> tacoItems);
+        public void InsertCustomTacoItem(TacoItem tacoItem);
+        public void UpdateTacoItem(TacoItem tacoItem);
     }
 }

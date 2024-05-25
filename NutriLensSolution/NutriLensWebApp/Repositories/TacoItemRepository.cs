@@ -22,6 +22,45 @@ namespace NutriLensWebApp.Repositories
             }
         }
 
+        public void InsertCustomTacoItem(TacoItem tacoItem)
+        {
+            TacoItem existingTacoItem;
+
+            try
+            {
+                FilterDefinition<TacoItem> filter = Builders<TacoItem>.Filter.Eq(x => x.Nome, tacoItem.Nome);
+                existingTacoItem = AppMongoDbContext.TacoItem.Find(filter).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                throw new DatabaseQueryException("Houve algum problema para verificar alimento já existente", ex);
+            }
+
+            if (existingTacoItem != null)
+                throw new AlreadyRegisteredException("Já existe um produto registrado com o nome informado");
+
+            try
+            {
+                AppMongoDbContext.TacoItem.InsertOne(tacoItem);
+            }
+            catch (Exception ex)
+            {
+                throw new DatabaseQueryException("Houve algum problema para inserir o novo alimento", ex);
+            }
+        }
+
+        public void UpdateTacoItem(TacoItem tacoItem)
+        {
+            try
+            {
+                AppMongoDbContext.TacoItem.ReplaceOne(doc => doc.id == tacoItem.id, tacoItem);
+            }
+            catch (Exception ex)
+            {
+                throw new DatabaseQueryException("Houve algum problema para atualizar o alimento", ex);
+            }
+        }
+
         public void UpdateTacoItems(List<TacoItem> tacoItems)
         {
             try
