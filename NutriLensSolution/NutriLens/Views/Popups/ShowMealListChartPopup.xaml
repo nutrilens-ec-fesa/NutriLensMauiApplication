@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:control="clr-namespace:Syncfusion.Maui.Charts;assembly=Syncfusion.Maui.Charts"
+             x:Class="NutriLens.Views.Popups.ShowMealListChartPopup"
+             Color="{StaticResource ControlBackgroundColor}">
+
+    <ScrollView Margin="5">
+        <StackLayout Margin="5" Spacing="10">
+            <Label Text="Macronutrientes da refeição selecionada" FontSize="Small" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0" HorizontalTextAlignment="Center"/>
+            <ScrollView Orientation="Horizontal">
+                <control:SfCartesianChart>
+                    <control:SfCartesianChart.XAxes>
+                        <control:CategoryAxis/>
+                    </control:SfCartesianChart.XAxes>
+
+                    <control:SfCartesianChart.YAxes>
+                        <control:NumericalAxis/>
+                    </control:SfCartesianChart.YAxes>
+
+                    <control:LineSeries  ItemsSource="{Binding PartialResultsMacroNutrients1}"
+                                            XBindingPath="Label" 
+                                            YBindingPath="Value1"
+                                            EnableAnimation="True" EnableTooltip="True" ShowDataLabels="True"/>
+                    <control:LineSeries  ItemsSource="{Binding PartialResultsMacroNutrients1}"
+                        XBindingPath="Label" 
+                        YBindingPath="Value2"
+                        EnableAnimation="True" EnableTooltip="True" ShowDataLabels="True"/>
+                    <control:LineSeries  ItemsSource="{Binding PartialResultsMacroNutrients1}"
+                        XBindingPath="Label" 
+                        YBindingPath="Value3"
+                        EnableAnimation="True" EnableTooltip="True" ShowDataLabels="True"/>
+
+                </control:SfCartesianChart>
+            </ScrollView>
+            <ScrollView Orientation="Horizontal">
+
+                <control:SfCartesianChart>
+                    <control:SfCartesianChart.XAxes>
+                        <control:CategoryAxis/>
+                    </control:SfCartesianChart.XAxes>
+
+                    <control:SfCartesianChart.YAxes>
+                        <control:NumericalAxis/>
+                    </control:SfCartesianChart.YAxes>
+
+                    <control:LineSeries  ItemsSource="{Binding PartialResultsMacroNutrients2}"
+                            XBindingPath="Label" 
+                            YBindingPath="Value"
+                            EnableAnimation="True" EnableTooltip="True" ShowDataLabels="True"/>
+                    <control:LineSeries  ItemsSource="{Binding PartialResultsMacroNutrients1}"
+                        XBindingPath="Label" 
+                        YBindingPath="Value2"
+                        EnableAnimation="True" EnableTooltip="True" ShowDataLabels="True"/>
+                    <control:LineSeries  ItemsSource="{Binding PartialResultsMacroNutrients1}"
+                        XBindingPath="Label" 
+                        YBindingPath="Value3"
+                        EnableAnimation="True" EnableTooltip="True" ShowDataLabels="True"/>
+
+                </control:SfCartesianChart>
+            </ScrollView>
+            <ScrollView Orientation="Horizontal">
+
+                <control:SfCartesianChart>
+                    <control:SfCartesianChart.XAxes>
+                        <control:CategoryAxis/>
+                    </control:SfCartesianChart.XAxes>
+
+                    <control:SfCartesianChart.YAxes>
+                        <control:NumericalAxis/>
+                    </control:SfCartesianChart.YAxes>
+
+                    <control:LineSeries  ItemsSource="{Binding PartialResultsMacroNutrients2}"
+                            XBindingPath="Label" 
+                            YBindingPath="Value"
+                            EnableAnimation="True" EnableTooltip="True" ShowDataLabels="True"/>
+                    <control:LineSeries  ItemsSource="{Binding PartialResultsMacroNutrients1}"
+                        XBindingPath="Label" 
+                        YBindingPath="Value2"
+                        EnableAnimation="True" EnableTooltip="True" ShowDataLabels="True"/>
+                    <control:LineSeries  ItemsSource="{Binding PartialResultsMacroNutrients1}"
+                        XBindingPath="Label" 
+                        YBindingPath="Value3"
+                        EnableAnimation="True" EnableTooltip="True" ShowDataLabels="True" ShowTrackballLabel="True"/>
+
+                </control:SfCartesianChart>
+            </ScrollView>
+            <Button x:Name="btnConfirmEntry" Text="OK" Clicked="btnConfirmEntry_Clicked"></Button>
+        </StackLayout>
+    </ScrollView>
+</toolkit:Popup>

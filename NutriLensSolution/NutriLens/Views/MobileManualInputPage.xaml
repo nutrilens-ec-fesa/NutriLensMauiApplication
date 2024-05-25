@@ -82,7 +82,7 @@
                                     </ImageButton>
                                     <ImageButton Grid.Column="2" Source="edit_icon.png" Margin="3" Command="{Binding Path=BindingContext.EditItemCommand, Source={x:Reference ManualInputPage}}" CommandParameter="{Binding .}" HeightRequest="50">
                                     </ImageButton>
-                                    <ImageButton Grid.Column="3" Source="list_icon.png" Margin="3" Command="{Binding Path=BindingContext.ListItemCommand, Source={x:Reference ManualInputPage}}" CommandParameter="{Binding .}" HeightRequest="50">
+                                    <ImageButton Grid.Column="3" Source="chart_icon.png" Margin="3" Command="{Binding Path=BindingContext.ListItemCommand, Source={x:Reference ManualInputPage}}" CommandParameter="{Binding .}" HeightRequest="50">
                                     </ImageButton>
                                 </Grid>
                             </ViewCell.View>

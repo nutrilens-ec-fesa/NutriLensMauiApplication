@@ -33,6 +33,7 @@
                                         <ColumnDefinition Width="2*"></ColumnDefinition>
                                         <ColumnDefinition Width="4*"></ColumnDefinition>
                                         <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
 
                                     <Rectangle Grid.Column="0" BackgroundColor="Transparent"></Rectangle>
@@ -46,6 +47,7 @@
                                     <Label Grid.Row="2" Grid.Column="0" Text="Kcal:" FontAttributes="Bold"></Label>
                                     <Label Grid.Row="2" Grid.Column="1" Text="{Binding TotalEnergeticConsumptionString}"></Label>
                                     <ImageButton Grid.Row="0" Grid.RowSpan="3" Grid.Column="2" Source="list_icon.png" Margin="4" Command="{Binding Path=BindingContext.ListMealsCommand, Source={x:Reference GroupedMealHistoricPage}}" CommandParameter="{Binding .}" HeightRequest="50" />
+                                    <ImageButton Grid.Row="0" Grid.RowSpan="3" Grid.Column="3" Source="chart_icon.png" Margin="4" Command="{Binding Path=BindingContext.ShowMealsChartCommand, Source={x:Reference GroupedMealHistoricPage}}" CommandParameter="{Binding .}" HeightRequest="50" />
                                 </Grid>
                             </ViewCell.View>
                         </ViewCell>

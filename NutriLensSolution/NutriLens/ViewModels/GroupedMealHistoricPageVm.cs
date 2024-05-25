@@ -1,10 +1,12 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DateTimeLibrary;
 using NutriLens.Entities;
 using NutriLens.Models;
 using NutriLens.Services;
 using NutriLens.ViewInterfaces;
+using NutriLens.Views.Popups;
 using NutriLensClassLibrary.Models;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -247,6 +249,21 @@ namespace NutriLens.ViewModels
             //    await _navigation.PushAsync(ViewServices.ResolvePage<IBarCodePage>());
             //else
             //    await _navigation.PushAsync(ViewServices.ResolvePage<IManualInputPage>());
+        }
+
+        [RelayCommand]
+        private async Task ShowMealsChart(MealListClass filteredMealList)
+        {
+            if (int.Parse(filteredMealList.MealCount) == 0)
+            {
+                await ViewServices.PopUpManager.PopErrorAsync("O período não possui refeições registradas.");
+                return;
+            }
+
+            AppDataHelperClass.FilteredMealList = filteredMealList;
+
+            ShowMealListChartPopup showMealListChartPopup = new ShowMealListChartPopup(filteredMealList);
+            await Application.Current.MainPage.ShowPopupAsync(showMealListChartPopup);
         }
     }
 }

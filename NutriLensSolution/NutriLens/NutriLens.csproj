@@ -71,8 +71,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\AppIcon\icon_nutrilens_1 - Cópia.svg" />
 	  <None Remove="Resources\AppIcon\icon_nutrilens_1.svg" />
 	  <None Remove="Resources\AppIcon\nutrilens_dark_logo.svg" />
+	  <None Remove="Resources\Images\chart_icon.png" />
 	  <None Remove="Resources\Images\delete_icon.png" />
 	  <None Remove="Resources\Images\document_link.png" />
 	  <None Remove="Resources\Images\edit_icon.png" />
@@ -148,6 +150,9 @@
 	  <Compile Update="Views\Popups\AddTacoFoodItemPopup.xaml.cs">
 	    <DependentUpon>AddTacoFoodItemPopup.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\Popups\ShowMealListChartPopup.xaml.cs">
+	    <DependentUpon>ShowMealListChartPopup.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\Popups\ShowTacoMealItemPopup.xaml.cs">
 	    <DependentUpon>ShowTacoMealItemPopup.xaml</DependentUpon>
 	  </Compile>
@@ -219,6 +224,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Popups\PeriodChoosePopup.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Popups\ShowMealListChartPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Popups\ShowTacoMealItemPopup.xaml">
