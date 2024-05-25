@@ -9,10 +9,30 @@ namespace NutriLens
     {
         public App()
         {
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense();
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("");
             InitializeComponent();
             ViewServices.PopUpManager.UpdateLanguage(Languages.Portuguese);
-            MainPage = new NavigationPage(ViewServices.ResolvePage<ILoginPage>());
+
+            bool foundNavigationBarBackgroundColor = false;
+
+            if (Current.Resources.TryGetValue("SecondaryColor", out var navigationPageBarColor))
+                foundNavigationBarBackgroundColor = true;
+
+            bool foundNavigationBarTextColor = false;
+
+            if (Current.Resources.TryGetValue("PrimaryColor", out var navigationPageBarTextColor))
+                foundNavigationBarTextColor = true;
+
+            if (foundNavigationBarBackgroundColor && foundNavigationBarTextColor)
+            {
+                MainPage = new NavigationPage(ViewServices.ResolvePage<ILoginPage>())
+                {
+                    BarBackgroundColor = (Color)navigationPageBarColor,
+                    BarTextColor = (Color)navigationPageBarTextColor
+                };
+            }
+            else
+                MainPage = new NavigationPage(ViewServices.ResolvePage<ILoginPage>());
         }
 
         private static MauiAppInfo GetAppInfo()
