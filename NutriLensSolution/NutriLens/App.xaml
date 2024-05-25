@@ -5,6 +5,13 @@
              x:Class="NutriLens.App">
     <Application.Resources>
         <ResourceDictionary>
+            <Color x:Key="PrimaryColor">#CCDCEA</Color>
+            <Color x:Key="SecondaryColor">#0276B1</Color>
+            <Color x:Key="PrimaryTextColor">#CCDCEA</Color>
+            <Color x:Key="ControlTextColor">#000000</Color>
+            <Color x:Key="ControlBackgroundColor">#F0F8FF</Color>
+            <Color x:Key="TrackFillColor">#B4C1CF</Color>
+            
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
