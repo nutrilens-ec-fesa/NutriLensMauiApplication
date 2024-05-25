@@ -56,6 +56,20 @@ namespace StringLibrary
         }
 
         /// <summary>
+        /// Retorna uma string a partir de um double nullable, caso seja nulo, retorna 0
+        /// </summary>
+        /// <param name="value">Valor em double a ser obtida a string</param>
+        /// <param name="decimalPlaces">Quantidade de casas decimais desejadas na string, por padrão, considera-se 2</param>
+        /// <returns></returns>
+        public static string GetRoundDoubleString(double? value, int decimalPlaces = 2)
+        {
+            if (value == null)
+                return "0";
+
+            return Math.Round((double)value, decimalPlaces).ToString();
+        }
+
+        /// <summary>
         /// Remove todos os acentos de uma string.
         /// </summary>
         /// <param name="text">string contendo acentos ou não.</param>
