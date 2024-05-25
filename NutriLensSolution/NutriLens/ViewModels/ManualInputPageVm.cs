@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NutriLens.Entities;
 using NutriLens.Services;
+using NutriLens.ViewInterfaces;
 using NutriLens.Views.Popups;
 using NutriLensClassLibrary.Models;
 using System.Collections.ObjectModel;
@@ -87,8 +88,13 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         public async Task AddNewItemFromTaco()
         {
-            AddTacoFoodItemPopup addFoodItemPopup = new AddTacoFoodItemPopup();
+            AddTacoFoodItemPopup addFoodItemPopup = new AddTacoFoodItemPopup(_navigation);
             await Application.Current.MainPage.ShowPopupAsync(addFoodItemPopup);
+
+            if (AppDataHelperClass.AddTacoItemRequested)
+            {
+                await _navigation.PushAsync(ViewServices.ResolvePage<IAddCustomFoodItemPage>());
+            }
 
             if (addFoodItemPopup.Confirmed)
             {
@@ -216,7 +222,7 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private async Task EditItem(FoodItem item)
         {
-            AddTacoFoodItemPopup addFoodItemPopup = new AddTacoFoodItemPopup(item);
+            AddTacoFoodItemPopup addFoodItemPopup = new AddTacoFoodItemPopup(_navigation);
             await Application.Current.MainPage.ShowPopupAsync(addFoodItemPopup);
 
             if (addFoodItemPopup.Confirmed)
