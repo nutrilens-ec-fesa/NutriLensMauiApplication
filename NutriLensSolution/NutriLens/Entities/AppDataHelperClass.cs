@@ -105,6 +105,8 @@ namespace NutriLens.Entities
 
         public static List<FoodItem> DetectedFoodItems { get; set; } = new List<FoodItem>();
 
+        public static bool AddTacoItemRequested { get; set; }
+
         /// <summary>
         /// Lista de refeições
         /// </summary>
