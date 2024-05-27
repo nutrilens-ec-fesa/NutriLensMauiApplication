@@ -8,7 +8,7 @@
              xmlns:local="clr-namespace:NutriLens.ViewModels"
              x:Name="ManualInputPage"
              Title="Inserção manual"
-             BackgroundColor="{StaticResource PrimaryColor}">
+             BackgroundColor="White">
     <ContentPage.Behaviors>
         <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
         <mct:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
@@ -80,9 +80,11 @@
                                     </Grid>
                                     <ImageButton Grid.Column="1" Source="delete_icon.png" Command="{Binding Path=BindingContext.DeleteItemCommand, Source={x:Reference ManualInputPage}}" CommandParameter="{Binding .}" HeightRequest="50">
                                     </ImageButton>
-                                    <ImageButton Grid.Column="2" Source="edit_icon.png" Margin="3" Command="{Binding Path=BindingContext.EditItemCommand, Source={x:Reference ManualInputPage}}" CommandParameter="{Binding .}" HeightRequest="50">
+                                    <ImageButton Grid.Column="2" Source="edit_icon.png" Margin="5" Command="{Binding Path=BindingContext.EditItemCommand, Source={x:Reference ManualInputPage}}" CommandParameter="{Binding .}" HeightRequest="50">
                                     </ImageButton>
+									
                                     <ImageButton Grid.Column="3" Source="chart_icon.png" Margin="3" Command="{Binding Path=BindingContext.ListItemCommand, Source={x:Reference ManualInputPage}}" CommandParameter="{Binding .}" HeightRequest="50">
+
                                     </ImageButton>
                                 </Grid>
                             </ViewCell.View>

@@ -19,7 +19,7 @@
 
                 <Label Grid.Row="0" x:Name="lblEntryTitle" TextColor="White"></Label>
                 <Editor Grid.Row="1" x:Name="entry" HorizontalTextAlignment="Center" TextColor="White" BackgroundColor="#1B1B1B"></Editor>
-                <Button Grid.Row="2" x:Name="btnConfirmEntry" Text="OK" Clicked="btnConfirmEntry_Clicked"></Button>
+                <Button Grid.Row="2" x:Name="btnConfirmEntry" BackgroundColor="{StaticResource SecondaryColor}" TextColor="{StaticResource PrimaryColor}" Text="OK" Clicked="btnConfirmEntry_Clicked"></Button>
             </Grid>
         </Frame.Content>
     </Frame>
