@@ -65,6 +65,19 @@ img {
     width: 400px;
 }
 
+.background-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../img/nutrilens-pattern-background.png');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.05; /* Adjust the opacity here */
+    z-index: -1; /* Ensure the background image stays behind the content */
+}
+
 .image-container {
     /*overflow: hidden;*/ /* Ensure the zoomed-in image does not overflow the container */
     display: inline-block; /* For demonstration, adjust as needed */
