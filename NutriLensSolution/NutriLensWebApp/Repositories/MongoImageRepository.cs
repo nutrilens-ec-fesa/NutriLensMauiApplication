@@ -37,6 +37,8 @@ namespace NutriLensWebApp.Repositories
             {
                 return AppMongoDbContext.MongoImage
                     .Find(Builders<MongoImage>.Filter.Empty)
+                    .Limit(64)
+                    .SortByDescending(x => x.DateTime)
                     .ToList();
             }
             catch(Exception ex)

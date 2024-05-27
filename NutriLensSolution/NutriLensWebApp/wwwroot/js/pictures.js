@@ -1,20 +1,32 @@
 ﻿$(function () {
     $.ajax({
-        url: '/Image/v1/GetAllImages', // Your API endpoint
+        url: '/Image/v1/GetAllImagesIds', // Your API endpoint
         type: 'GET',
         dataType: 'json', // Expecting JSON response
         success: function (data) {
             const imagesGrid = $('#imagesGrid');
             data.forEach((item, index) => {
-                // Assuming 'imageBytes' is a Base64-encoded image
-                const imgSrc = `data:image/jpeg;base64,${item.imageBytes}`;
-                const imgElement = $('<img id="image-' + index + '" class="dynamic-image">').attr('src', imgSrc).attr('download', item.id).css({
-                    width: '100%', // Ensure the image fits its container
-                    height: 'auto'
+
+                // Execute the AJAX request
+                $.ajax({
+                    url: '/Image/v1/GetImageById/' + item, // The URL to send the request to
+                    type: 'GET', // or 'POST', depending on your needs
+                    success: function (response) {
+                        // Assuming 'imageBytes' is a Base64-encoded image
+                        const imgSrc = `data:image/jpeg;base64,${response.imageBytes}`;
+                        const imgElement = $('<img id="image-' + index + '" class="dynamic-image">').attr('src', imgSrc).attr('download', item.id).css({
+                            width: '100%', // Ensure the image fits its container
+                            height: 'auto'
+                        });
+                        const divElement = $('<div>').attr('class', 'image-container');
+                        divElement.append(imgElement);
+                        imagesGrid.append(divElement);
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error
+                        console.log('Error:', error);
+                    }
                 });
-                const divElement = $('<div>').attr('class', 'image-container');
-                divElement.append(imgElement);
-                imagesGrid.append(divElement);
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
