@@ -28,30 +28,29 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
-		<AssemblyVersion>1.0.2</AssemblyVersion>
-		<FileVersion>1.0.2</FileVersion>
+		<AssemblyVersion>1.0.3</AssemblyVersion>
+		<FileVersion>1.0.3</FileVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android|AnyCPU'">
 	  <AndroidPackageFormat>apk</AndroidPackageFormat>
 	  <AndroidKeyStore>False</AndroidKeyStore>
 	  <ApplicationId>com.fesaec.nutrilens</ApplicationId>
-	  <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android|AnyCPU'">
 	  <AndroidKeyStore>False</AndroidKeyStore>
 	  <ApplicationId>com.fesaec.nutrilens</ApplicationId>
 	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
-	  <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
     
 		<!-- App Icon -->
-    <MauiIcon Include="Resources\AppIcon\nutrilens_dark_logo.svg" Color="#FB7243" />
 
     <!--ForegroundFile="Resources\Splash\template_app_pattern_foods.svg"-->
     <!-- Splash Screen -->
@@ -73,12 +72,11 @@
 	<ItemGroup>
 	  <None Remove="Resources\AppIcon\icon_nutrilens_1 - Cópia.svg" />
 	  <None Remove="Resources\AppIcon\icon_nutrilens_1.svg" />
-	  <None Remove="Resources\AppIcon\nutrilens_dark_logo.svg" />
+	  <None Remove="Resources\AppIcon\nutrilens_dark_log_only.png" />
 	  <None Remove="Resources\Images\chart_icon.png" />
 	  <None Remove="Resources\Images\delete_icon.png" />
 	  <None Remove="Resources\Images\document_link.png" />
 	  <None Remove="Resources\Images\edit_icon.png" />
-	  <None Remove="Resources\Images\nutrilenslogo.jpg" />
 	  <None Remove="Resources\Images\nutrilens_dark_logo.svg" />
 	  <None Remove="Resources\Images\nutrilens_dark_logo_text.png" />
 	  <None Remove="Resources\Images\nutrilens_dark_log_only.png" />
@@ -91,6 +89,10 @@
 	  <None Remove="Resources\Splash\nutrilens_dark_logo.svg" />
 	  <None Remove="Resources\Splash\nutrilens_pattern_background.svg" />
 	  <None Remove="Resources\Splash\template_app_pattern_foods.svg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiIcon Include="Resources\AppIcon\nutrilens_dark_log_only.png" Color="#CCDCEA" />
 	</ItemGroup>
 
 	<ItemGroup>
