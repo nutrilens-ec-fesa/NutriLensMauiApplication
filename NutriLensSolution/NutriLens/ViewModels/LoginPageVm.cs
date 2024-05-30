@@ -210,7 +210,7 @@ namespace NutriLens.ViewModels
         /// <returns></returns>
         private async Task PermissionManager_EventInfoMessage(string title, string msg, string btn1, string btn2, string btn3)
         {
-            await ViewServices.PopUpManager.PopFullyPersonalizedAsync(title, msg, btn1, btn2, btn3);
+            await ViewServices.PopUpManager.PopPersonalizedAsync(title, msg, btn1);
         }
     }
 }
