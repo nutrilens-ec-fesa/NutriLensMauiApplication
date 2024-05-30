@@ -10,43 +10,12 @@ namespace NutriLensClassLibrary.Models
         [JsonIgnore, BsonIgnore]
         public double Portion { get; set; }
 
-        [JsonIgnore, BsonIgnore]
-        public string FoodType { get; set; }
-
-        private string _glutenEntry;
-
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        [JsonIgnore, BsonIgnore]
-        public string GlutenEntry
-        {
-
-            // TODO, ainda não foi finalizado
-            get
-            {
-                if (Gluten == null)
-                    _glutenEntry = "Não informado";
-                else if ((bool)Gluten)
-                    _glutenEntry = "Sim";
-                else
-                    _glutenEntry = "Não";
-
-                OnPropertyChanged(nameof(GlutenEntry));
-
-                return _glutenEntry;
-            }
-            set
-            {
-                _glutenEntry = value;
-            }
-        }
-
-        public string LactoseEntry { get; set; }
 
         [JsonIgnore, BsonIgnore]
         public string PortionEntry
