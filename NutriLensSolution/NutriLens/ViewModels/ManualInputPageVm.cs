@@ -208,7 +208,7 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private void Disappearing()
         {
-
+            
         }
 
         [RelayCommand]
