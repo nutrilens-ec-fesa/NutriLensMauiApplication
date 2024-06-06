@@ -3,7 +3,9 @@ using ExceptionLibrary;
 using NutriLens.Entities;
 using NutriLens.Services;
 using NutriLens.ViewInterfaces;
+using NutriLensClassLibrary.Entities;
 using NutriLensClassLibrary.Models;
+using StringLibrary;
 
 namespace NutriLens.Views;
 
@@ -101,6 +103,32 @@ public partial class MobileCameraPageV2 : ContentPage
             File.WriteAllBytes(filePath, img);
 
             EntitiesHelperClass.ShowLoading("Sincronizando imagem na nuvem...");
+
+            if (await ViewServices.PopUpManager.PopYesOrNoAsync("Peso da refeição", "Você sabe o peso da sua refeição? Caso você tenha essa informação, a IA pode ser mais assertiva na análise das quantidades."))
+            {
+                while (true)
+                {
+                    string pesoInformadoStr = await ViewServices.PopUpManager.PopNumericInputAsync("Peso da refeição", "Informe o peso em gramas (g) da refeição:");
+
+                    if (string.IsNullOrEmpty(pesoInformadoStr))
+                    {
+                        if (await ViewServices.PopUpManager.PopYesOrNoAsync("Peso não informado", "Você não passou o peso da sua refeição, deseja tentar novamente?"))
+                            continue;
+                        else
+                            break;
+                    }
+
+                    double pesoInformado = StringFunctions.ParseDoubleValue(pesoInformadoStr);
+
+                    if(pesoInformado == double.NaN || pesoInformado <= 0)
+                    {
+                        if (await ViewServices.PopUpManager.PopYesOrNoAsync("Peso inválido", "Você passou um peso inválido. Lembre-se que deve ser um número maior que zero! Deseja tentar novamente?"))
+                            continue;
+                        else
+                            break;
+                    }
+                }
+            }
 
             string mongoImageId = string.Empty;
 
