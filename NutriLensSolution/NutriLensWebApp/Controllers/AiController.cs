@@ -338,6 +338,90 @@ namespace NutriLensWebApp.Controllers
             }
         }
 
+        [HttpPost, Route("v3/DetectFoodByMongoImageId/{mongoImageId}/{informedWeight}"), AllowAnonymous]
+        public async Task<IActionResult> DetectFoodByMongoImageIdV2(string mongoImageId, double informedWeight,
+            [FromServices] IOpenAiPrompt openAiPromptRepo,
+            [FromServices] IMongoImage mongoImageRepo)
+        {
+            try
+            {
+                OpenAiPrompt openAiPrompt = openAiPromptRepo.GetLast();
+
+                string informeWeightInfo = string.Empty;
+
+                if (informedWeight > 0)
+                    informeWeightInfo = $" Sabe-se que essa refeição pesa {informedWeight} gramas.";
+
+                MongoImage mongoImage = mongoImageRepo.GetById(mongoImageId);
+                string mongoImageBase64 = Convert.ToBase64String(mongoImage.ImageBytes);
+
+                OpenAiResponse gptResponse = null;
+                string geminiResponse = string.Empty;
+
+                TaskCompletionSource<bool> tcsGpt = new TaskCompletionSource<bool>();
+
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        OpenAiVisionInputModel inputModel = new()
+                        {
+                            UserPrompt = openAiPrompt.UserPrompt + informeWeightInfo,
+                            SystemPrompt = openAiPrompt.SystemPrompt,
+                            MaxTokens = 300,
+                            Base64 = false,
+                            Url = $"data:image/jpeg;base64,{mongoImageBase64}"
+                        };
+
+                        gptResponse = OpenAiQuery(OpenAiModel.Gpt4Turbo, inputModel);
+                        tcsGpt.SetResult(true);
+                    }
+                    catch (Exception ex)
+                    {
+                        tcsGpt.SetResult(false);
+                    }
+
+                });
+
+                TaskCompletionSource<bool> tcsGemini = new TaskCompletionSource<bool>();
+
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        string prompt = openAiPrompt.SystemPrompt + informeWeightInfo;
+                        geminiResponse = await GeminiAiEntity.GeminiAiQuery(prompt, mongoImage.ImageBytes);
+                        tcsGemini.SetResult(true);
+                    }
+                    catch (Exception ex)
+                    {
+                        tcsGemini.SetResult(false);
+                    }
+                });
+
+                // Aguarda as consultas terminarem
+                do
+                {
+                    await Task.Delay(1000);
+
+                    Console.WriteLine("GPT: " + tcsGpt.Task.IsCompleted);
+                    Console.WriteLine("Gemini: " + tcsGemini.Task.IsCompleted);
+
+                } while (!tcsGpt.Task.IsCompleted || !tcsGemini.Task.IsCompleted);
+
+                mongoImage.GptRawResult = "[OpenAi] " + gptResponse.GetResponseMessage();
+                mongoImage.GeminiRawResult = "[Gemini] " + geminiResponse;
+
+                mongoImageRepo.UpdateImage(mongoImage);
+
+                return Ok(new AiResult(mongoImage.GptRawResult, mongoImage.GeminiRawResult));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ExceptionManager.ExceptionMessage(ex));
+            }
+        }
+
         [HttpPost, Route("v2/GetFoodItemsJsonByMealDescription")]
         public async Task<IActionResult> GetFoodItemsJsonByMealDescriptionV2([FromBody] StringObject mealDescription)
         {
