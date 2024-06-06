@@ -4,20 +4,13 @@
              x:Class="NutriLens.Views.MobileManualInputPage"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:c="clr-namespace:NutriLens.Entities.Converters"
              xmlns:local="clr-namespace:NutriLens.ViewModels"
              x:Name="ManualInputPage"
              Title="Inserção manual"
              BackgroundColor="White">
     <ContentPage.Behaviors>
         <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
-        <mct:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
     </ContentPage.Behaviors>
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <c:ItemTappedEventArgsConverter x:Key="itemTappedEventArgsConverter" />
-        </ResourceDictionary>
-    </ContentPage.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -38,34 +31,27 @@
         </StackLayout>
         <StackLayout Grid.Row="2" Padding="10">
             <Image IsVisible="{Binding HasPictureAnalysisSource}" Source="{Binding PictureAnalysisSource}" HeightRequest="180" Margin="0,0,0,10"></Image>
-            <ListView x:Name="listViewName" ItemsSource="{Binding FoodItems}" HasUnevenRows="True" SelectionMode="None" CachingStrategy="RetainElement" Margin="0">
+            <ListView x:Name="listViewName" ItemsSource="{Binding FoodItems}" HasUnevenRows="True" SelectionMode="None" CachingStrategy="RetainElement" Margin="0" SeparatorColor="Black" SeparatorVisibility="Default">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View>
-                                <Grid>
+                                <Grid Padding="0,10,0,10">
                                     <Grid.RowDefinitions>
                                         <RowDefinition></RowDefinition>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="6*"></ColumnDefinition>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                                        <ColumnDefinition Width="auto"></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
+                                    <Line Grid.Row="0" Grid.Column="0" Stroke="Black" StrokeThickness="10"></Line>
                                     <Grid Grid.Column="0">
                                         <Grid.RowDefinitions>
                                             <RowDefinition></RowDefinition>
                                             <RowDefinition></RowDefinition>
                                             <RowDefinition></RowDefinition>
-                                            <!--<RowDefinition></RowDefinition>
-                                            <RowDefinition></RowDefinition>
-                                            <RowDefinition></RowDefinition>
-                                            <RowDefinition></RowDefinition>
-                                            <RowDefinition></RowDefinition>
-                                            <RowDefinition></RowDefinition>
-                                            <RowDefinition></RowDefinition>
-                                            <RowDefinition></RowDefinition>-->
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -78,13 +64,12 @@
                                         <Label Grid.Row="2" Grid.Column="0" FontAttributes="Bold" Text="Calorias:"></Label>
                                         <Label Grid.Row="2" Grid.Column="1" Margin="5,0,0,0" Text="{Binding KiloCalorieInfo}"></Label>
                                     </Grid>
-                                    <ImageButton Grid.Column="1" Source="delete_icon.png" Command="{Binding Path=BindingContext.DeleteItemCommand, Source={x:Reference ManualInputPage}}" CommandParameter="{Binding .}" HeightRequest="50">
+                                    <ImageButton Grid.Column="1" Source="delete_icon.png" Command="{Binding Path=BindingContext.DeleteItemCommand, Source={x:Reference ManualInputPage}}" CommandParameter="{Binding .}" HeightRequest="55" WidthRequest="70">
                                     </ImageButton>
-                                    <ImageButton Grid.Column="2" Source="edit_icon.png" Margin="5" Command="{Binding Path=BindingContext.EditItemCommand, Source={x:Reference ManualInputPage}}" CommandParameter="{Binding .}" HeightRequest="50">
+                                    <ImageButton Grid.Column="2" Source="edit_icon.png" Margin="0,0,7,0" Command="{Binding Path=BindingContext.EditItemCommand, Source={x:Reference ManualInputPage}}" CommandParameter="{Binding .}" HeightRequest="50" WidthRequest="45">
                                     </ImageButton>
-									
-                                    <ImageButton Grid.Column="3" Source="chart_icon.png" Margin="3" Command="{Binding Path=BindingContext.ListItemCommand, Source={x:Reference ManualInputPage}}" CommandParameter="{Binding .}" HeightRequest="50">
 
+                                    <ImageButton Grid.Column="3" Source="chart_icon.png" Margin="3" Command="{Binding Path=BindingContext.ListItemCommand, Source={x:Reference ManualInputPage}}" CommandParameter="{Binding .}" HeightRequest="50" WidthRequest="45">
                                     </ImageButton>
                                 </Grid>
                             </ViewCell.View>
