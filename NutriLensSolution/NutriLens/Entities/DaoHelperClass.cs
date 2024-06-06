@@ -322,9 +322,11 @@ namespace NutriLens.Entities
         /// <param name="imageId">Identificador da imagem na base de dados</param>
         /// <returns></returns>
         /// <exception cref="UnsuccessfullRequestException"></exception>
-        public static AiResult GetFoodVisionAnalisysByImageId(string imageId)
+        public static AiResult GetFoodVisionAnalisysByImageId(string imageId, double informedWeight)
         {
-            PostRequest httpRequest = new(UriAndPaths.ApiUrl, "Ai/v2/DetectFoodByMongoImageId", imageId)
+            string weightParam = double.IsNaN(informedWeight) || informedWeight <= 0 ? "0" : Math.Round(informedWeight).ToString();
+
+            PostRequest httpRequest = new(UriAndPaths.ApiUrl, "Ai/v3/DetectFoodByMongoImageId", imageId, weightParam)
             {
                 Token = AppDataHelperClass.NutriLensApiToken
             };

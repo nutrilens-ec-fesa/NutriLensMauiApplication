@@ -73,13 +73,13 @@ namespace NutriLens.Entities
             };
         }
 
-        public static async Task<List<FoodItem>> GetAiAnalysisByMongoImageId(string mongoImageId)
+        public static async Task<List<FoodItem>> GetAiAnalysisByMongoImageId(string mongoImageId, double informedWeight)
         {
             ShowLoading("Realizando análise dos alimentos...");
 
             AiResult aiResult = null; 
 
-            await Task.Run(() => aiResult = DaoHelperClass.GetFoodVisionAnalisysByImageId(mongoImageId));
+            await Task.Run(() => aiResult = DaoHelperClass.GetFoodVisionAnalisysByImageId(mongoImageId, informedWeight));
 
             await ViewServices.PopUpManager.PopInfoAsync(aiResult.GptResult);
             await ViewServices.PopUpManager.PopInfoAsync(aiResult.GeminiResult);

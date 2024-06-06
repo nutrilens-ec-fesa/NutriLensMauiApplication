@@ -104,13 +104,15 @@ public partial class MobileCameraPageV2 : ContentPage
 
             EntitiesHelperClass.ShowLoading("Sincronizando imagem na nuvem...");
 
+            double informedWeight = 0;
+
             if (await ViewServices.PopUpManager.PopYesOrNoAsync("Peso da refeição", "Você sabe o peso da sua refeição? Caso você tenha essa informação, a IA pode ser mais assertiva na análise das quantidades."))
             {
                 while (true)
                 {
-                    string pesoInformadoStr = await ViewServices.PopUpManager.PopNumericInputAsync("Peso da refeição", "Informe o peso em gramas (g) da refeição:");
+                    string informedWeightStr = await ViewServices.PopUpManager.PopNumericInputAsync("Peso da refeição", "Informe o peso em gramas (g) da refeição:");
 
-                    if (string.IsNullOrEmpty(pesoInformadoStr))
+                    if (string.IsNullOrEmpty(informedWeightStr))
                     {
                         if (await ViewServices.PopUpManager.PopYesOrNoAsync("Peso não informado", "Você não passou o peso da sua refeição, deseja tentar novamente?"))
                             continue;
@@ -118,15 +120,17 @@ public partial class MobileCameraPageV2 : ContentPage
                             break;
                     }
 
-                    double pesoInformado = StringFunctions.ParseDoubleValue(pesoInformadoStr);
+                    informedWeight = StringFunctions.ParseDoubleValue(informedWeightStr);
 
-                    if(pesoInformado == double.NaN || pesoInformado <= 0)
+                    if (double.IsNaN(informedWeight) || informedWeight <= 0)
                     {
-                        if (await ViewServices.PopUpManager.PopYesOrNoAsync("Peso inválido", "Você passou um peso inválido. Lembre-se que deve ser um número maior que zero! Deseja tentar novamente?"))
+                        if (await ViewServices.PopUpManager.PopYesOrNoAsync("Peso inválido", "Você passou um peso inválido. Lembre-se que deve ser um número inteiro maior que zero! Deseja tentar novamente?"))
                             continue;
                         else
                             break;
                     }
+                    else
+                        break;
                 }
             }
 
@@ -141,7 +145,7 @@ public partial class MobileCameraPageV2 : ContentPage
 
             while (true)
             {
-                foodItems = await EntitiesHelperClass.GetAiAnalysisByMongoImageId(mongoImageId);
+                foodItems = await EntitiesHelperClass.GetAiAnalysisByMongoImageId(mongoImageId, informedWeight);
 
                 if (foodItems == null)
                 {
