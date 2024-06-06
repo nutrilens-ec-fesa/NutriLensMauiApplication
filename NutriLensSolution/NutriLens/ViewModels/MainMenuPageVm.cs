@@ -406,7 +406,7 @@ namespace NutriLens.ViewModels
                 }
 
                 AppDataHelperClass.DetectedFoodItems = foodItems;
-                await OpenManualInput();
+                await _navigation.PushAsync(ViewServices.ResolvePage<IManualInputPage>());
             }
         }
 
@@ -434,7 +434,7 @@ namespace NutriLens.ViewModels
                 }
 
                 AppDataHelperClass.DetectedFoodItems = foodItems;
-                await OpenManualInput();
+                await _navigation.PushAsync(ViewServices.ResolvePage<IManualInputPage>());
             }
         }
 

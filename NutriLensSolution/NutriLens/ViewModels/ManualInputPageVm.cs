@@ -7,7 +7,6 @@ using NutriLens.ViewInterfaces;
 using NutriLens.Views.Popups;
 using NutriLensClassLibrary.Models;
 using System.Collections.ObjectModel;
-using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace NutriLens.ViewModels
 {
@@ -25,10 +24,10 @@ namespace NutriLens.ViewModels
             }
         }
 
-        public int FoodItemsQuantity => FoodItems.Count;
-        public double KiloCalories => FoodItems.Sum(x => x.KiloCalories);
-        public double KiloCaloriesRound => Math.Round(KiloCalories, 2);
-        public string EnergeticUnit => AppConfigHelperClass.EnergeticUnit.ToString();
+        public int FoodItemsQuantity { get => FoodItems.Count; }
+        public double KiloCalories { get => FoodItems.Sum(x => x.KiloCalories); }
+        public double KiloCaloriesRound { get => Math.Round(KiloCalories, 2); }
+        public string EnergeticUnit { get => AppConfigHelperClass.EnergeticUnit.ToString(); }
         public bool HasPictureAnalysisSource { get => !string.IsNullOrEmpty(AppDataHelperClass.NewFoodPicturePath); }
         public string PictureAnalysisSource { get => AppDataHelperClass.NewFoodPicturePath; }
 
@@ -38,15 +37,15 @@ namespace NutriLens.ViewModels
             FoodItems = new ObservableCollection<FoodItem>();
         }
 
-        public ManualInputPageVm(INavigation navigation, List<FoodItem> foods)
-        {
-            _navigation = navigation;
-            FoodItems = new ObservableCollection<FoodItem>();
-            foreach (FoodItem food in foods)
-            {
-                FoodItems.Add(food);
-            }
-        }
+        //public ManualInputPageVm(INavigation navigation, List<FoodItem> foods)
+        //{
+        //    _navigation = navigation;
+        //    FoodItems = new ObservableCollection<FoodItem>();
+        //    foreach (FoodItem food in foods)
+        //    {
+        //        FoodItems.Add(food);
+        //    }
+        //}
 
         [RelayCommand]
         public async Task AddNewItemFromTbca()
@@ -222,7 +221,7 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         private async Task EditItem(FoodItem item)
         {
-            AddTacoFoodItemPopup addFoodItemPopup = new AddTacoFoodItemPopup(_navigation);
+            AddTacoFoodItemPopup addFoodItemPopup = new AddTacoFoodItemPopup(_navigation, item);
             await Application.Current.MainPage.ShowPopupAsync(addFoodItemPopup);
 
             if (addFoodItemPopup.Confirmed)
