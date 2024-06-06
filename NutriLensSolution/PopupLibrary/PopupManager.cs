@@ -447,11 +447,11 @@ public class PopUpManager : IPopUpManager
         {
             await Application.Current.Dispatcher.DispatchAsync(async () =>
             {
-                inputText = await ActualPage.DisplayPromptAsync(title, message, _ok, _cancel, null, 5, Keyboard.Numeric);
+                inputText = await ActualPage.DisplayPromptAsync(title, message, _ok, _cancel, null, 5, Keyboard.Default);
             });
         }
         else
-            inputText = await ActualPage.DisplayPromptAsync(title, message, _ok, _cancel, null, 5, Keyboard.Numeric);
+            inputText = await ActualPage.DisplayPromptAsync(title, message, _ok, _cancel, null, 5, Keyboard.Default);
 
         return inputText;
     }
