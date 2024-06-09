@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using StringLibrary;
 using System.ComponentModel;
 using CommunityToolkit.Maui.Core.Extensions;
+using System.Reflection.Metadata.Ecma335;
 
 namespace NutriLens.ViewModels
 {
@@ -86,6 +87,13 @@ namespace NutriLens.ViewModels
 
         public bool ValidInput { get; set; }
 
+        public int CalculatedCalories { get; set; }
+
+        public int? OldSetCalories { get; set; }
+
+        public string CaloriesEntry { get; set; }
+
+        public bool ManualCaloriesChange { get; set; }
         public bool InvalidInput { get => !ValidInput; }
 
         public Color GenderColorValidation { get => GenderIndex == 0 ? ColorHelperClass.InvalidFieldColor : ColorHelperClass.ValidFieldColor; }
@@ -209,7 +217,7 @@ namespace NutriLens.ViewModels
         }
 
         public Color PhysicalActivityColorValidation { get => HabitualPhysicalActivityIndex == 0 ? ColorHelperClass.InvalidFieldColor : ColorHelperClass.ValidFieldColor; }
-        
+
         public Color DailyKiloCaloriesObjectiveColorValidation { get => DailyKiloCaloriesObjectiveIndex == 0 ? ColorHelperClass.InvalidFieldColor : ColorHelperClass.ValidFieldColor; }
 
         public Color KiloCaloriesDiaryObjectiveColorValidation { get => UserInfo.KiloCaloriesDiaryObjective <= 0 ? ColorHelperClass.InvalidFieldColor : ColorHelperClass.ValidFieldColor; }
@@ -233,7 +241,10 @@ namespace NutriLens.ViewModels
             _navigation = navigation;
             UserInfo = AppDataHelperClass.UserInfo;
 
-            var anvisaLimits = AppDataHelperClass.GetAnvisaLimits();
+            CaloriesEntry = UserInfo.KiloCaloriesDiaryObjective.ToString();
+            OldSetCalories = int.Parse(CaloriesEntry);
+
+            var anvisaLimits = AnvisaLimits.GetAnvisaLimits();
 
             if (UserInfo.BornDate == DateTime.MinValue)
                 UserInfo.BornDate = DateTime.Now;
@@ -253,55 +264,55 @@ namespace NutriLens.ViewModels
 
             KcalEnabled = AppConfigHelperClass.EnergeticUnit == EnergeticUnit.kcal;
             KJEnabled = !KcalEnabled;
-            WeightEntry = UserInfo.Weight.ToString("0.00");
-            HeightEntry = UserInfo.Height.ToString("0.00");
+            WeightEntry = Math.Round(UserInfo.Weight, 2).ToString();
+            HeightEntry = Math.Round(UserInfo.Height, 2).ToString();
 
-            if(UserInfo.DailyCarbohydrateGoal.IsZeroOrNaN())
-                CarbohydrateGoalEntry = anvisaLimits.Carboidratos.ToString("0.00");
+            if (UserInfo.DailyCarbohydrateGoal.IsZeroOrNaN())
+                CarbohydrateGoalEntry = Math.Round(anvisaLimits.Carboidratos, 2).ToString();
             else
-                CarbohydrateGoalEntry = UserInfo.DailyCarbohydrateGoal.ToString("0.00");
+                CarbohydrateGoalEntry = Math.Round(UserInfo.DailyCarbohydrateGoal, 2).ToString();
 
             if (UserInfo.DailyProteinGoal.IsZeroOrNaN())
-                ProteinGoalEntry = anvisaLimits.Proteinas.ToString("0.00");
+                ProteinGoalEntry = Math.Round(anvisaLimits.Proteinas, 2).ToString();
             else
-                ProteinGoalEntry = UserInfo.DailyProteinGoal.ToString("0.00");
+                ProteinGoalEntry = Math.Round(UserInfo.DailyProteinGoal, 2).ToString();
 
             if (UserInfo.DailyFatGoal.IsZeroOrNaN())
-                FatGoalEntry = anvisaLimits.GordurasTotais.ToString("0.00");
+                FatGoalEntry = anvisaLimits.GordurasTotais.ToString();
             else
-                FatGoalEntry = UserInfo.DailyFatGoal.ToString("0.00");
+                FatGoalEntry = Math.Round(UserInfo.DailyFatGoal, 2).ToString();
 
             if (UserInfo.DailyFiberGoal.IsZeroOrNaN())
-                FiberGoalEntry = anvisaLimits.FibraAlimentar.ToString("0.00");
+                FiberGoalEntry = anvisaLimits.FibraAlimentar.ToString();
             else
-                FiberGoalEntry = UserInfo.DailyFiberGoal.ToString("0.00");
+                FiberGoalEntry = Math.Round(UserInfo.DailyFiberGoal, 2).ToString();
 
             if (UserInfo.DailySodiumGoal.IsZeroOrNaN())
-                SodiumGoalEntry = anvisaLimits.Sodio.ToString("0.00");
+                SodiumGoalEntry = anvisaLimits.Sodio.ToString();
             else
-                SodiumGoalEntry = UserInfo.DailySodiumGoal.ToString("0.00");
+                SodiumGoalEntry = Math.Round(UserInfo.DailySodiumGoal, 2).ToString();
 
             if (UserInfo.DailyCholesterolGoal.IsZeroOrNaN())
-                CholesterolGoalEntry = anvisaLimits.Colesterol.ToString("0.00");
+                CholesterolGoalEntry = anvisaLimits.Colesterol.ToString();
             else
-                CholesterolGoalEntry = UserInfo.DailyCholesterolGoal.ToString("0.00");
+                CholesterolGoalEntry = Math.Round(UserInfo.DailyCholesterolGoal, 2).ToString();
 
             if (UserInfo.DailyCalciumGoal.IsZeroOrNaN())
-                CalciumGoalEntry = anvisaLimits.Calcio.ToString("0.00");
+                CalciumGoalEntry = anvisaLimits.Calcio.ToString();
             else
-                CalciumGoalEntry = UserInfo.DailyCalciumGoal.ToString("0.00");
+                CalciumGoalEntry = Math.Round(UserInfo.DailyCalciumGoal, 2).ToString();
 
             if (UserInfo.DailyIronGoal.IsZeroOrNaN())
-                IronGoalEntry = anvisaLimits.Ferro.ToString("0.00");
+                IronGoalEntry = anvisaLimits.Ferro.ToString();
             else
-                IronGoalEntry = UserInfo.DailyIronGoal.ToString("0.00");
+                IronGoalEntry = Math.Round(UserInfo.DailyIronGoal, 2).ToString();
 
             UseSuggestedCaloricGoalEntry = UserInfo.UseSuggestedCaloricGoal;
 
-            if (UseSuggestedCaloricGoalEntry)
-            {
-                UserInfo.KiloCaloriesDiaryObjective = int.Parse(DailyKiloCaloriesGoal);
-            }
+            //if (UseSuggestedCaloricGoalEntry)
+            //{
+            //    UserInfo.KiloCaloriesDiaryObjective = int.Parse(DailyKiloCaloriesGoal);
+            //}
 
             HabitualPhysicalActivityOptions = new ObservableCollection<string>();
             DailyKiloCaloriesObjectiveOptions = new ObservableCollection<string>();
@@ -331,9 +342,10 @@ namespace NutriLens.ViewModels
         }
 
         [RelayCommand]
-        private void Appearing()
+        private async Task Appearing()
         {
             UpdateUi();
+            await CaloricSuggestChanged();
         }
 
         [RelayCommand]
@@ -366,6 +378,12 @@ namespace NutriLens.ViewModels
                 return;
             }
 
+            if(UserInfo.KiloCaloriesDiaryObjective == 0)
+            {
+                await ViewServices.PopUpManager.PopErrorAsync("Meta de calorias não informada!");
+                return;
+            }
+
             UserInfo.Gender = (Gender)GenderIndex;
             UserInfo.HabitualPhysicalActivity = (HabitualPhysicalActivity)HabitualPhysicalActivityIndex;
             UserInfo.DailyKiloCaloriesObjective = (DailyKiloCaloriesObjective)DailyKiloCaloriesObjectiveIndex;
@@ -384,11 +402,11 @@ namespace NutriLens.ViewModels
             int age = AppDataHelperClass.GetAge(born);
             string gender = UserInfo.Gender.ToString();
             double basal = AppDataHelperClass.GetBasalDailyCalories(age, gender, UserInfo.Weight);
-            BasalDailyCalories = basal.ToString("0.00");
+            BasalDailyCalories = Math.Round(basal, 2).ToString();
 
             string activity = UserInfo.HabitualPhysicalActivity.ToString();
             double dailyKiloCaloriesBurn = AppDataHelperClass.GetDailyKiloCaloriesBurn(basal, activity, gender);
-            DailyKiloCaloriesBurn = dailyKiloCaloriesBurn.ToString("0.00");
+            DailyKiloCaloriesBurn = Math.Round(dailyKiloCaloriesBurn, 2).ToString();
 
             string objective = UserInfo.DailyKiloCaloriesObjective.ToString();
             DailyKiloCaloriesGoal = Math.Round(AppDataHelperClass.GetDailyKiloCaloriesGoal(dailyKiloCaloriesBurn, objective)).ToString() + " kcal";
@@ -429,6 +447,13 @@ namespace NutriLens.ViewModels
 
             try
             {
+                if (int.TryParse(CaloriesEntry, out int caloriesEntry))
+                    UserInfo.KiloCaloriesDiaryObjective = caloriesEntry;
+                else if (string.IsNullOrEmpty(CaloriesEntry))
+                    UserInfo.KiloCaloriesDiaryObjective = 0;
+                else
+                    return;
+
                 DateTime born = UserInfo.BornDate;
                 int age = AppDataHelperClass.GetAge(born);
                 UserInfo.Gender = (Gender)GenderIndex;
@@ -445,13 +470,13 @@ namespace NutriLens.ViewModels
                 double weight = UserInfo.Weight;
                 string gender = UserInfo.Gender.ToString();
                 double basal = AppDataHelperClass.GetBasalDailyCalories(age, gender, weight);
-                BasalDailyCalories = basal.ToString("0.00");
+                BasalDailyCalories = Math.Round(basal, 2).ToString();
                 OnPropertyChanged(nameof(BasalDailyCalories));
 
                 UserInfo.HabitualPhysicalActivity = (HabitualPhysicalActivity)HabitualPhysicalActivityIndex;
                 string activity = UserInfo.HabitualPhysicalActivity.ToString();
                 double dailyKiloCaloriesBurn = AppDataHelperClass.GetDailyKiloCaloriesBurn(basal, activity, gender);
-                DailyKiloCaloriesBurn = dailyKiloCaloriesBurn.ToString("0.00");
+                DailyKiloCaloriesBurn = Math.Round(dailyKiloCaloriesBurn, 2).ToString();
                 OnPropertyChanged(nameof(DailyKiloCaloriesBurn));
 
                 UserInfo.DailyKiloCaloriesObjective = (DailyKiloCaloriesObjective)DailyKiloCaloriesObjectiveIndex;
@@ -459,20 +484,26 @@ namespace NutriLens.ViewModels
 
                 double dailyKiloCalories = AppDataHelperClass.GetDailyKiloCaloriesGoal(dailyKiloCaloriesBurn, objective);
 
-                if(dailyKiloCalories == 0)
+                if (dailyKiloCalories == 0)
                 {
                     ValidInput = false;
                     UpdateUi();
                     return;
                 }
+                else
+                    CalculatedCalories = int.Parse(Math.Round(AppDataHelperClass.GetDailyKiloCaloriesGoal(dailyKiloCaloriesBurn, objective)).ToString());
 
-                DailyKiloCaloriesGoal = Math.Round(AppDataHelperClass.GetDailyKiloCaloriesGoal(dailyKiloCaloriesBurn, objective)).ToString() + " kcal";
+                DailyKiloCaloriesGoal = CalculatedCalories.ToString() + " kcal";
+
                 OnPropertyChanged(nameof(DailyKiloCaloriesGoal));
 
-                if (UseSuggestedCaloricGoalEntry)
-                {
-                    UserInfo.KiloCaloriesDiaryObjective = int.Parse(DailyKiloCaloriesGoal);
-                }
+                //if (UseSuggestedCaloricGoalEntry)
+                //    UserInfo.KiloCaloriesDiaryObjective = CalculatedCalories;
+
+
+                UserInfo.UseSuggestedCaloricGoal = UserInfo.KiloCaloriesDiaryObjective == CalculatedCalories;
+
+                ManualCaloriesChange = true;
 
                 ValidInput = true;
             }
@@ -485,10 +516,41 @@ namespace NutriLens.ViewModels
             UpdateUi();
         }
 
+        [RelayCommand]
+        private async Task SuggestedCaloriesCheckedChanged()
+        {
+            if (ManualCaloriesChange)
+            {
+                ManualCaloriesChange = false;
+                return;
+            }
+
+            UseSuggestedCaloricGoalEntry = UserInfo.UseSuggestedCaloricGoal;
+
+            if (UserInfo.UseSuggestedCaloricGoal)
+            {
+                if (OldSetCalories == null)
+                    OldSetCalories = UserInfo.KiloCaloriesDiaryObjective;
+
+                UserInfo.KiloCaloriesDiaryObjective = CalculatedCalories;
+            }
+            else
+                UserInfo.KiloCaloriesDiaryObjective = OldSetCalories != null ? (int)OldSetCalories : 0;
+
+            CaloriesEntry = UserInfo.KiloCaloriesDiaryObjective.ToString();
+
+            UpdateUi();
+        }
+
         private void UpdateUi()
         {
             OnPropertyChanged(nameof(UserInfo.BornDate));
+            OnPropertyChanged(nameof(UserInfo.UseSuggestedCaloricGoal));
+            OnPropertyChanged(nameof(UserInfo.KiloCaloriesDiaryObjective));
+            OnPropertyChanged(nameof(UserInfo));
 
+            OnPropertyChanged(nameof(CaloriesEntry));
+            OnPropertyChanged(nameof(DailyKiloCaloriesGoal));
             OnPropertyChanged(nameof(HabitualPhysicalActivityIndex));
             OnPropertyChanged(nameof(DailyKiloCaloriesObjectiveIndex));
             OnPropertyChanged(nameof(GenderIndex));

@@ -88,12 +88,20 @@
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
-                        <CheckBox IsChecked="{Binding UserInfo.UseSuggestedCaloricGoalEntry}" Color="{StaticResource SecondaryColor}"></CheckBox>
+                        <CheckBox IsChecked="{Binding UserInfo.UseSuggestedCaloricGoal}" Color="{StaticResource SecondaryColor}">
+                            <CheckBox.Behaviors>
+                                <xct:EventToCommandBehavior EventName="CheckedChanged" Command="{Binding SuggestedCaloriesCheckedChangedCommand}"/>
+
+                            </CheckBox.Behaviors>
+                            <!--<CheckBox.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SuggestedCaloriesCheckedChangedCommand}"></TapGestureRecognizer>
+                            </CheckBox.GestureRecognizers>-->
+                        </CheckBox>
                         <Label Text="Utilizar meta diaria de calorias sugerido" VerticalOptions="Center" />
                     </StackLayout>
                 </Grid>
                 <Label Margin="5,0,0,0" Text="Meta diária de consumo de calorias:" FontAttributes="Bold"/>
-                <Entry Keyboard="Numeric" Placeholder="Digite sua meta diária de consumo..." Text="{Binding UserInfo.KiloCaloriesDiaryObjective}" BackgroundColor="{StaticResource ControlBackgroundColor}" TextColor="{Binding KiloCaloriesDiaryObjectiveColorValidation}" FontSize="Medium">
+                <Entry Keyboard="Numeric" Placeholder="Digite sua meta diária de consumo..." Text="{Binding CaloriesEntry, Mode=TwoWay}" BackgroundColor="{StaticResource ControlBackgroundColor}" TextColor="{Binding KiloCaloriesDiaryObjectiveColorValidation}" FontSize="Medium">
                     <Entry.Behaviors>
                         <xct:EventToCommandBehavior EventName="TextChanged" Command="{Binding CaloricSuggestChangedCommand}"></xct:EventToCommandBehavior>
                     </Entry.Behaviors>
