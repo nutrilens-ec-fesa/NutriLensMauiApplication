@@ -161,7 +161,7 @@ namespace NutriLens.Models
             double totalCalories = TotalEnergeticConsumption();
 
             if (valueOnly)
-                return totalCalories.ToString("0.00");
+                return Math.Round(totalCalories, 2).ToString();
             else
             {
                 return AppConfigHelperClass.EnergeticUnit switch

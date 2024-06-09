@@ -10,91 +10,91 @@ namespace NutriLensClassLibrary.Models
         [JsonIgnore, BsonIgnore]
         public string UnitsPerPortionEntry
         {
-            get => UnitsPerPortion.ToString("0.00");
+            get => Math.Round(UnitsPerPortion, 2).ToString();
             set { UnitsPerPortion = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string TotalCarbohydratesEntry
         {
-            get => TotalCarbohydrates.ToString("0.00");
+            get => Math.Round(TotalCarbohydrates, 2).ToString();
             set { TotalCarbohydrates = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string TotalSugarEntry
         {
-            get => TotalSugar.ToString("0.00");
+            get => Math.Round(TotalSugar, 2).ToString();
             set { TotalSugar = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string AddedSugarEntry
         {
-            get => AddedSugar.ToString("0.00");
+            get => Math.Round(AddedSugar, 2).ToString();
             set { AddedSugar = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string ProteinsEntry
         {
-            get => Proteins.ToString("0.00");
+            get => Math.Round(Proteins, 2).ToString();
             set { Proteins = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string TotalFatEntry
         {
-            get => TotalFat.ToString("0.00");
+            get => Math.Round(TotalFat, 2).ToString();
             set { TotalFat = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string SaturatedFatEntry
         {
-            get => SaturatedFat.ToString("0.00");
+            get => Math.Round(SaturatedFat, 2).ToString();
             set { SaturatedFat = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string TransFatEntry
         {
-            get => TransFat.ToString("0.00");
+            get => Math.Round(TransFat, 2).ToString();
             set { TransFat = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string DietaryFiberEntry
         {
-            get => DietaryFiber.ToString("0.00");
+            get => Math.Round(DietaryFiber, 2).ToString();
             set { DietaryFiber = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string SodiumEntry
         {
-            get => Sodium.ToString("0.00");
+            get => Math.Round(Sodium, 2).ToString();
             set { Sodium = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string CholesterolEntry
         {
-            get => Cholesterol.ToString("0.00");
+            get => Math.Round(Cholesterol, 2).ToString();
             set { Cholesterol = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string CalciumEntry
         {
-            get => Calcium.ToString("0.00");
+            get => Math.Round(Calcium, 2).ToString();
             set { Calcium = StringFunctions.ParseDoubleValue(value); }
         }
 
         [JsonIgnore, BsonIgnore]
         public string IronEntry
         {
-            get => Iron.ToString("0.00");
+            get => Math.Round(Iron, 2).ToString();
             set { Iron = StringFunctions.ParseDoubleValue(value); }
         }
 
