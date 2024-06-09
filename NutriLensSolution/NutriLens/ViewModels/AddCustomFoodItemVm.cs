@@ -4,6 +4,7 @@ using NutriLens.Entities;
 using NutriLens.Services;
 using NutriLensClassLibrary.Models;
 using System.Collections.ObjectModel;
+using ExceptionLibrary;
 
 namespace NutriLens.ViewModels
 {
@@ -99,74 +100,96 @@ namespace NutriLens.ViewModels
         [RelayCommand]
         public async Task ConfirmProduct()
         {
-            EntitiesHelperClass.ShowLoading($"Registrando produto {CustomTacoItem.Nome}");
-
-            bool result = false;
-            string verb;
-
-            if (string.IsNullOrEmpty(CustomTacoItem.Nome))
+            try
             {
-                await ViewServices.PopUpManager.PopErrorAsync("Nome do alimento não informado. Preencha o nome do alimento.");
-                return;
-            }
+                EntitiesHelperClass.ShowLoading($"Registrando produto {CustomTacoItem.Nome}");
 
-            switch ((FoodTypeEnum)FoodTypeIndex)
+                bool result = false;
+                string verb;
+
+                if (string.IsNullOrEmpty(CustomTacoItem.Nome))
+                {
+                    await ViewServices.PopUpManager.PopErrorAsync("Nome do alimento não informado. Preencha o nome do alimento.");
+                    await EntitiesHelperClass.CloseLoading();
+                    return;
+                }
+
+                if (CustomTacoItem.Portion == 0)
+                {
+                    await ViewServices.PopUpManager.PopErrorAsync("Porção base do alimento não informada.");
+                    await EntitiesHelperClass.CloseLoading();
+                    return;
+                }
+
+                switch ((FoodTypeEnum)FoodTypeIndex)
+                {
+                    case FoodTypeEnum.Uninformed:
+                        CustomTacoItem.Liquid = null;
+                        break;
+                    case FoodTypeEnum.Solid:
+                    case FoodTypeEnum.Liquid:
+                        CustomTacoItem.Liquid = (FoodTypeEnum)FoodTypeIndex == FoodTypeEnum.Liquid;
+                        break;
+                }
+
+                switch ((YesOrNoOptionsEnum)GlutenOptionIndex)
+                {
+                    case YesOrNoOptionsEnum.Uninformed:
+                        CustomTacoItem.Gluten = null;
+                        break;
+                    case YesOrNoOptionsEnum.Yes:
+                    case YesOrNoOptionsEnum.No:
+                        CustomTacoItem.Gluten = (YesOrNoOptionsEnum)GlutenOptionIndex == YesOrNoOptionsEnum.Yes;
+                        break;
+                }
+
+                switch ((YesOrNoOptionsEnum)LactoseOptionIndex)
+                {
+                    case YesOrNoOptionsEnum.Uninformed:
+                        CustomTacoItem.Lactose = null;
+                        break;
+                    case YesOrNoOptionsEnum.Yes:
+                    case YesOrNoOptionsEnum.No:
+                        CustomTacoItem.Lactose = (YesOrNoOptionsEnum)LactoseOptionIndex == YesOrNoOptionsEnum.Yes;
+                        break;
+                }
+
+
+
+                TacoItem normalizedTacoItem = GetNormalizedTacoItem(CustomTacoItem);
+
+                if (_addProduct)
+                {
+                    verb = "adicionado";
+                    await Task.Run(() => DaoHelperClass.InsertTacoItem(normalizedTacoItem));
+                }
+                else
+                {
+                    verb = "alterado";
+                    await Task.Run(() => DaoHelperClass.UpdateTacoItem(normalizedTacoItem));
+                }
+
+                await EntitiesHelperClass.CloseLoading();
+
+                await ViewServices.PopUpManager.PopInfoAsync($"Alimento {verb} com sucesso!");
+
+
+                EntitiesHelperClass.ShowLoading("Verificando atualização dos alimentos");
+
+                await Task.Run(AppDataHelperClass.CheckTacoUpdate);
+
+                AppDataHelperClass.AddedTacoItem = AppDataHelperClass.TacoFoodItems.Find(x => x.Nome == CustomTacoItem.Nome);
+
+                await EntitiesHelperClass.CloseLoading();
+
+                await _navigation.PopAsync();
+
+            }
+            catch(Exception ex)
             {
-                case FoodTypeEnum.Uninformed:
-                    CustomTacoItem.Liquid = null;
-                    break;
-                case FoodTypeEnum.Solid:
-                case FoodTypeEnum.Liquid:
-                    CustomTacoItem.Liquid = (FoodTypeEnum)FoodTypeIndex == FoodTypeEnum.Liquid;
-                    break;
+                await EntitiesHelperClass.CloseLoading();
+                await ViewServices.PopUpManager.PopErrorAsync("Houve algum problema para registrar o novo produto. " + ExceptionManager.ExceptionMessage(ex));
             }
-
-            switch ((YesOrNoOptionsEnum)GlutenOptionIndex)
-            {
-                case YesOrNoOptionsEnum.Uninformed:
-                    CustomTacoItem.Gluten = null;
-                    break;
-                case YesOrNoOptionsEnum.Yes:
-                case YesOrNoOptionsEnum.No:
-                    CustomTacoItem.Gluten = (YesOrNoOptionsEnum)GlutenOptionIndex == YesOrNoOptionsEnum.Yes;
-                    break;
-            }
-
-            switch ((YesOrNoOptionsEnum)LactoseOptionIndex)
-            {
-                case YesOrNoOptionsEnum.Uninformed:
-                    CustomTacoItem.Lactose = null;
-                    break;
-                case YesOrNoOptionsEnum.Yes:
-                case YesOrNoOptionsEnum.No:
-                    CustomTacoItem.Lactose = (YesOrNoOptionsEnum)LactoseOptionIndex == YesOrNoOptionsEnum.Yes;
-                    break;
-            }
-
-            TacoItem normalizedTacoItem = GetNormalizedTacoItem(CustomTacoItem);
-
-            if (_addProduct)
-            {
-                verb = "adicionado";
-                await Task.Run(() => DaoHelperClass.InsertTacoItem(normalizedTacoItem));
-            }
-            else
-            {
-                verb = "alterado";
-                await Task.Run(() => DaoHelperClass.UpdateTacoItem(normalizedTacoItem));
-            }
-
-            EntitiesHelperClass.CloseLoading();
-
-            await ViewServices.PopUpManager.PopInfoAsync($"Alimento {verb} com sucesso!");
-
-            EntitiesHelperClass.ShowLoading("Verificando atualização dos alimentos");
-
-            await Task.Run(async () => await AppDataHelperClass.CheckTacoUpdate());
-
-            await EntitiesHelperClass.CloseLoading();
-
-            await _navigation.PopAsync();
         }
 
         public TacoItem GetNormalizedTacoItem(TacoItemEntry unormalizedTacoItem)

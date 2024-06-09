@@ -56,6 +56,25 @@ public partial class AddTacoFoodItemPopup : Popup
         inputPortion.Text = foodItem.Portion;
     }
 
+    public AddTacoFoodItemPopup(INavigation navigation, TacoItem tacoItem)
+    {
+        InitializeComponent();
+
+        _navigation = navigation;
+
+        TacoItems = new ObservableCollection<TacoItem>();
+
+        if (AppDataHelperClass.TacoFoodItems == null || AppDataHelperClass.TacoFoodItems.Count == 0)
+        {
+            List<TacoItem> tacoItems = DaoHelperClass.GetTacoItemsList();
+            AppDataHelperClass.SetTacoItems(tacoItems.OrderBy(x => x.Nome).ToList());
+        }
+
+        tacoPicker.ItemsSource = AppDataHelperClass.TacoFoodItems;
+        tacoPicker.SelectedItem = tacoItem;
+        SelectedItem = tacoItem;
+    }
+
     private async void BtnConfirmItem_Clicked(object sender, EventArgs e)
     {
         Confirmed = true;
@@ -78,7 +97,11 @@ public partial class AddTacoFoodItemPopup : Popup
         tacoPicker.ItemsSource = null;
 
         if (string.IsNullOrEmpty(tacoTextSearch.Text))
+        {
+            tacoPicker.ItemsSource = AppDataHelperClass.TacoFoodItems;
+            tacoPicker.SelectedIndex = 0;
             return;
+        }
 
         string[] words = tacoTextSearch.Text.Trim().Split(" ");
 
@@ -124,7 +147,7 @@ public partial class AddTacoFoodItemPopup : Popup
         {
             if (double.TryParse(inputPortion.Text, out double quantity))
             {
-                inputCalories.Text = (quantity * selecteditem.GetValue(nameof(selecteditem.EnergiaKcal)) / 100).ToString();
+                inputCalories.Text = Math.Round((quantity * selecteditem.GetValue(nameof(selecteditem.EnergiaKcal)) / 100), 2).ToString();
             }
             else
                 inputCalories.Text = string.Empty;
@@ -142,7 +165,7 @@ public partial class AddTacoFoodItemPopup : Popup
 
             if (double.TryParse(inputPortion.Text, out double quantity))
             {
-                inputCalories.Text = (quantity * selecteditem.GetValue(nameof(selecteditem.EnergiaKcal)) / 100).ToString();
+                inputCalories.Text = Math.Round((quantity * selecteditem.GetValue(nameof(selecteditem.EnergiaKcal)) / 100), 2).ToString();
             }
             else
                 inputCalories.Text = string.Empty;

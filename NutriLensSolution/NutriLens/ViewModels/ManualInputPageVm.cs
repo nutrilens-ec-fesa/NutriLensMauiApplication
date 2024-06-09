@@ -85,13 +85,20 @@ namespace NutriLens.ViewModels
         }
 
         [RelayCommand]
-        public async Task AddNewItemFromTaco()
+        public async Task AddNewItemFromTaco(TacoItem tacoItem = null)
         {
-            AddTacoFoodItemPopup addFoodItemPopup = new AddTacoFoodItemPopup(_navigation);
+            AddTacoFoodItemPopup addFoodItemPopup;
+
+            if (tacoItem == null)
+                addFoodItemPopup = new AddTacoFoodItemPopup(_navigation);
+            else
+                addFoodItemPopup = new AddTacoFoodItemPopup(_navigation, tacoItem);
+
             await Application.Current.MainPage.ShowPopupAsync(addFoodItemPopup);
 
             if (AppDataHelperClass.AddTacoItemRequested)
             {
+                AppDataHelperClass.AddTacoItemRequested = false;
                 await _navigation.PushAsync(ViewServices.ResolvePage<IAddCustomFoodItemPage>());
             }
 
@@ -156,10 +163,18 @@ namespace NutriLens.ViewModels
         }
 
         [RelayCommand]
-        private void Appearing()
+        private async void Appearing()
         {
             try
             {
+
+                if (AppDataHelperClass.AddedTacoItem != null)
+                {
+                    await AddNewItemFromTaco(AppDataHelperClass.AddedTacoItem);
+                    AppDataHelperClass.AddedTacoItem = null;
+                    return;
+                }
+
                 if (AppDataHelperClass.DetectedFoodItems != null && AppDataHelperClass.DetectedFoodItems.Count > 0)
                 {
                     AppDataHelperClass.MealToEdit = null;
