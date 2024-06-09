@@ -63,7 +63,22 @@ namespace NutriLensWebApp.Repositories
 
             try
             {
-                UserInfo newUserInfo = new() { Id = userInfoIdentifier,  KiloCaloriesDiaryObjective = 2000 };
+                AnvisaLimits anvisaLimits = AnvisaLimits.GetAnvisaLimits();
+
+                UserInfo newUserInfo = new() 
+                { 
+                    Id = userInfoIdentifier, 
+                    KiloCaloriesDiaryObjective = 2000,
+                    DailyCarbohydrateGoal = anvisaLimits.Carboidratos,
+                    DailyProteinGoal = anvisaLimits.Proteinas,
+                    DailyFatGoal = anvisaLimits.GordurasTotais,
+                    DailyFiberGoal = anvisaLimits.FibraAlimentar,
+                    DailySodiumGoal = anvisaLimits.Sodio,
+                    DailyCholesterolGoal = anvisaLimits.Colesterol,
+                    DailyCalciumGoal = anvisaLimits.Calcio,
+                    DailyIronGoal = anvisaLimits.Ferro
+                };
+
                 AppMongoDbContext.UserInfo.InsertOne(newUserInfo);
             }
             catch(Exception ex)

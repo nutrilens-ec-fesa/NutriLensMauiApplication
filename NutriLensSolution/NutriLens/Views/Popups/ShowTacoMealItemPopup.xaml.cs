@@ -55,7 +55,7 @@ public partial class ShowTacoMealItemPopup : Popup
     {
         get
         {
-            var anvisaLimits = AppDataHelperClass.GetAnvisaLimits();
+            var anvisaLimits = AnvisaLimits.GetAnvisaLimits();
             double limiteCalorias = AppDataHelperClass.UserInfo.KiloCaloriesDiaryObjective;
             double limiteCarboidratos = AppDataHelperClass.UserInfo.DailyCarbohydrateGoal;
             double limiteProteinas = AppDataHelperClass.UserInfo.DailyProteinGoal;
@@ -95,7 +95,7 @@ public partial class ShowTacoMealItemPopup : Popup
     {
         get
         {
-            var anvisaLimits = AppDataHelperClass.GetAnvisaLimits();
+            var anvisaLimits = AnvisaLimits.GetAnvisaLimits();
             double limiteGorduras = AppDataHelperClass.UserInfo.DailyFatGoal;
             double limiteFibras = AppDataHelperClass.UserInfo.DailyFiberGoal;
             double limiteSodio = AppDataHelperClass.UserInfo.DailySodiumGoal;
@@ -141,7 +141,7 @@ public partial class ShowTacoMealItemPopup : Popup
     {
         get
         {
-            var anvisaLimits = AppDataHelperClass.GetAnvisaLimits();
+            var anvisaLimits = AnvisaLimits.GetAnvisaLimits();
             double limiteColesterol = AppDataHelperClass.UserInfo.DailyCholesterolGoal;
             double limiteCalcio = AppDataHelperClass.UserInfo.DailyCalciumGoal;
             double limiteFerro = AppDataHelperClass.UserInfo.DailyIronGoal;

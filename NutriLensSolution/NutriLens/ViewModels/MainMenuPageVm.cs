@@ -37,7 +37,7 @@ namespace NutriLens.ViewModels
                 _mealList = new MealListClass(AppDataHelperClass.GetTodayMeals());
                 _physicalActivitiesList = AppDataHelperClass.GetTodayPhysicalActivities();
                 _caloricBalance = _mealList.TotalEnergeticConsumption() - EntitiesHelperClass.TotalEnergeticConsumption(_physicalActivitiesList);
-                return _caloricBalance.ToString("0.00") + " " + AppConfigHelperClass.EnergeticUnit;
+                return Math.Round(_caloricBalance, 2).ToString() + " " + AppConfigHelperClass.EnergeticUnit;
             }
         }
 
@@ -92,7 +92,7 @@ namespace NutriLens.ViewModels
 
                 double diaryObjective = AppDataHelperClass.GetEnergeticDiaryObjective();
 
-                return $"{_caloricBalance:0.00} / {diaryObjective} {AppConfigHelperClass.EnergeticUnit}{Environment.NewLine}({_caloricBalance / diaryObjective * 100:0.00}% atingido)";
+                return $"{Math.Round(_caloricBalance, 2)} / {diaryObjective} {AppConfigHelperClass.EnergeticUnit}{Environment.NewLine}({Math.Round(_caloricBalance / diaryObjective * 100, 2)}% atingido)";
             }
         }
 
@@ -100,7 +100,7 @@ namespace NutriLens.ViewModels
         {
             get
             {
-                return $"Ganho calórico: + {_mealCalories:0.00} {AppConfigHelperClass.EnergeticUnit}";
+                return $"Ganho calórico: + {Math.Round(_mealCalories, 2)} {AppConfigHelperClass.EnergeticUnit}";
             }
         }
 
@@ -108,7 +108,7 @@ namespace NutriLens.ViewModels
         {
             get
             {
-                return $"Perda calórica: - {_physicalActivitiesCalories:0.00} {AppConfigHelperClass.EnergeticUnit}";
+                return $"Perda calórica: - {Math.Round(_physicalActivitiesCalories, 2)} {AppConfigHelperClass.EnergeticUnit}";
             }
         }
 
@@ -187,6 +187,9 @@ namespace NutriLens.ViewModels
 
         public string AppVersion { get => "V " + AppInfo.Current.VersionString; }
 
+        public bool ItemsInsideAnvisaLimits { get => AppDataHelperClass.GetIfMacroNutrientsAreOnAnvisaLimits(); }
+        public bool ItemsOutsideAnvisaLimits { get => !AppDataHelperClass.GetIfMacroNutrientsAreOnAnvisaLimits(); }
+
         public ObservableCollection<Brush> Chart1ColorPalette { get; set; }
         public ObservableCollection<Brush> Chart2ColorPalette { get; set; }
 
@@ -196,7 +199,7 @@ namespace NutriLens.ViewModels
         {
             get
             {
-                var anvisaLimits = AppDataHelperClass.GetAnvisaLimits();
+                var anvisaLimits = AnvisaLimits.GetAnvisaLimits();
                 double limiteCarboidratos = AppDataHelperClass.UserInfo.DailyCarbohydrateGoal;
                 double limiteProteinas = AppDataHelperClass.UserInfo.DailyProteinGoal;
 
@@ -241,7 +244,7 @@ namespace NutriLens.ViewModels
         {
             get
             {
-                var anvisaLimits = AppDataHelperClass.GetAnvisaLimits();
+                var anvisaLimits = AnvisaLimits.GetAnvisaLimits();
                 double limiteGorduras = AppDataHelperClass.UserInfo.DailyFatGoal;
                 double limiteFibras = AppDataHelperClass.UserInfo.DailyFiberGoal;
                 double limiteSodio = AppDataHelperClass.UserInfo.DailySodiumGoal;
@@ -287,7 +290,7 @@ namespace NutriLens.ViewModels
         {
             get
             {
-                var anvisaLimits = AppDataHelperClass.GetAnvisaLimits();
+                var anvisaLimits = AnvisaLimits.GetAnvisaLimits();
                 double limiteColesterol = AppDataHelperClass.UserInfo.DailyCholesterolGoal;
                 double limiteCalcio = AppDataHelperClass.UserInfo.DailyCalciumGoal;
                 double limiteFerro = AppDataHelperClass.UserInfo.DailyIronGoal;
@@ -583,6 +586,8 @@ namespace NutriLens.ViewModels
             OnPropertyChanged(nameof(PartialResultsMacroNutrients1));
             OnPropertyChanged(nameof(PartialResultsMacroNutrients2));
             OnPropertyChanged(nameof(PartialResultsMacroNutrients3));
+            OnPropertyChanged(nameof(ItemsInsideAnvisaLimits));
+            OnPropertyChanged(nameof(ItemsOutsideAnvisaLimits));
         }
 
         [RelayCommand]

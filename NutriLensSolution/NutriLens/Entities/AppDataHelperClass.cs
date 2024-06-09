@@ -848,23 +848,21 @@ namespace NutriLens.Entities
             return taco;
         }
 
-        public static AnvisaLimits GetAnvisaLimits()
+        public static bool GetIfMacroNutrientsAreOnAnvisaLimits()
         {
-            var limits = new AnvisaLimits();
+            AnvisaLimits anvisaLimits = AnvisaLimits.GetAnvisaLimits();
 
-            limits.Carboidratos = 300;      //g
-            limits.Proteinas = 75;          //g
-            limits.GordurasTotais = 55;     //g
-            limits.GordurasSaturadas = 22;  //g
-            limits.FibraAlimentar = 25;     //g
-            limits.Sodio = 2400;            //mg
-            limits.Colesterol = 300;        //mg
-            limits.Calcio = 1000;           //mg
-            limits.Ferro = 14;              //mg
-
-            return limits;
-
+            return
+                UserInfo.DailyCarbohydrateGoal == anvisaLimits.Carboidratos &&
+                UserInfo.DailyProteinGoal == anvisaLimits.Proteinas &&
+                UserInfo.DailyFatGoal == anvisaLimits.GordurasTotais &&
+                UserInfo.DailyFiberGoal == anvisaLimits.FibraAlimentar &&
+                UserInfo.DailySodiumGoal == anvisaLimits.Sodio &&
+                UserInfo.DailyCholesterolGoal == anvisaLimits.Colesterol &&
+                UserInfo.DailyCalciumGoal == anvisaLimits.Calcio &&
+                UserInfo.DailyIronGoal == anvisaLimits.Ferro;
         }
+
 
         public static async Task CheckTacoUpdate()
         {
@@ -1091,28 +1089,6 @@ namespace NutriLens.Entities
                     KiloCalories = kiloCalories,
                     TacoFoodItem = GetTacoFoodItem(randomTacoItem, portion.ToString())
                 };
-
-                //}
-                //else
-                //{
-                //    // Verifica se os itens de código de barras já foram carregados
-                //    if (_barcodeItems == null)
-                //        await Task.Run(() => _barcodeItems = DaoHelperClass.GetAllBarCodeItems());
-
-                //    // Ontém um item de código de barras aleatório
-                //    BarcodeItemEntry randomBarcodeItemEntry = _barcodeItems.ElementAt(_random.Next(0, _barcodeItems.Count));
-
-                //    // Obtém uma porção aleatória, entre 1 e 10
-                //    int portion = _random.Next(1, 11);
-
-                //    foodItem = new FoodItem
-                //    {
-                //        KiloCalories = randomBarcodeItemEntry.TotalCaloriesConsumption,
-                //        BarcodeItemEntry = randomBarcodeItemEntry,
-                //        Name = randomBarcodeItemEntry.ProductName,
-                //        Portion = (randomBarcodeItemEntry.BasePortion * portion).ToString("0.00"),
-                //    };
-                //}
 
                 randomizedFoodItems.Add(foodItem);
             }
