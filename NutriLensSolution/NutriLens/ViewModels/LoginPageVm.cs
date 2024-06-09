@@ -128,7 +128,24 @@ namespace NutriLens.ViewModels
             {
                 EntitiesHelperClass.ShowLoading("Realizando login automático");
 
-                await Task.Run(() => DaoHelperClass.LoginWithUserInfoId(AppDataHelperClass.UserInfo.Id));
+                bool automaticLoginResult = false;
+
+                await Task.Run(async () =>
+                {
+                    try
+                    {
+                        DaoHelperClass.LoginWithUserInfoId(AppDataHelperClass.UserInfo.Id);
+                        automaticLoginResult = true;
+                    }
+                    catch(Exception ex)
+                    {
+                        await ViewServices.PopUpManager.PopErrorAsync("Não foi possível efetuar o login automático. Tente novamente mais tarde.");
+                        await EntitiesHelperClass.CloseLoading();
+                    }
+                });
+
+                if (!automaticLoginResult)
+                    return;
 
                 await EntitiesHelperClass.CloseLoading();
 
