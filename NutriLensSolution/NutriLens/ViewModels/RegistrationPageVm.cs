@@ -89,5 +89,12 @@ namespace NutriLens.ViewModels
 
             await _navigation.PopAsync();
         }
+
+        [RelayCommand]
+        public async Task GoBack()
+        {
+            if (await ViewServices.PopUpManager.PopYesOrNoAsync("Registrar usuário", "Deseja realmente cancelar o registro de novo usuário e voltar para a tela de login?"))
+                await _navigation.PopAsync();
+        }
     }
 }
