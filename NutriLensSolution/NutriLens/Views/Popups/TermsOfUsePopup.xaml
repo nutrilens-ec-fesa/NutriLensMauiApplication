@@ -50,9 +50,9 @@
 
                 <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" HorizontalTextAlignment="Center" Text="Enquanto você não aceitar os termos de uso e privacidade o aplicativo não poderá ser utilizado" TextColor="White"></Label>
 
-                <Button Grid.Row="5" BackgroundColor="{StaticResource SecondaryColor}" Grid.Column="0" Margin="10,0,10,0" x:Name="btnCancel" Text="Cancelar" Clicked="btnCancel_Clicked"></Button>
+                <Button Grid.Row="5" BackgroundColor="{StaticResource SecondaryColor}" TextColor="{StaticResource PrimaryColor}" Grid.Column="0" Margin="10,0,10,0" x:Name="btnCancel" Text="Cancelar" Clicked="btnCancel_Clicked"></Button>
 
-                <Button Grid.Row="6" BackgroundColor="{StaticResource SecondaryColor}" Grid.Column="1" Margin="10,0,10,0" x:Name="btnConfirmActivity" Text="Continuar" Clicked="btnContinue_Clicked"></Button>
+                <Button Grid.Row="6" BackgroundColor="{StaticResource SecondaryColor}" TextColor="{StaticResource PrimaryColor}" Grid.Column="1" Margin="10,0,10,0" x:Name="btnConfirmActivity" Text="Continuar" Clicked="btnContinue_Clicked"></Button>
             </Grid>
         </Frame.Content>
     </Frame>
