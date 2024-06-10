@@ -28,24 +28,24 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
-		<AssemblyVersion>1.0.3</AssemblyVersion>
-		<FileVersion>1.0.3</FileVersion>
+		<AssemblyVersion>1.0.4</AssemblyVersion>
+		<FileVersion>1.0.4</FileVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android|AnyCPU'">
 	  <AndroidPackageFormat>apk</AndroidPackageFormat>
 	  <AndroidKeyStore>False</AndroidKeyStore>
 	  <ApplicationId>com.fesaec.nutrilens</ApplicationId>
-	  <ApplicationDisplayVersion>1.0.3</ApplicationDisplayVersion>
-	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.4</ApplicationDisplayVersion>
+	  <ApplicationVersion>4</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android|AnyCPU'">
 	  <AndroidKeyStore>False</AndroidKeyStore>
 	  <ApplicationId>com.fesaec.nutrilens</ApplicationId>
 	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
-	  <ApplicationDisplayVersion>1.0.3</ApplicationDisplayVersion>
-	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.4</ApplicationDisplayVersion>
+	  <ApplicationVersion>4</ApplicationVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
