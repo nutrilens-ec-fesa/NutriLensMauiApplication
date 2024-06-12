@@ -39,8 +39,21 @@ namespace NutriLensWebApp.Repositories
             if (existingTacoItem != null)
                 throw new AlreadyRegisteredException("Já existe um produto registrado com o nome informado");
 
+            TacoItem lastInsertedTacoItem;
+
             try
             {
+                FilterDefinition<TacoItem> filter = Builders<TacoItem>.Filter.Empty;
+                existingTacoItem = AppMongoDbContext.TacoItem.Find(filter).SortByDescending(x => x.id).FirstOrDefault();
+            }
+            catch(Exception ex)
+            {
+                throw new DatabaseQueryException("Houve algum problema para verificar último ID inserido.", ex);
+            }
+
+            try
+            {
+                tacoItem.id = existingTacoItem.id + 1;
                 AppMongoDbContext.TacoItem.InsertOne(tacoItem);
             }
             catch (Exception ex)
