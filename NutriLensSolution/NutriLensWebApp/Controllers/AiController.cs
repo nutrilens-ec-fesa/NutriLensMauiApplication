@@ -441,8 +441,8 @@ namespace NutriLensWebApp.Controllers
                             UserPrompt = mealDescription.Value,
                             SystemPrompt = "Você obtém uma descrição de uma refeição, e, para cada item mencionado, " +
                             "você monta um objeto composto por Item e Quantidade e devolve uma lista desses objetos. " +
-                            "O usuário pode ou não falar a quantidade em gramas de cada um dos itens, caso ele não mencione, " +
-                            "considere a medida em gramas típica para o item em uma refeição.",
+                            "O usuário pode ou não falar a quantidade em gramas (ou mls para líquidos) de cada um dos itens, caso ele não mencione, " +
+                            "considere a medida em gramas típica para o item em uma refeição. Não precisa mencionar que está passando uma quantidade típica. Você é objetivo e não passa nenhuma informação a mais do que foi solicitado.",
                             MaxTokens = 300
                         };
                         gptResponse = OpenAiQuery(OpenAiModel.Gpt4Turbo, inputModel);
@@ -463,8 +463,8 @@ namespace NutriLensWebApp.Controllers
                     {
                         string prompt = $"Considere a descrição de refeição: '{mealDescription.Value}'. Para cada item mencionado, " +
                         "você monta um objeto composto por Item e Quantidade e devolve uma lista desses objetos, em json. " +
-                        "O usuário pode ou não falar a quantidade em gramas de cada um dos itens, caso ele não mencione, " +
-                        "considere a medida em gramas típica para o item em uma refeição.";
+                        "O usuário pode ou não falar a quantidade em gramas (ou mls para líquidos) de cada um dos itens, caso ele não mencione, " +
+                        "considere a medida em gramas típica para o item em uma refeição. Não precisa mencionar que está passando uma quantidade típica. Você é objetivo e não passa nenhuma informação a mais do que foi solicitado.";
 
                         geminiResponse = await GeminiAiEntity.GeminiAiQuery(prompt);
                         tcsGemini.SetResult(true);
