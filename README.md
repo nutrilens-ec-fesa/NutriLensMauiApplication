@@ -1,5 +1,11 @@
 # NutriLens - Solução para aprimorar o controle alimentar por meio da exploração nutricional
 
+<br/>
+<div align="center">
+	<img src="https://github.com/user-attachments/assets/df3033bf-d7c9-4c21-85da-ff47be641348">
+</div>
+<br/>
+
 ## UMA NOVA MANEIRA DE CONTROLAR A SUA ALIMENTAÇÃO
 
 Pensando nesses problemas, desenvolvemos essa solução que vai
@@ -7,7 +13,11 @@ ajudar a controlar melhor a sua alimentação, tendo consciência de
 boa parte dos nutrientes presentes em suas refeições a partir de
 diversas formas de registro.
 
-![image](https://github.com/user-attachments/assets/6eef63f6-086d-474d-9d5d-1980ad6585dd)
+<br/>
+<div align="center">
+	<img src="https://github.com/user-attachments/assets/6eef63f6-086d-474d-9d5d-1980ad6585dd">
+</div>
+<br/>
 
 ## ARQUITETURA DA SOLUÇÃO
 
@@ -15,7 +25,11 @@ A arquitetura da solução NutriLens, se utiliza de recursos disponíveis no
 dispositivo móvel e computação em nuvem, levando em consideração
 conceitos de modularidade e segurança.
 
-![image](https://github.com/user-attachments/assets/ef1243b5-c34e-43db-9bdd-aeedcfdb7e97)
+<br/>
+<div align="center">
+	<img src="https://github.com/user-attachments/assets/ef1243b5-c34e-43db-9bdd-aeedcfdb7e97">
+</div>
+<br/>
 
 1. Como o ponto de entrada para a nossa solução, temos o usuário, que faz toda a
 interação com o sistema a partir de um smartphone.
